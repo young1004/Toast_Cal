@@ -29,6 +29,9 @@ def createData(request):
             location=request.POST["location"],
             start_date=request.POST["start_date"],
             end_date=request.POST["end_date"],
+            isAllDay=request.POST["isAllDay"],
+            state=request.POST["state"],
+            calendarClass=request.POST["class"],
         )
         new_instance.save()
 
@@ -39,12 +42,15 @@ def createData(request):
 # @csrf_exempt
 # def updateData(request):
 #     if request.method == "POST":
-#         # new_instance = Calendar.objects.create(
-#         #     calendar=request.POST["calendar"],
-#         #     title=request.POST["title"],
-#         #     location=request.POST["location"],
-#         #     start_date=request.POST["start_date"],
-#         #     end_date=request.POST["end_date"],
-#         # )
-#         # new_instance.save()
+
 #         return HttpResponse(update_instance, content_type="application/json")
+
+
+# ajax로 들어온 pk값으로 데이터 삭제
+@csrf_exempt
+def deleteData(request):
+    if request.method == "POST":
+        query = Calendar.objects.get(pk=request.POST["id"])
+        query.delete()
+        # 더미데이터로 응답
+        return HttpResponse(100, content_type="application/json")

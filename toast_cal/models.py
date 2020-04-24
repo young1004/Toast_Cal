@@ -7,6 +7,9 @@ class Calendar(models.Model):
     location = models.CharField(max_length=30)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+    isAllDay = models.BooleanField(default=False)
+    state = models.CharField(max_length=30, default="Busy")
+    calendarClass = models.CharField(max_length=30, default="public")
 
     def __str__(self):
         return self.title

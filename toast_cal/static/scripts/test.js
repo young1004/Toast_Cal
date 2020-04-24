@@ -10,7 +10,6 @@ const options = {
 
 // 캘린더 생성
 const calendar = new tui.Calendar(container, options);
-var a = 1;
 
 // 달력 뷰를 바꾸기 위한 버튼 및 addEventListener
 var nextBtn = document.getElementById("nextBtn");
@@ -90,13 +89,30 @@ function create(data) {
 
     for (i = 0; i < data.length; i++) {
         calendar.createSchedules([{
-            id: data[i].pk,
-            calendarId: data[i].fields.calendar,
-            title: data[i].fields.title,
-            category: "time", // 일반 일정
-            start: data[i].fields.start_date,
-            end: data[i].fields.end_date
+            id: data[i].pk, //scheduleID
+            calendarId: data[i].fields.calendar, // calendarId
+            title: data[i].fields.title, // title
+            category: "time", // only 'milestone', 'task', allday', 'time'
+            start: data[i].fields.start_date, // schedule start time
+            end: data[i].fields.end_date, // schedule end time
+            isAllDay: data[i].fields.isAllDay, // boolean type data 
+            state: data[i].fields.state, // only 'busy', 'free'
+            raw: {
+                class: data[i].fields.calendarClass
+            }
         }]);
+    }
+}
+
+/**
+ * boolean 데이터를 django 데이터베이스에 맞게 변환해주는 함수
+ * @param {boolean} data 
+ */
+function convertBooleanData(data) {
+    if (data == true) {
+        return "True"
+    } else {
+        return "False"
     }
 }
 
@@ -105,20 +121,28 @@ calendar.on('beforeCreateSchedule', function(event) {
     var startTime = event.start;
     var endTime = event.end;
     var title = event.title;
-    var calendarId = event.calendarId;
-    var schedule;
+    var location = event.location;
+    var isAllDay = event.isAllDay;
+    var calendarClass = event.raw.class;
+    var state = event.state;
+    var calendar_Id = event.calendarId;
+    var schedule = {};
 
+    console.log(event);
 
     //서버에 보낼 데이터 object
-    var create = {
-        calendar: calendarId,
-        title: document.getElementById("tui-full-calendar-schedule-title").value,
-        location: document.getElementById("tui-full-calendar-schedule-location").value,
+    var createData = {
+        calendar: calendar_Id,
+        title: title,
+        location: location,
         start_date: document.getElementById("tui-full-calendar-schedule-start-date").value,
         end_date: document.getElementById("tui-full-calendar-schedule-end-date").value,
+        isAllDay: convertBooleanData(isAllDay),
+        state: state,
+        class: calendarClass
     };
 
-    // console.log(create);
+    console.log(createData);
 
     //ajax로 서버에 데이터 전송
     $.ajax({
@@ -128,24 +152,26 @@ calendar.on('beforeCreateSchedule', function(event) {
             'X-CSRFToken': '{{ csrf_token }}'
         },
         type: 'POST',
-        data: create,
+        data: createData,
         success: function(data) {
             schedule = {
                 id: data,
-                calendarId: calendarId,
+                calendarId: calendar_Id,
                 title: title,
                 category: 'time', // 일반 일정
                 start: startTime,
-                end: endTime
+                end: endTime,
+                isAllDay: isAllDay,
+                state: state,
+                raw: {
+                    class: calendarClass
+                }
             };
+            calendar.createSchedules([schedule]);
             // 디버깅용 alert
             alert("success!!")
         }
     });
-    // 디버깅용 alert
-    alert('일정이 등록되었습니다.')
-
-    calendar.createSchedules([schedule]);
 });
 
 // 이벤트로 일정 수정하기
@@ -154,27 +180,22 @@ calendar.on('beforeUpdateSchedule', function(event) {
     var changes = event.changes;
 
     //서버에 보낼 데이터 object
-    //var data
+    var upData = changes;
 
-    // 디버깅용 코드
-    // console.log("스케줄 데이터");
-    // console.log(schedule);
-    // console.log("변경된 데이터");
-    // console.log(changes);
-
+    console.log(upData);
 
     //ajax로 서버에 데이터 전송
-    $.ajax({
-        url: "/toast_cal/create/",
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-        type: 'POST',
-        data: create,
-        success: function(data) {
-            alert("success!!")
-        }
-    });
+    // $.ajax({
+    //     url: "/toast_cal/create/",
+    //     headers: {
+    //         'X-CSRFToken': '{{ csrf_token }}'
+    //     },
+    //     type: 'POST',
+    //     data: create,
+    //     success: function(data) {
+    //         alert("success!!")
+    //     }
+    // });
 
     // console.log(changes);
 
@@ -186,9 +207,24 @@ calendar.on('beforeUpdateSchedule', function(event) {
 calendar.on('beforeDeleteSchedule', function(event) {
     var schedule = event.schedule;
 
-    alert('스케줄이 삭제되었습니다.', schedule);
+    delData = {
+        id: schedule.id
+    }
+    $.ajax({
+        url: "/toast_cal/delete/",
+        datatype: "int",
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        type: 'POST',
+        data: delData,
+        success: function(data) {
+            calendar.deleteSchedule(schedule.id, schedule.calendarId);
+            // 디버깅용 alert
+            alert("success!!");
+        }
+    });
 
-    calendar.deleteSchedule(schedule.id, schedule.calendarId);
 });
 
 /* 새로운 일정 만들기 버튼용 함수
