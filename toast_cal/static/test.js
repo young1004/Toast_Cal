@@ -41,15 +41,6 @@ calendar.setCalendars([{
     }
 ]);
 
-// 일정 생성하기
-// calendar.createSchedules([{
-//     id: a,
-//     calendarId: 'Major Subject',
-//     title: '자료구조론',
-//     category: 'milestone', // 일반 일정
-//     start: '2020-04-20T10:00:00',
-//     end: '2020-04-20T11:00:00'
-// }]);
 
 $.ajax({
     url: "/toast_cal/ourstores/",
@@ -87,39 +78,28 @@ calendar.on('beforeCreateSchedule', function(event) {
     var calendarId = event.calendarId;
     var schedule;
 
-    var data = {
-        id: a,
-        calendarId: calendarId,
-        title: title,
-        category: 'time',
-        start: startTime,
-        end: endTime
-    }
+    var create = {
+        //id: a,
+        calendar: calendarId,
+        title: document.getElementById("tui-full-calendar-schedule-title").value,
+        location: document.getElementById("tui-full-calendar-schedule-location").value,
+        start_date: document.getElementById("tui-full-calendar-schedule-start-date").value,
+        end_date: document.getElementById("tui-full-calendar-schedule-end-date").value,
+    };
+
+    console.log(create);
 
     $.ajax({
         url: "/toast_cal/create/",
-        processData: false,
-        contentType: false,
         headers: {
             'X-CSRFToken': '{{ csrf_token }}'
         },
         type: 'POST',
-        data: ajaxData,
+        data: create,
         success: function(data) {
-            alert("Asdf")
+            alert("success!!")
         }
     });
-
-    // var createFormID = document.getElementById('create_calendar');
-    // var createInput = document.createElement("input");
-
-    // createFormID.setAttribute("charser", "UTF-8");
-
-    // createInput.setAttribute("type", "hidden");
-    // createInput.setAttribute("name", "newdata");
-    // createInput.setAttribute("value", event);
-    // createFormID.appendChild(createInput);
-
     alert('일정이 등록되었습니다.')
     schedule = {
         id: a,
@@ -130,8 +110,6 @@ calendar.on('beforeCreateSchedule', function(event) {
         end: endTime
     };
     calendar.createSchedules([schedule]);
-
-    //createFormID.submit();
 });
 
 // 이벤트로 일정 수정하기

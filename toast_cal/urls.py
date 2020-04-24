@@ -1,10 +1,11 @@
 from django.urls import path
 
-from . import views
-from . import dbcrud
+from toast_cal import views
+
+app_name = "toast_cal"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("create/", dbcrud.insertData, name="create"),
     path("ourstores/", views.ourstores, name="ourstores"),
+    path("create/", views.createData, name="createData"),
 ]
