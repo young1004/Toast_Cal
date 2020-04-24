@@ -8,4 +8,5 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("ourstores/", views.ourstores, name="ourstores"),
     path("create/", views.createData, name="createData"),
+    # path("update/", views.updateData, name="updateData"),
 ]

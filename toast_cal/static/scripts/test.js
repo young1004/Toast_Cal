@@ -12,7 +12,32 @@ const options = {
 const calendar = new tui.Calendar(container, options);
 var a = 1;
 
+// 달력 뷰를 바꾸기 위한 버튼 및 addEventListener
+var nextBtn = document.getElementById("nextBtn");
+var prevBtn = document.getElementById('prevBtn');
+var dayViewBtn = document.getElementById('dayViewBtn');
+var weekViewBtn = document.getElementById('weekViewBtn');
+var monthViewBtn = document.getElementById('monthViewBtn');
 
+nextBtn.addEventListener('click', function(event) {
+    calendar.next();
+});
+
+prevBtn.addEventListener("click", function(event) {
+    calendar.prev();
+});
+
+dayViewBtn.addEventListener("click", function(event) {
+    calendar.changeView('day', true);
+});
+
+weekViewBtn.addEventListener("click", function(event) {
+    calendar.changeView('week', true);
+});
+
+monthViewBtn.addEventListener("click", function(event) {
+    calendar.changeView('month', true);
+});
 
 // 캘린더 분류 생성
 calendar.setCalendars([{
@@ -41,7 +66,7 @@ calendar.setCalendars([{
     }
 ]);
 
-
+// ajax로 서버에서 일정 데이터 받아오기
 $.ajax({
     url: "/toast_cal/ourstores/",
     datatype: 'json',
@@ -51,16 +76,21 @@ $.ajax({
     type: 'GET',
     success: function(data) {
         create(data);
+        // 디버깅용 alert
         alert("일정 불러오기 완료");
     }
 });
 
-
+/**
+ * createSchedules API를 통해 화면에 일정 뿌려주기
+ * @param {object} data 
+ */
 function create(data) {
     var i;
 
     for (i = 0; i < data.length; i++) {
         calendar.createSchedules([{
+            id: data[i].pk,
             calendarId: data[i].fields.calendar,
             title: data[i].fields.title,
             category: "time", // 일반 일정
@@ -78,8 +108,9 @@ calendar.on('beforeCreateSchedule', function(event) {
     var calendarId = event.calendarId;
     var schedule;
 
+
+    //서버에 보낼 데이터 object
     var create = {
-        //id: a,
         calendar: calendarId,
         title: document.getElementById("tui-full-calendar-schedule-title").value,
         location: document.getElementById("tui-full-calendar-schedule-location").value,
@@ -87,8 +118,52 @@ calendar.on('beforeCreateSchedule', function(event) {
         end_date: document.getElementById("tui-full-calendar-schedule-end-date").value,
     };
 
-    console.log(create);
+    // console.log(create);
 
+    //ajax로 서버에 데이터 전송
+    $.ajax({
+        url: "/toast_cal/create/",
+        datatype: "int",
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        type: 'POST',
+        data: create,
+        success: function(data) {
+            schedule = {
+                id: data,
+                calendarId: calendarId,
+                title: title,
+                category: 'time', // 일반 일정
+                start: startTime,
+                end: endTime
+            };
+            // 디버깅용 alert
+            alert("success!!")
+        }
+    });
+    // 디버깅용 alert
+    alert('일정이 등록되었습니다.')
+
+    calendar.createSchedules([schedule]);
+});
+
+// 이벤트로 일정 수정하기
+calendar.on('beforeUpdateSchedule', function(event) {
+    var schedule = event.schedule;
+    var changes = event.changes;
+
+    //서버에 보낼 데이터 object
+    //var data
+
+    // 디버깅용 코드
+    // console.log("스케줄 데이터");
+    // console.log(schedule);
+    // console.log("변경된 데이터");
+    // console.log(changes);
+
+
+    //ajax로 서버에 데이터 전송
     $.ajax({
         url: "/toast_cal/create/",
         headers: {
@@ -100,26 +175,10 @@ calendar.on('beforeCreateSchedule', function(event) {
             alert("success!!")
         }
     });
-    alert('일정이 등록되었습니다.')
-    schedule = {
-        id: a,
-        calendarId: calendarId,
-        title: title,
-        category: 'time', // 일반 일정
-        start: startTime,
-        end: endTime
-    };
-    calendar.createSchedules([schedule]);
-});
 
-// 이벤트로 일정 수정하기
-calendar.on('beforeUpdateSchedule', function(event) {
-    var schedule = event.schedule;
-    var changes = event.changes;
+    // console.log(changes);
 
-    console.log(changes);
-
-    calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
+    //calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
 });
 
 

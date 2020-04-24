@@ -19,13 +19,30 @@
     <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
     <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
 
+    <link href="{% static 'styles/styles.css' %}" rel="stylesheet">
+
     <title>캘린더 테스트</title>
 </head>
 
 <body>
-    <div id="calendar">
+    <div class="cal">
+        <div id="title">
+            <h1>toast ui calender</h1>
+        </div>
+        <div id="menu">
+            <span id="menu-navi">
+                <button type="button" id="prevBtn">이전</button>
+                <button type="button" id="nextBtn">다음</button>
+                <button type="button" id="dayViewBtn">일간</button>
+                <button type="button" id="weekViewBtn">주간</button>
+                <button type="button" id="monthViewBtn">월간</button>
+            </span>
+        </div>
+
+        <div id="calendar">
+        </div>
+        <script src="{% static 'scripts/test.js' %}"></script>
     </div>
-    <script src="{% static 'test.js' %}"></script>
 </body>
 
 </html>

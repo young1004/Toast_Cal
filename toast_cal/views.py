@@ -31,4 +31,20 @@ def createData(request):
             end_date=request.POST["end_date"],
         )
         new_instance.save()
-        return HttpResponse(new_instance, content_type="application/json")
+
+        return HttpResponse(new_instance.id, content_type="application/json")
+
+
+# ajax로 들어온 데이터를 db에 ORM사용 수정
+# @csrf_exempt
+# def updateData(request):
+#     if request.method == "POST":
+#         # new_instance = Calendar.objects.create(
+#         #     calendar=request.POST["calendar"],
+#         #     title=request.POST["title"],
+#         #     location=request.POST["location"],
+#         #     start_date=request.POST["start_date"],
+#         #     end_date=request.POST["end_date"],
+#         # )
+#         # new_instance.save()
+#         return HttpResponse(update_instance, content_type="application/json")
