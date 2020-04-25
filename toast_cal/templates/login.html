@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+
+<body>
+        <div class="contanier">
+            <h1>login</h1>
+
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                Username:
+                <br>
+                <input name="username" type="text">
+                <br>
+                Password:
+                <br>
+                <input name="password" type="password">
+                <br><br>
+                <input type="submit" class="btn btn-primary" value="sign in"> 
+            </form>
+        </div>
+    </body>
+</html>

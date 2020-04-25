@@ -128,7 +128,7 @@ calendar.on('beforeCreateSchedule', function(event) {
     var calendar_Id = event.calendarId;
     var schedule = {};
 
-    console.log(event);
+    //console.log(event);
 
     //서버에 보낼 데이터 object
     var createData = {
@@ -142,7 +142,7 @@ calendar.on('beforeCreateSchedule', function(event) {
         class: calendarClass
     };
 
-    console.log(createData);
+    //console.log(createData);
 
     //ajax로 서버에 데이터 전송
     $.ajax({
@@ -179,27 +179,9 @@ calendar.on('beforeUpdateSchedule', function(event) {
     var schedule = event.schedule;
     var changes = event.changes;
 
-    //서버에 보낼 데이터 object
-    var upData = changes;
+    console.log(schedule);
+    console.log(changes);
 
-    console.log(upData);
-
-    //ajax로 서버에 데이터 전송
-    // $.ajax({
-    //     url: "/toast_cal/create/",
-    //     headers: {
-    //         'X-CSRFToken': '{{ csrf_token }}'
-    //     },
-    //     type: 'POST',
-    //     data: create,
-    //     success: function(data) {
-    //         alert("success!!")
-    //     }
-    // });
-
-    // console.log(changes);
-
-    //calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
 });
 
 
