@@ -1,10 +1,12 @@
-<!DOCTYPE html>
 {% load static %}
+
+<!DOCTYPE html>
 <html lang="ko">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
 
     <!-- If you use the default popups, use this. -->
@@ -19,29 +21,39 @@
     <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
     <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
 
-    <link href="{% static 'styles/styles.css' %}" rel="stylesheet">
+    <link href="{% static 'styles/index.css' %}" rel="stylesheet">
 
     <title>캘린더 테스트</title>
 </head>
 
 <body>
-    <div class="cal">
-        <div id="title">
-            <h1>toast ui calender</h1>
-        </div>
-        <div id="menu">
-            <span id="menu-navi">
-                <button type="button" id="prevBtn">이전</button>
-                <button type="button" id="nextBtn">다음</button>
-                <button type="button" id="dayViewBtn">일간</button>
-                <button type="button" id="weekViewBtn">주간</button>
-                <button type="button" id="monthViewBtn">월간</button>
-            </span>
+    <div id="wrap">
+        <div class="cal">
+            <div id="title">
+                <h1>스캐줄 관리</h1>
+            </div>
+            <div id="menu">
+                <span id="menu-navi">
+                    <button type="button" id="prevBtn">이전</button>
+                    <button type="button" id="nextBtn">다음</button>
+                    <button type="button" id="dayViewBtn">일간</button>
+                    <button type="button" id="weekViewBtn">주간</button>
+                    <button type="button" id="monthViewBtn">월간</button>
+                </span>
+            </div>
+            <div id="calendar">
+            </div>
+            <script src="{% static 'scripts/test.js' %}"></script>
         </div>
 
-        <div id="calendar">
+        <div id="userinfo_layer">
+            <div id="userInfo">
+                <p> {{ request.session.username }} 님 안녕하세요!</p>
+                <span id=logout-navi>
+                    <button type="button" id="logoutBtn" onclick="location.href='/login/'">로그아웃</button>
+                </span>
+            </div>
         </div>
-        <script src="{% static 'scripts/test.js' %}"></script>
     </div>
 </body>
 
