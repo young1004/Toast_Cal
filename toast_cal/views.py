@@ -42,15 +42,17 @@ def createData(request):
 @csrf_exempt
 def updateData(request):
     if request.method == "POST":
-        update = Calendar.objects.filter(pk=request.POST["pk"]).update(
-            calendar=request.POST["calendar"],
+        update = Calendar.objects.filter(pk=request.POST["id"]).update(
+            calendar=request.POST["calendarId"],
             title=request.POST["title"],
             location=request.POST["location"],
             start_date=request.POST["start_date"],
             end_date=request.POST["end_date"],
+            isAllDay=request.POST["isAllDay"],
+            state=request.POST["state"],
+            calendarClass=request.POST["class"],
         )
-
-        return HttpResponse(update, content_type="application/json")
+        return HttpResponse(1, content_type="application/json")
 
 
 # ajax로 들어온 pk값으로 데이터 삭제

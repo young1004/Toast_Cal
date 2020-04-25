@@ -111,15 +111,51 @@ function create(data) {
 function convertBooleanData(data) {
     if (data == true) {
         return "True"
-    } else {
+    } else if (data == false) {
         return "False"
+    } else {
+        return undefined;
     }
+}
+
+
+/**
+ * Date 객체를 문자열로 변환해주는 함수
+ * @param {Date} data 
+ */
+function date_to_str(data) {
+
+    var year = data.getFullYear();
+    var month = data.getMonth() + 1;
+    var date = data.getDate();
+    var hour = data.getHours();
+    var min = data.getMinutes();
+
+    if (month < 10) {
+        month = "0" + month;
+    }
+
+
+    if (date < 10) {
+        date = "0" + date;
+    }
+
+    if (hour < 10) {
+        hour = "0" + hour;
+    }
+
+    if (min < 10) {
+        min = "0" + min;
+    }
+
+    return year + "-" + month + "-" + date + " " + hour + ":" + min;
+
 }
 
 // 이벤트로 일정 생성하기
 calendar.on('beforeCreateSchedule', function(event) {
-    var startTime = event.start;
-    var endTime = event.end;
+    var startTime = date_to_str(event.start._date);
+    var endTime = date_to_str(event.end._date);
     var title = event.title;
     var location = event.location;
     var isAllDay = event.isAllDay;
@@ -128,21 +164,17 @@ calendar.on('beforeCreateSchedule', function(event) {
     var calendar_Id = event.calendarId;
     var schedule = {};
 
-    //console.log(event);
-
     //서버에 보낼 데이터 object
     var createData = {
         calendar: calendar_Id,
         title: title,
         location: location,
-        start_date: document.getElementById("tui-full-calendar-schedule-start-date").value,
-        end_date: document.getElementById("tui-full-calendar-schedule-end-date").value,
+        start_date: startTime,
+        end_date: endTime,
         isAllDay: convertBooleanData(isAllDay),
         state: state,
         class: calendarClass
     };
-
-    //console.log(createData);
 
     //ajax로 서버에 데이터 전송
     $.ajax({
@@ -179,11 +211,51 @@ calendar.on('beforeUpdateSchedule', function(event) {
     var schedule = event.schedule;
     var changes = event.changes;
 
-    console.log(schedule);
-    console.log(changes);
+    calendar.updateSchedule(schedule.id, schedule.calendarId, changes);
+
+    updateData = schedule;
+
+    // 오브젝트 붙이기
+    Object.assign(updateData, changes);
+
+    // 날짜 데이터 포맷 변경
+    if (updateData.hasOwnProperty('start') /*|| updateData.hasOwnProperty('isAllDay')*/ ) {
+        updateData.start_date = date_to_str(updateData.start._date);
+        updateData.end_date = date_to_str(updateData.end._date);
+        delete updateData.start;
+        delete updateData.end;
+    }
+    // boolean 데이터 포맷 변경
+    if (updateData.hasOwnProperty('isAllDay')) {
+        updateData.isAllDay = convertBooleanData(updateData.isAllDay);
+    }
+
+    //class 데이터 포맷 변경 잠금 0, public 1
+    if (document.getElementsByClassName("tui-full-calendar-public").length == 1) {
+        updateData.class = "public";
+    } else {
+        updateData.class = "private";
+    }
+
+
+
+    console.log(updateData);
+    // ajax로 서버에 데이터 전송
+    $.ajax({
+        url: "/toast_cal/update/",
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        datatype: "int",
+        type: 'POST',
+        data: updateData,
+        success: function(data) {
+            alert("수정완료!!")
+        }
+    });
+
 
 });
-
 
 // 이벤트로 일정 삭제하기
 calendar.on('beforeDeleteSchedule', function(event) {
