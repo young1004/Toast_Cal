@@ -38,7 +38,7 @@ body {
     border-radius: 3px;
 }
 
-#userinfo_layer{
+#userinfo_layer {
     display: block;
     float: left;
     width: 30%;
@@ -53,4 +53,9 @@ body {
     width: 400px;
     margin-left: 3em;
     text-align: center;
+}
+
+#logoutBtn {
+    text-decoration: none;
+    color: #666666;
 }

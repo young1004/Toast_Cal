@@ -48,9 +48,15 @@
 
         <div id="userinfo_layer">
             <div id="userInfo">
+
+                {% if request.session.username %}
                 <p> {{ request.session.username }} 님 안녕하세요!</p>
+                {% else %}
+                <!-- ?로그인 버튼 로직 넣기? -->
+                <p> 로그인이 필요합니다.</p>
+                {% endif %}
                 <span id=logout-navi>
-                    <button type="button" id="logoutBtn" onclick="location.href='/login/'">로그아웃</button>
+                    <a type="button" id="logoutBtn" href="{% url 'logout' %}">로그아웃</a>
                 </span>
             </div>
         </div>

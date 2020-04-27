@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate, login, logout
 
 # 메인 홈페이지 리턴
 def index(request):
@@ -14,9 +14,9 @@ def index(request):
     return render(request, "index.html")
 
 
-# 서버에서 ajax로 일정 보내주는 뷰
+# 서버에서 ajax로 일정 보내주는 뷰 (수정)
 def ourstores(request):
-    stores_list = Calendar.objects.all()
+    stores_list = Calendar.objects.filter(userID=request.session["username"])
 
     stores_list_json = serializers.serialize("json", stores_list)
 
@@ -28,6 +28,7 @@ def ourstores(request):
 def createData(request):
     if request.method == "POST":
         new_instance = Calendar.objects.create(
+            userID=request.session["username"],
             calendar=request.POST["calendar"],
             title=request.POST["title"],
             location=request.POST["location"],
@@ -109,4 +110,5 @@ def login(request):
 # 로그아웃
 def logout(request):
     auth.logout(request)
+
     return redirect("login")
