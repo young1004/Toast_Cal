@@ -33,52 +33,6 @@ a {
     text-align: left;
 }
 
-.lg_local {
-    padding: 10px 26px;
-}
-
-.lg_local .lg_local_text {
-    color: #888;
-    line-height: 14px;
-}
-
-.lg_local .lg_local_btn {
-    display: block;
-    margin-top: 10px;
-}
-
-.lg_local .icon_local_login {
-    display: block;
-    width: 280px;
-    height: 37px;
-    background-position: 0 -47px;
-    background-image: url("https://s.pstatic.net/static/www/img/2018/sp_login_v180727.png");
-    /* background-repeat: no-repeat; */
-}
-
-.lg_links {
-    position: absolute;
-    bottom: 0px;
-    left: 25px;
-    overflow: hidden;
-    width: 280px;
-}
-
-.lg_links .lg_link_join {
-    float: right;
-    color: #666;
-}
-
-.lg_links .lg_link_join, .lg_link_find {
-    display: block;
-    line-height: 38px;
-}
-
-.lg_links .lg_find_text {
-    color: #666;
-}
-
-
 /* login.html */
 
 #login {
@@ -157,7 +111,7 @@ h1, form {
     overflow: hidden;
 }
 
-.lbl {
+.input_box label {
     font-size: 15px;
     line-height: 16px;
     position: absolute;
@@ -167,7 +121,7 @@ h1, form {
     color: #8e8e8e;
 }
 
-.int {
+.user_info {
     /* cursor: pointer; */
     font-size: 15px;
     line-height: 16px;

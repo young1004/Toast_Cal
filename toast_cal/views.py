@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse  # , JsonResponse
 from django.core import serializers
-from .models import Calendar
+from .models import Calendar, Users
 from django.views.decorators.csrf import csrf_exempt
 
-from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password, check_password
+
+# from django.contrib.auth.models import User
 from django.contrib import auth
-from django.contrib.auth import authenticate, login, logout
+
+# from django.contrib.auth import authenticate, login, logout
 
 # 메인 홈페이지 리턴
 def index(request):
@@ -16,7 +19,7 @@ def index(request):
 
 # 서버에서 ajax로 일정 보내주는 뷰 (수정)
 def ourstores(request):
-    stores_list = Calendar.objects.filter(userID=request.session["username"])
+    stores_list = Calendar.objects.filter(userID=request.session["userID"])
 
     stores_list_json = serializers.serialize("json", stores_list)
 
@@ -28,7 +31,7 @@ def ourstores(request):
 def createData(request):
     if request.method == "POST":
         new_instance = Calendar.objects.create(
-            userID=request.session["username"],
+            userID=request.session["userID"],
             calendar=request.POST["calendar"],
             title=request.POST["title"],
             location=request.POST["location"],
@@ -73,13 +76,21 @@ def deleteData(request):
 # 회원가입 페이지
 def signup(request):
     if request.method == "POST":
-        if request.POST["password1"] == request.POST["password2"]:
-            user = User.objects.create_user(
+        userID = request.POST["userID"]
+        password = request.POST["password"]
+        password_check = request.POST["password_check"]
+
+        if password == password_check:
+            user_data = Users(
+                userID=userID,
+                password=make_password(password),
                 username=request.POST["username"],
-                password=request.POST["password1"],
+                department=request.POST["department"],
+                studentID=request.POST["studentID"],
                 email=request.POST["email"],
+                phone=request.POST["phone"],
             )
-            auth.login(request, user)
+            user_data.save()
 
             return redirect("login")
         return render(request, "signup.html")
@@ -89,26 +100,24 @@ def signup(request):
 # 로그인 페이지
 def login(request):
     if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = auth.authenticate(request, username=username, password=password)
+        userID = request.POST.get("userID", None)
+        password = request.POST.get("password", None)
 
-        if user is not None:
-            auth.login(request, user)
-            request.session["username"] = username
-            request.session["password"] = password
-
-            return redirect("/toast_cal/")
+        if not (userID and password):
+            return render(request, "login.html", {"error": "아이디와 비밀번호를 모두 입력해주세요."})
         else:
-            return render(
-                request, "login.html", {"error": "username or password is incorrent"}
-            )
+            user_data = Users.objects.get(userID=userID)
+            if check_password(password, user_data.password):
+                request.session["userID"] = userID
+                return redirect("/toast_cal/")
+            else:
+                return render(request, "login.html", {"error": "비밀번호를 틀렸습니다."})
     else:
         return render(request, "login.html")
 
 
 # 로그아웃
 def logout(request):
-    auth.logout(request)
+    request.session.pop("userID")
 
     return redirect("login")

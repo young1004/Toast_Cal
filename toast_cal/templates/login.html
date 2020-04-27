@@ -25,8 +25,8 @@
                         <div class="id_area">
                             <div class="input_row input_id" id="id_area">
                                 <span class="input_box">
-                                    <label class="lbl" style="display: block;">아이디</label>
-                                    <input name="username" class="int int_id" id="id" type="text" maxlength="41"
+                                    <label style="display: block;">아이디</label>
+                                    <input name="userID" class="user_info" id="userID" type="text" maxlength="41"
                                         placeholder="아이디" />
                                 </span>
                             </div>
@@ -35,12 +35,14 @@
                         <div class="pass_area">
                             <div class="input_row input_pass" id="pass_area">
                                 <span class="input_box">
-                                    <label class="lbl" style="display: block;">비밀번호</label>
-                                    <input name="password" class="int int_pass" id="password" type="password"
+                                    <label style="display: block;">비밀번호</label>
+                                    <input name="password" class="user_info" id="password" type="password"
                                         maxlength="41" placeholder="비밀번호" />
                                 </span>
                             </div>
                         </div>
+
+                        <span style="color: red;"><strong>{{ error }}</strong></span>
 
                         <input id="btn_login" type="submit" value="로그인" />
 

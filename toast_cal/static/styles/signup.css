@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800');
 
 /* html 문서 전체의 마진값 을 없앰 + 폰트변경 */
-html, body{
+html, body {
     margin-top: 0px;
     margin-left: 0px;
     margin-right: 0px;
@@ -10,7 +10,7 @@ html, body{
     background-color: whitesmoke;
 }
 
-#header{
+#header {
     position: relative;
     overflow: hidden;
     text-align: center;
@@ -18,14 +18,30 @@ html, body{
     padding-bottom: 20px;
 }
 
-#header a:link { color: lightslategrey; text-decoration: none; } /*클릭하지않은 링크에 대한 css속성값*/
-#header a:visited { color: lightslategrey; text-decoration: none; } /*한번 들어갔던 링크에 대한 css 속성값*/
-#header a:hover { color: lightslategrey; text-decoration: none; } /*링크위에 마우스를 올려놨을때*/
+#header a:link {
+    color: lightslategrey;
+    text-decoration: none;
+}
 
-select{
+/*클릭하지않은 링크에 대한 css속성값*/
+#header a:visited {
+    color: lightslategrey;
+    text-decoration: none;
+}
+
+/*한번 들어갔던 링크에 대한 css 속성값*/
+#header a:hover {
+    color: lightslategrey;
+    text-decoration: none;
+}
+
+/*링크위에 마우스를 올려놨을때*/
+
+select {
     border-style: none;
 }
-.main_logo{
+
+.main_logo {
     font-weight: 700;
     font-size: 40px;
     margin-top: 0px;
@@ -37,18 +53,19 @@ select{
     max-width: 768px;
     min-width: 460px;
 }
-#content{
+
+#content {
     width: 460px;
     margin: 0 auto;
 }
 
-.join_title{
+.join_title {
     margin-top: 19px;
     margin-bottom: 8px;
     font-size: 14px;
 }
 
-.ps_box{
+.ps_box {
     display: block;
     padding: 10px 14px 10px 14px;
     position: relative;
@@ -59,7 +76,7 @@ select{
     background-color: white;
 }
 
-.int{
+.user_info {
     display: block;
     position: relative;
     width: 100%;
@@ -72,11 +89,11 @@ select{
     box-sizing: border-box;
 }
 
-.btn_area{
+.btn_area {
     margin: 30px 0 10px;
 }
 
-.btn_type{
+.btn_type {
     font-weight: 400;
     display: block;
     width: 100%;
@@ -89,4 +106,3 @@ select{
     color: #fff;
     background-color: lightslategrey;
 }
-
