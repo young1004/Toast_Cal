@@ -3,11 +3,13 @@ from django.db import models
 # 일정 정보가 저장되는 데이터베이스 모델
 class Calendar(models.Model):  # pk값이 별도로 지정됨
     userID = models.CharField(max_length=30, null=False)  # 유저 id의 session값
-    calendar = models.CharField(max_length=50)  # calendar 분류(현재는 전필, 전선, 교양)
+    calendarId = models.CharField(max_length=50)  # calendar 분류(현재는 전필, 전선, 교양)
     title = models.CharField(max_length=30)
+    category = models.CharField(max_length=30, default="time")
+    # category : only "milestone", "task", "allday", "time"
     location = models.CharField(max_length=100, blank=True)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start = models.DateTimeField()
+    end = models.DateTimeField()
     isAllDay = models.BooleanField(default=False)
     state = models.CharField(max_length=20, default="Busy")
     # state : only "Busy", "Free"

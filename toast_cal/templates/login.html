@@ -18,8 +18,7 @@
         </div>
         <div id="container">
             <div id="content">
-                <form name="frmNIDLogin" id="frmNIDLogin" action="{% url 'login' %}" method="POST" target="_top"
-                    autocomplete="off">
+                <form name="frmNIDLogin" id="frmNIDLogin" action="{% url 'login' %}" method="POST">
                     {% csrf_token %}
                     <fieldset class="login_form">
                         <div class="id_area">
