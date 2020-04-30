@@ -223,9 +223,9 @@ calendar.on('beforeCreateSchedule', function(event) {
 
     ajaxPost("/toast_cal/create/", "int", "POST", createData)
         .then(function(data) {
-            var schedule = newCalObj(data, calendarId, title, 'time', location, start, end, isAllDay, state, {
-                class: calendarClass
-            })
+            var schedule = createData;
+            schedule.id = data;
+            schedule.isAllDay = isAllDay;
             calendar.createSchedules([schedule]);
             // 디버깅용 alert
             alert("success!!")

@@ -27,7 +27,6 @@ class Calendar(models.Model):  # pk값이 별도로 지정됨
 class Users(models.Model):
     userID = models.CharField(max_length=30, primary_key=True)  # 유저가 사용할 아이디
     department = models.CharField(max_length=50)  # 학과
-    department = models.CharField(max_length=50)  # 학과
     studentID = models.CharField(max_length=30)  # 학번
     username = models.CharField(max_length=30)  # 유저의 이름
     email = models.CharField(max_length=50)  # 이메일
