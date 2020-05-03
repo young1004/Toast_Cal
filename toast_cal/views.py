@@ -1,15 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse  # , JsonResponse
+from django.http import HttpResponse
 from django.core import serializers
 from .models import Calendar, Users
-from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth.hashers import make_password, check_password
-
-# from django.contrib.auth.models import User
-from django.contrib import auth
-
-# from django.contrib.auth import authenticate, login, logout
 
 # 메인 홈페이지 리턴
 def index(request):
@@ -23,52 +17,6 @@ def ourstores(request):
     stores_list_json = serializers.serialize("json", stores_list)
 
     return HttpResponse(stores_list_json, content_type="application/json")
-
-
-# ajax로 들어온 데이터를 db에 ORM사용 저장
-def createData(request):
-    if request.method == "POST":
-        new_instance = Calendar.objects.create(
-            userID=request.session["userID"],
-            calendarId=request.POST["calendarId"],
-            title=request.POST["title"],
-            category=request.POST["category"],
-            location=request.POST["location"],
-            start=request.POST["start"],
-            end=request.POST["end"],
-            isAllDay=request.POST["isAllDay"],
-            state=request.POST["state"],
-            calendarClass=request.POST["class"],
-        )
-        new_instance.save()
-
-        return HttpResponse(new_instance.id)
-
-
-# ajax로 들어온 데이터를 db에 ORM사용 수정
-def updateData(request):
-    if request.method == "POST":
-        update = Calendar.objects.filter(pk=request.POST["id"]).update(
-            calendarId=request.POST["calendarId"],
-            title=request.POST["title"],
-            category=request.POST["category"],
-            location=request.POST["location"],
-            start=request.POST["start"],
-            end=request.POST["end"],
-            isAllDay=request.POST["isAllDay"],
-            state=request.POST["state"],
-            calendarClass=request.POST["class"],
-        )
-        return HttpResponse(1)
-
-
-# ajax로 들어온 pk값으로 데이터 삭제
-def deleteData(request):
-    if request.method == "POST":
-        query = Calendar.objects.get(pk=request.POST["id"])
-        query.delete()
-        # 더미데이터로 응답
-        return HttpResponse(1)
 
 
 # 회원가입 페이지
