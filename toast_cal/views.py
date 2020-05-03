@@ -26,7 +26,7 @@ def ourstores(request):
 
 
 # ajax로 들어온 데이터를 db에 ORM사용 저장
-@csrf_exempt
+# @csrf_exempt
 def createData(request):
     if request.method == "POST":
         new_instance = Calendar.objects.create(
@@ -47,7 +47,7 @@ def createData(request):
 
 
 # ajax로 들어온 데이터를 db에 ORM사용 수정
-@csrf_exempt
+# @csrf_exempt
 def updateData(request):
     if request.method == "POST":
         update = Calendar.objects.filter(pk=request.POST["id"]).update(
@@ -65,7 +65,7 @@ def updateData(request):
 
 
 # ajax로 들어온 pk값으로 데이터 삭제
-@csrf_exempt
+# @csrf_exempt
 def deleteData(request):
     if request.method == "POST":
         query = Calendar.objects.get(pk=request.POST["id"])

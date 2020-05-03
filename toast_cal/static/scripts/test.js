@@ -128,11 +128,7 @@ function newCalObj(id, calendarId, title, category, location, start, end, isAllD
         start: start,
         end: end,
         isAllDay: isAllDay,
-        state: state,
-        // class: calendarClass,
-        // raw: {
-        //     class: calendarClass
-        // }
+        state: state
     }
     if (typeof calendarClass === "object")
         schedule.raw = calendarClass;
@@ -170,21 +166,43 @@ function create(data) {
 }
 
 /**
+ * name 값을 이용해 쿠키값을 리턴해주는 함수
+ * @param {String} name 쿠키를 받아올 html dom의 이름
+ */
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+/**
  * jquery ajax promise 이용 함수
  * @param {String} url 요청을 보낼 url 주소
  * @param {String} datatype 서버에서 받아올 데이터 타입(json, int, number ...)
  * @param {"GET"|"POST"} type 요청을 보내는 방식 only (GET, POST)
  * @param {*} data 서버에 보낼 데이터(없다면 1 입력)
- * @returns {Promise} then으로 불러낼 Promise 객체 반환
+ * @returns {Promise} 성공, 실패 상태를 나눠 처리할 Promise 객체 반환
  */
 function ajaxPost(url, datatype, type, data) {
+    var csrftoken = getCookie('csrftoken');
+
     return new Promise(function(resolve, reject) {
         $.ajax({
             url: url,
             datatype: datatype,
             data: data,
             headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
+                'X-CSRFToken': csrftoken
             },
             type: type,
             success: function(data) {
