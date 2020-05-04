@@ -23,9 +23,9 @@ class Calendar(models.Model):  # pk값이 별도로 지정됨
         db_table = "Calendar"
 
 
-# 유저 정보가 저장되는 데이터베이스 모델
-class Users(models.Model):
-    userID = models.CharField(max_length=30, primary_key=True)  # 유저가 사용할 아이디
+# 학생 정보가 저장되는 데이터베이스 모델
+class Student(models.Model):
+    userID = models.CharField(max_length=30, primary_key=True)  # 학생의 아이디
     department = models.CharField(max_length=50)  # 학과
     studentID = models.CharField(max_length=30)  # 학번
     username = models.CharField(max_length=30)  # 유저의 이름
@@ -37,4 +37,20 @@ class Users(models.Model):
         return self.username
 
     class Meta:
-        db_table = "Users"
+        db_table = "Student"
+
+
+# 교수 정보가 저장되는 데이터베이스 모델
+class Professor(models.Model):
+    userID = models.CharField(max_length=30, primary_key=True)  # 유저가 사용할 아이디
+    department = models.CharField(max_length=50)  # 학과
+    username = models.CharField(max_length=30)  # 유저의 이름
+    email = models.CharField(max_length=50)  # 이메일
+    password = models.CharField(max_length=128)  # 사용할 비밀번호
+    phone = models.CharField(max_length=30)  # 휴대폰 번호
+
+    def __str__(self):
+        return self.username
+
+    class Meta:
+        db_table = "Professor"

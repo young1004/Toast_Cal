@@ -36,6 +36,7 @@ def updateData(request):
             state=request.POST["state"],
             calendarClass=request.POST["class"],
         )
+        # 더미데이터로 응답
         return HttpResponse(1)
 
 

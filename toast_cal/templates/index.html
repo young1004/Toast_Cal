@@ -52,10 +52,14 @@
         <div id="userinfo_layer">
             <div id="userInfo">
 
+                <!-- 학생과 교수에 따라 문구를 변경 -->
                 {% if request.session.userID %}
-                <p> {{ request.session.userID }} 님 안녕하세요!</p>
+                {% if request.session.userType == "student" %}
+                <p> {{ request.session.userID }} 학생 안녕하세요!</p>
                 {% else %}
-                <!-- ?로그인 버튼 로직 넣기? -->
+                <p> {{ request.session.userID }} 교수님 안녕하세요!</p>
+                {% endif %}
+                {% else %}
                 <p> 로그인이 필요합니다.</p>
                 {% endif %}
                 <span id=logout-navi>

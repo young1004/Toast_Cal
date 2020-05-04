@@ -26,8 +26,12 @@
                     <h3 class="join_title">
                         <label for="userid">아이디</label>
                     </h3>
-                    <span class="ps_box">
+                    <span id="select_area">
                         <input type="text" name="userID" class="user_info" maxlength="20" placeholder="아이디">
+                        <select id="user_type_select" name="userType">
+                            <option value="student">학생</option>
+                            <option value="professor">교수</option>
+                        </select>
                     </span>
                 </div>
                 <div>
@@ -64,7 +68,7 @@
                         <label for="userno">학번</label>
                     </h3>
                     <span class="ps_box">
-                        <input type="text" name="studentID" class="user_info" maxlength="20" placeholder="학번">
+                        <input type="text" name="studentID" class="user_info" maxlength="20" placeholder="학번(학생만 입력)">
                     </span>
                 </div>
 
@@ -81,10 +85,9 @@
                         <label for="phone">전화번호</label>
                     </h3>
                     <span class="ps_box">
-                        <input type="text" name="phone" class="user_info" maxlength="100">
+                        <input type="text" name="phone" class="user_info" maxlength="100" placeholder="-제외하고 입력">
                     </span>
                 </div>
-
                 <div class="btn_area">
                     <input type="submit" class="btn_type" value="가입하기">
                 </div>
