@@ -1,13 +1,31 @@
 from django.http import HttpResponse
 from django.core import serializers
-from .models import Calendar
+from .models import Calendar, CalID
+
+
+# 서버에서 ajax로 일정 보내주는 함수
+def ourstores(request):
+    stores_list = Calendar.objects.filter(userID=request.session["userID"])
+
+    return HttpResponse(
+        serializers.serialize("json", stores_list), content_type="application/json"
+    )
+
+
+def calSetData(request):
+    calData = CalID.objects.all()
+
+    return HttpResponse(
+        serializers.serialize("json", calData), content_type="application/json"
+    )
+
 
 # ajax로 들어온 데이터를 db에 ORM사용 저장
 def createData(request):
     if request.method == "POST":
         new_instance = Calendar.objects.create(
             userID=request.session["userID"],
-            calendarId=request.POST["calendarId"],
+            calendarId_id=request.POST["calendarId"],
             title=request.POST["title"],
             category=request.POST["category"],
             location=request.POST["location"],
@@ -26,7 +44,7 @@ def createData(request):
 def updateData(request):
     if request.method == "POST":
         update = Calendar.objects.filter(pk=request.POST["id"]).update(
-            calendarId=request.POST["calendarId"],
+            calendarId_id=request.POST["calendarId"],
             title=request.POST["title"],
             category=request.POST["category"],
             location=request.POST["location"],

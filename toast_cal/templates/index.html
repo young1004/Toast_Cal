@@ -44,15 +44,15 @@
             </div>
             <div id="calendar">
             </div>
-            <script src="{% static 'scripts/calSet.js' %}"></script>
             <script src="{% static 'scripts/calFunc.js' %}"></script>
+            <script src="{% static 'scripts/calSet.js' %}"></script>
             <script src="{% static 'scripts/calMain.js' %}"></script>
         </div>
 
         <div id="userinfo_layer">
             <div id="userInfo">
 
-                <!-- 학생과 교수에 따라 문구를 변경 -->
+                <!-- 학생과 교수에 따라 문구를 변경 username으로 변경예정-->
                 {% if request.session.userID %}
                 {% if request.session.userType == "student" %}
                 <p> {{ request.session.userID }} 학생 안녕하세요!</p>

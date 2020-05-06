@@ -10,15 +10,6 @@ def index(request):
     return render(request, "index.html")
 
 
-# 서버에서 ajax로 일정 보내주는 뷰 (수정)
-def ourstores(request):
-    stores_list = Calendar.objects.filter(userID=request.session["userID"])
-
-    stores_list_json = serializers.serialize("json", stores_list)
-
-    return HttpResponse(stores_list_json, content_type="application/json")
-
-
 # 회원가입과 로그인 기능에서 Student, Professor 조건문으로 분기
 # 회원가입 페이지
 def signup(request):

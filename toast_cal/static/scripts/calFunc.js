@@ -72,9 +72,10 @@ function newCalObj(id, calendarId, title, category, location, start, end, isAllD
 
 /**
  * createSchedules API를 통해 화면에 일정 뿌려주기
+ * @param {Object} calendar 스케쥴을 생성할 캘린더 객체
  * @param {Object} data 서버에서 받아온 json 객체(object)
  */
-function create(data) {
+function create(calendar, data) {
     var i;
 
 

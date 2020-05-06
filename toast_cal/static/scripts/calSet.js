@@ -37,29 +37,25 @@ monthViewBtn.addEventListener("click", function(event) {
     calendar.changeView('month', true);
 });
 
-// 캘린더 분류 생성
-calendar.setCalendars([{
-        id: 'Major Subject',
-        name: '전공 필수',
-        color: '#ffffff',
-        bgColor: '#ff5583',
-        dragBgColor: '#ff5583',
-        borderColor: '#ff5583'
-    },
-    {
-        id: 'Elective Subject',
-        name: '전공 선택',
-        color: '#ffffff',
-        bgColor: '#ffbb3b',
-        dragBgColor: '#ffbb3b',
-        borderColor: '#ffbb3b'
-    },
-    {
-        id: 'General Subject',
-        name: '일반 교양',
-        color: '#ffffff',
-        bgColor: '#03bd9e',
-        dragBgColor: '#03bd9e',
-        borderColor: '#03bd9e'
-    }
-]);
+ajaxPost("/toast_cal/calSetData/", 'json', "POST", "1").then(function(data) {
+        var calSetData = new Array();
+        for (var i = 0; i < data.length; i++) {
+            calSetData.push({
+                id: data[i].pk,
+                name: data[i].fields.name,
+                color: data[i].fields.color,
+                bgColor: data[i].fields.bgColor,
+                dragBgColor: data[i].fields.dragBgColor,
+                borderColor: data[i].fields.borderColor
+            });
+        }
+        // 디버깅용 코드
+        // console.log(calSetData);
+
+        // 캘린더 분류 생성
+        calendar.setCalendars(calSetData);
+
+    })
+    .catch(function(err) {
+        console.log(err);
+    })
