@@ -72,3 +72,84 @@ class Professor(models.Model):
 
     class Meta:
         db_table = "Professor"
+
+
+# 0002 이전 코드들 끝
+
+
+# 과목
+class Subject(models.Model):
+    name = models.CharField(max_length=30)  # 강의명
+    code = models.CharField(max_length=20, primary_key=True)  # 강의 코드
+    professor = models.CharField(max_length=20)  # 담당교수
+    period = models.CharField(max_length=20)  # 교시
+    lecture_type = models.CharField(max_length=10)  # 이수구분
+    department = models.CharField(max_length=20)  # 학과
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "Subject"
+
+
+# 학과
+class Department(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "Department"
+
+
+# 학생 강의
+class Student_lecture(models.Model):
+    student_id = models.CharField(max_length=30)  # 학생ID
+    name = models.CharField(max_length=30)  # 강의명
+    code = models.CharField(max_length=20)  # 강의 코드
+    professor = models.CharField(max_length=20)  # 담당교수
+    period = models.CharField(max_length=20)  # 교시
+    lecture_type = models.CharField(max_length=10)  # 이수구분
+    department = models.CharField(max_length=20)  # 학과
+
+    def __str__(self):
+        return self.student_id
+
+    class Meta:
+        db_table = "Student_lecture"
+
+
+# 교수 강의
+class Professor_lecture(models.Model):
+    professor_id = models.CharField(max_length=30)  # 교수ID
+    name = models.CharField(max_length=30)  # 강의명
+    code = models.CharField(max_length=20)  # 강의 코드
+    period = models.CharField(max_length=20)  # 교시
+    lecture_type = models.CharField(max_length=10)  # 이수구분
+    department = models.CharField(max_length=20)  # 학과
+
+    def __str__(self):
+        return self.professor_id
+
+    class Meta:
+        db_table = "Professor_lecture"
+
+
+# 투표 테이블
+class Vote(models.Model):
+    professor_id = models.CharField(max_length=30)  # 교수ID
+    code = models.CharField(max_length=30)  # 강의 코드
+    name = models.CharField(max_length=30)  # 강의명
+    lecture_type = models.CharField(max_length=30)  # 이수구분
+    vote_status = models.CharField(max_length=30)  # 투표 상태
+    agree_votes = models.IntegerField()  # 찬성 표 수
+    reject_votes = models.IntegerField()  # 반대 표 수
+    all_students = models.IntegerField()  # 전체 학생수
+
+    def __str__(self):
+        return self.professor_id
+
+    class Meta:
+        db_table = "Vote"

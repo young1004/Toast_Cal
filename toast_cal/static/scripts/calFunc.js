@@ -37,6 +37,17 @@ function date_to_str(data) {
 }
 
 /**
+ * 캘린더의 년, 월 정보를 받아 출력하는 함수
+ * @param {*} year 캘린더에 표시할 년도 값
+ * @param {*} month 캘린더에 표시할 월 값
+ * @param {*} calendar 년도와 월 값을 표시할 calendar 객체
+ */
+function getYearMonth(year, month, calendar) {
+    year.innerHTML = calendar.getDate()._date.getFullYear();
+    month.innerHTML = calendar.getDate()._date.getMonth() + 1;
+}
+
+/**
  * 서버에서 주고받는 데이터를 통일해서 생성하기 위한 함수(총 10개의 파라미터)
  * @param {String|Number} id 캘린더의 scheduleID(database 키 값)
  * @param {String} calendarId 캘린더의 setCalendars로 지정된 값(ex. "Major Subject")
@@ -102,6 +113,7 @@ function create(calendar, data) {
 /**
  * name 값을 이용해 쿠키값을 리턴해주는 함수
  * @param {String} name 쿠키를 받아올 html dom의 이름
+ * @returns {String} 받아올 쿠키값의 문자열
  */
 function getCookie(name) {
     var cookieValue = null;
@@ -148,4 +160,20 @@ function ajaxPost(url, datatype, type, data) {
             }
         });
     })
+}
+
+/**
+ * HTML DOM을 조작하여 첫번째 속성만 display block으로 변경하는 함수
+ * @param {String} id1 display 속성을 block으로 설정할 id 값
+ * @param  {...String} args display 속성을 none으로 설정할 id값들
+ */
+function changeContents(id1, ...args) {
+    var setDisplay = document.getElementById(id1);
+
+    setDisplay.style.display = 'block';
+
+    for (let i = 0; i < args.length; i++) {
+        setDisplay = document.getElementById(args[i]);
+        setDisplay.style.display = 'none';
+    }
 }

@@ -13,28 +13,36 @@ const calendar = new tui.Calendar(container, options);
 // 달력 뷰를 바꾸기 위한 버튼 및 addEventListener
 var nextBtn = document.getElementById("nextBtn");
 var prevBtn = document.getElementById('prevBtn');
-var dayViewBtn = document.getElementById('dayViewBtn');
-var weekViewBtn = document.getElementById('weekViewBtn');
-var monthViewBtn = document.getElementById('monthViewBtn');
+var change_day = document.getElementById('change_day');
+var todayBtn = document.getElementById("today");
+var year = document.getElementById("year");
+var month = document.getElementById("month");
+
+getYearMonth(year, month, calendar);
 
 nextBtn.addEventListener('click', function(event) {
     calendar.next();
+    getYearMonth(year, month, calendar);
 });
 
 prevBtn.addEventListener("click", function(event) {
     calendar.prev();
+    getYearMonth(year, month, calendar);
 });
 
-dayViewBtn.addEventListener("click", function(event) {
-    calendar.changeView('day', true);
+todayBtn.addEventListener("click", function(event) {
+    calendar.today();
+    getYearMonth(year, month, calendar);
 });
 
-weekViewBtn.addEventListener("click", function(event) {
-    calendar.changeView('week', true);
-});
-
-monthViewBtn.addEventListener("click", function(event) {
-    calendar.changeView('month', true);
+change_day.addEventListener('change', (event) => {
+    if (change_day.value == "day") {
+        calendar.changeView('day', true);
+    } else if (change_day.value == "week") {
+        calendar.changeView('week', true);
+    } else {
+        calendar.changeView('month', true);
+    }
 });
 
 ajaxPost("/toast_cal/calSetData/", 'json', "POST", "1").then(function(data) {
@@ -58,4 +66,4 @@ ajaxPost("/toast_cal/calSetData/", 'json', "POST", "1").then(function(data) {
     })
     .catch(function(err) {
         console.log(err);
-    })
+    });

@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.core import serializers
-from .models import Calendar, CalID
+from .models import Calendar, CalID, Vote
 
 
 # 서버에서 ajax로 일정 보내주는 함수
@@ -12,6 +12,7 @@ def ourstores(request):
     )
 
 
+# calendar 초기세팅 데이터 보내주는 함수
 def calSetData(request):
     calData = CalID.objects.all()
 
@@ -65,3 +66,24 @@ def deleteData(request):
         query.delete()
         # 더미데이터로 응답
         return HttpResponse(1)
+
+
+# ajax로 필터링하여 table 생성할 값 반환
+def voteTable(request):
+    stores_list = Vote.objects.filter(
+        lecture_type=request.POST["lecture_type"],
+        vote_status=request.POST["vote_status"],
+    )
+
+    return HttpResponse(
+        serializers.serialize("json", stores_list), content_type="application/json"
+    )
+
+
+# ajax로 필터링하여 chart를 만들기 위한 값 반환
+def voteChart(request):
+    stores_list = Vote.objects.filter(code=request.POST["code"])
+
+    return HttpResponse(
+        serializers.serialize("json", stores_list), content_type="application/json"
+    )

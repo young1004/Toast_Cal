@@ -1,3 +1,4 @@
+/* 전체적으로 적용되는 css */
 body {
     font-family: sans-serif;
     background: whitesmoke;
@@ -8,7 +9,7 @@ body {
     padding: 3em 5em;
 }
 
-.cal {
+.contents {
     display: block;
     width: 60%;
     height: 20%;
@@ -16,21 +17,42 @@ body {
     float: left;
 }
 
-#title {
-    font-weight: 700;
-    text-transform: uppercase;
-    color: lightslategrey;
+
+
+/* 상단 버튼 부분 관련 css*/
+.bg-light {
+    border: 1px solid black;
+    width: 60%;
+    margin-left: 3em;
 }
 
-#menu {
+
+
+/* calendar 부분 관련 css */
+#navi {
     margin-bottom: 1em;
+    text-align: center;
 }
 
-#menu button {
+#navi button {
     width: 4em;
     background-color: white;
     border: 1px solid #cdcdcd;
     border-radius: 3px;
+}
+
+#year_month {
+    font-weight: 700;
+    color: rgb(41, 47, 53);
+    margin-right: 100px;
+}
+
+#prevBtn, #today, #change_day {
+    float: left;
+}
+
+#nextBtn {
+    float: right;
 }
 
 #calendar {
@@ -38,11 +60,62 @@ body {
     border-radius: 3px;
 }
 
+
+
+/* 교수 투표페이지 관련 css */
+#professor1 {
+    margin-top: 10px;
+    display: block;
+    position: relative;
+}
+
+#table-wrap {
+    overflow: auto;
+    height: 350px;
+}
+
+.vote-professor {
+    text-align: center;
+}
+
+.vote-professor a {
+    text-decoration: none;
+    color: black;
+}
+
+#vote-status {
+    margin-bottom: 10px;
+}
+
+#vote-detail-donut {
+    width: 500px;
+    margin: 0;
+}
+
+#chart-area {
+    width: 400px;
+    font-size: 5px;
+    color: white;
+}
+
+tspan {
+    font-size: 15px;
+}
+
+
+/* 사용자 메뉴 관련 css */
+#right_nav {
+    display: block;
+    float: left;
+    position: relative;
+    width: 30%;
+}
+
 #userinfo_layer {
     display: block;
     float: left;
     width: 30%;
-    padding: 8.7em 0em;
+    padding: 3.5em 0em 0em 0em;
 }
 
 #userInfo {
@@ -50,7 +123,7 @@ body {
     border-radius: 5px;
     background: #fff;
     padding: 2em 1em;
-    width: 400px;
+    width: 350px;
     margin-left: 3em;
     text-align: center;
 }
@@ -58,4 +131,22 @@ body {
 #logoutBtn {
     text-decoration: none;
     color: #666666;
+}
+
+.tab_area {
+    display: block;
+    position: relative;
+    width: 30%;
+    padding: 0em 0em 0em 0em;
+}
+
+#tab_box {
+    border: 1px solid #cdcdcd;
+    float: left;
+    border-radius: 5px;
+    background: #fff;
+    padding: 0.2em 0.2em;
+    width: 350px;
+    margin-left: 3em;
+    text-align: center;
 }

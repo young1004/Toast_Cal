@@ -60,16 +60,20 @@ def login(request):
             return render(request, "login.html", {"error": "아이디와 비밀번호를 모두 입력해주세요."})
         else:
             user_data = "1"  # 더미데이터로 변수 생성
+            userName = "1"  # 더미데이터로 변수 생성
             userType = "1"  # 더미데이터로 변수 생성
             try:
                 user_data = Student.objects.get(userID=userID)
+                userName = user_data.username
                 userType = "student"
             except Student.DoesNotExist:
                 user_data = Professor.objects.get(userID=userID)
+                userName = user_data.username
                 userType = "professor"
 
             if check_password(password, user_data.password):
                 request.session["userID"] = userID
+                request.session["userName"] = userName
                 request.session["userType"] = userType
                 return redirect("/toast_cal/")
             else:
@@ -81,6 +85,7 @@ def login(request):
 # 로그아웃
 def logout(request):
     request.session.pop("userID")
+    request.session.pop("userName")
     request.session.pop("userType")
 
     return redirect("login")
