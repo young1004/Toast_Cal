@@ -49,8 +49,9 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    {% if request.session.userID %}
+                    <!-- 학생과 교수가 다르게 보이는 부분 -->
                     {% if request.session.userType == "student" %}
+                    <!-- id에 addEventListner 추가 -->
                     <li>
                         <button onclick="changeContents('calendar-pro', 'test2', 'test3')">일정 관리</button>
                     </li>
@@ -58,7 +59,8 @@
                         <button onclick="changeContents('test2', 'calendar-pro', 'test3')">과목</button>
                     </li>
                     <li><button onclick="changeContents('test3', 'test2', 'calendar-pro')">기타</button></li>
-                    {% else %}
+                    <!-- 테스트 -->
+                    {% elif request.session.userType == "professor" %}
                     <li>
                         <button type="button" id="calProBtn">일정 관리</button>
                     </li>
@@ -68,7 +70,6 @@
                     <li>
                         <button type="button" id="shareProBtn">공유 캘린더?</button>
                     </li>
-                    {% endif %}
                     {% endif %}
                 </ul>
             </div>
@@ -88,6 +89,9 @@
             </div>
         </div>
 
+
+        {% if request.session.userID %}
+        <!-- 학생/교수 다쓰는 부분 -->
         <div class="contents" id="calendar-pro">
             <div id="navi">
                 <button type="button" id="prevBtn">
@@ -108,7 +112,43 @@
             <div id="calendar">
             </div>
         </div>
+        <!-- 학생과 교수가 다르게 보이는 부분 -->
+        {% if request.session.userType == "student" %}
+        <div class="contents" id="test2" style="display: none;">
+            <h3>강의</h3>
+            <div>
+                <label class="" for="">학과: </label>
+                <select class="selectpicker" id="department" name="department"
+                    onchange="change_subject('department', 'subject', 'lecture_type')"></select>
+                <label class="" for="">과목: </label>
+                <select class="selectpicker" id="subject" name="subject"
+                    onchange="change_type('subject', 'lecture_type')"></select>
+                <label class="" for="">이수구분: </label>
+                <select class="selectpicker" id="lecture_type" name="lecture_type"></select>
+                <button class="btn btn-default" onclick="lecture_lookup()">조회</button>
+            </div>
+            <table class="table table-hover" id="lecture_table">
+                <thead>
+                    <tr>
+                        <th scope="col">학수번호</th>
+                        <th scope="col">학과</th>
+                        <th scope="col">이수구분</th>
+                        <th scope="col">교과목명</th>
+                        <th scope="col">교수</th>
+                        <th scope="col">교시</th>
+                    </tr>
+                </thead>
+                <tbody id="lecture_tbody">
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-outline-dark" id="lecture_save_btn">저장</button>
+        </div>
 
+        <div class="contents" id="test3" style="display: none;">
+            변경2
+        </div>
+
+        {% elif request.session.userType == "professor" %}
         <div class="contents" id="professor1" style="display: none;">
             <span>강의 분류:</span>
             <select id="lecture-class" name="lectureClass">
@@ -142,10 +182,11 @@
             </div>
         </div>
 
-    </div>
-
-    <div class=" contents" id="professor2" style="display: none;">
-        변경2
+        <div class=" contents" id="professor2" style="display: none;">
+            변경2
+        </div>
+        {% endif %}
+        {% endif %}
     </div>
 
     <div id="right_nav">
@@ -197,7 +238,14 @@
     <script src="{% static 'scripts/calFunc.js' %}"></script>
     <script src="{% static 'scripts/calSet.js' %}"></script>
     <script src="{% static 'scripts/calMain.js' %}"></script>
+
+    {% if request.session.userType == "student" %}
+    <script src="{% static 'scripts/students.js' %}"></script>
+    {% elif request.session.userType == "professor" %}
     <script src="{% static 'scripts/professors.js' %}"></script>
+    {% endif %}
+
+
 
 
 </body>

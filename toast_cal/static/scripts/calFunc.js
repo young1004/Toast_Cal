@@ -176,4 +176,23 @@ function changeContents(id1, ...args) {
         setDisplay = document.getElementById(args[i]);
         setDisplay.style.display = 'none';
     }
+
+    if (document.getElementById("test2").style.display == "block") {
+        // 학과 옵션 출력
+        ajaxPost("/toast_cal/department/", "json", "POST", 1)
+            .then(function(data) {
+                $('#department').empty(); //기존 옵션 값 삭제
+                $("#department").find("option").end().append("<option value='전체'>전체</option>");
+                $('#subject').empty();
+                $('#lecture_type').empty();
+
+                for (var count = 0; count < data.length; count++) {
+                    var option = $("<option>" + data[count].fields.name + "</option>");
+                    $('#department').append(option);
+                }
+            })
+            .catch(function(err) {
+                alert(err);
+            });
+    }
 }

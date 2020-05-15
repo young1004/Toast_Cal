@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.core import serializers
-from .models import Calendar, CalID, Vote
+from .models import *
 
 
 # 서버에서 ajax로 일정 보내주는 함수
@@ -79,6 +79,101 @@ def checked(request):
     return HttpResponse(
         serializers.serialize("json", checked_list), content_type="application/json"
     )
+
+
+# 메뉴
+# 강의 버튼 클릭시 학과 데이터 반환
+def department(request):
+    department_list = Department.objects.all().order_by("name")
+
+    return HttpResponse(
+        serializers.serialize("json", department_list), content_type="application/json"
+    )
+
+
+# 학과 선택시 해당 과목반환
+def subject(request):
+    subject_list = Subject.objects.filter(
+        department=request.POST.get("name", None)
+    ).order_by("name")
+
+    return HttpResponse(
+        serializers.serialize("json", subject_list), content_type="application/json"
+    )
+
+
+# 과목 선택시 해당 이수구분 반환
+def chanege_type(request):
+    lecture_type = Subject.objects.filter(name=request.POST.get("name", None))
+
+    return HttpResponse(
+        serializers.serialize("json", lecture_type), content_type="application/json"
+    )
+
+
+# 조회 버튼
+def lecture_lookup(request):
+    if request.method == "POST":
+        department = request.POST.get("department")
+        subject = request.POST.get("subject")
+        lecture_type = request.POST.get("lecture_type")
+        if subject == "전체":
+            if lecture_type == "일반교양" or lecture_type == "전체":
+                subject = Subject.objects.filter(department=department)
+
+                return HttpResponse(
+                    serializers.serialize("json", subject),
+                    content_type="application/json",
+                )
+            else:
+                subject = Subject.objects.filter(
+                    department=department, lecture_type=lecture_type
+                )
+
+                return HttpResponse(
+                    serializers.serialize("json", subject),
+                    content_type="application/json",
+                )
+        else:
+            if lecture_type == "일반교양" or lecture_type == "전체":
+                subject = Subject.objects.filter(department=department, name=subject)
+
+                return HttpResponse(
+                    serializers.serialize("json", subject),
+                    content_type="application/json",
+                )
+            else:
+                subject = Subject.objects.filter(
+                    department=department, name=subject, lecture_type=lecture_type
+                )
+
+                return HttpResponse(
+                    serializers.serialize("json", subject),
+                    content_type="application/json",
+                )
+
+
+# 과목 저장
+def lecture_save(request):
+    if request.method == "POST":
+        for data in range(int(len(request.POST) / 6)):
+            flag = Student_lecture.objects.filter(
+                student_id=request.session["userID"],
+                code=request.POST["data[" + str(data) + "][code]"],
+            ).exists()
+            if flag:
+                print("중복된 데이터입니다.")
+            else:
+                new_instance = Student_lecture.objects.create(
+                    student_id=request.session["userID"],
+                    code=request.POST["data[" + str(data) + "][code]"],
+                    department=request.POST["data[" + str(data) + "][department]"],
+                    lecture_type=request.POST["data[" + str(data) + "][lecture_type]"],
+                    name=request.POST["data[" + str(data) + "][name]"],
+                    professor=request.POST["data[" + str(data) + "][professor]"],
+                    period=request.POST["data[" + str(data) + "][period]"],
+                )
+        return HttpResponse("저장 완료!!")
 
 
 # 교수 기능
