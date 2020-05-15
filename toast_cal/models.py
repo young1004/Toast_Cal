@@ -74,9 +74,6 @@ class Professor(models.Model):
         db_table = "Professor"
 
 
-# 0002 이전 코드들 끝
-
-
 # 과목
 class Subject(models.Model):
     name = models.CharField(max_length=30)  # 강의명
@@ -118,23 +115,8 @@ class Student_lecture(models.Model):
         return self.student_id
 
     class Meta:
+        # unique_together = (("student_id", "code"),)
         db_table = "Student_lecture"
-
-
-# 교수 강의
-class Professor_lecture(models.Model):
-    professor_id = models.CharField(max_length=30)  # 교수ID
-    name = models.CharField(max_length=30)  # 강의명
-    code = models.CharField(max_length=20)  # 강의 코드
-    period = models.CharField(max_length=20)  # 교시
-    lecture_type = models.CharField(max_length=10)  # 이수구분
-    department = models.CharField(max_length=20)  # 학과
-
-    def __str__(self):
-        return self.professor_id
-
-    class Meta:
-        db_table = "Professor_lecture"
 
 
 # 투표 테이블

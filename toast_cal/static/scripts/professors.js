@@ -135,5 +135,4 @@ $(document).on("click", ".voteBtn", function() {
             console.log(err);
         });
 
-
 });

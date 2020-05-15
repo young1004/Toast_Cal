@@ -106,6 +106,44 @@ calendar.on('beforeDeleteSchedule', function(event) {
         });
 });
 
+
+// 사이드바 이벤트
+$(document).ready(function() {
+    $("input:checkbox").on('click', function() {
+        var checked = {
+            checked: $(this).val()
+        }
+
+        if ($(this).prop('checked')) {
+
+            ajaxPost("/toast_cal/checked/", 'json', "POST", checked)
+                .then(function(data) {
+                    create(calendar, data);
+                })
+                .catch(function(err) {
+                    alert(err);
+                });
+
+
+        } else {
+            ajaxPost("/toast_cal/checked/", "json", "POST", checked)
+                .then(function(data) {
+
+                    console.log(data)
+
+                    var i;
+
+                    for (i = 0; i < data.length; i++) {
+                        calendar.deleteSchedule(data[i].pk, data[i].fields.calendarId);
+                    }
+                })
+                .catch(function(err) {
+                    alert(err);
+                });
+        }
+    });
+});
+
 /* 새로운 일정 만들기 버튼용 함수
 function createNewSchedule(event) {
     var start = event.start ? new Date(event.start.getTime()) : new Date();

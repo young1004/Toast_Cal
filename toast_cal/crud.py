@@ -68,6 +68,20 @@ def deleteData(request):
         return HttpResponse(1)
 
 
+# 학생 기능
+# 왼쪽 사이드바 체크시 데이터를 보내줌
+def checked(request):
+    if request.method == "POST":
+        checked_list = Calendar.objects.filter(
+            userID=request.session["userID"], calendarId=request.POST["checked"]
+        )
+
+    return HttpResponse(
+        serializers.serialize("json", checked_list), content_type="application/json"
+    )
+
+
+# 교수 기능
 # ajax로 필터링하여 table 생성할 값 반환
 def voteTable(request):
     stores_list = Vote.objects.filter(
