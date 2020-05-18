@@ -28,7 +28,7 @@ calendar.on('beforeCreateSchedule', function(event) {
             schedule.isAllDay = isAllDay;
             calendar.createSchedules([schedule]);
             // 디버깅용 alert
-            alert("success!!")
+            // alert("success!!")
         })
         .catch(function(err) {
             alert(err);
@@ -82,7 +82,7 @@ calendar.on('beforeUpdateSchedule', function(event) {
     updateData.class = isPrivate;
 
     ajaxPost("/toast_cal/update/", "int", "POST", updateData)
-        .then(alert("수정 완료!"))
+        .then( /*alert("수정 완료!")*/ )
         .catch(function(err) {
             alert(err);
         });
@@ -99,7 +99,7 @@ calendar.on('beforeDeleteSchedule', function(event) {
     ajaxPost("/toast_cal/delete/", "int", "POST", delData)
         .then(function(data) {
             calendar.deleteSchedule(schedule.id, schedule.calendarId);
-            alert("삭제 완료!")
+            // alert("삭제 완료!")
         })
         .catch(function(err) {
             alert(err);
