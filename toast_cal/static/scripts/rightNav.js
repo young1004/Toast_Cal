@@ -1,17 +1,17 @@
 var date = new Date();
 
-var year = date.getFullYear();
-var month = date.getMonth() + 1;
-var day = date.getDate();
+var getYear = date.getFullYear();
+var getMonth = date.getMonth() + 1;
+var getDay = date.getDate();
 
 
-if (month < 10) month = "0" + month;
-if (date < 10) date = "0" + date;
+if (getMonth < 10) getMonth = "0" + getMonth;
+if (getDay < 10) getDay = "0" + getDay;
 
-var today = year + "-" + month + "-" + day;
+var getToday = getYear + "-" + getMonth + "-" + getDay;
 
 var todayData = {
-    todayData: today
+    todayData: getToday
 };
 
 
