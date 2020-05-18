@@ -196,3 +196,19 @@ def voteChart(request):
     return HttpResponse(
         serializers.serialize("json", stores_list), content_type="application/json"
     )
+
+
+# right nav 부분 ajax 통신
+def dateList(request):
+    if request.method == "POST":
+
+        date_list = Calendar.objects.filter(
+            userID=request.session["userID"],
+            start__startswith=request.POST["todayData"],
+            end__startswith=request.POST["todayData"],
+        )
+
+    return HttpResponse(
+        serializers.serialize("json", date_list), content_type="application/json"
+    )
+

@@ -1,4 +1,38 @@
-// 강의 버튼 관련 스크립트
+var calStdBtn = document.getElementById('calStdBtn');
+var subjectBtn = document.getElementById('subjectBtn');
+var etcBtn = document.getElementById('etcBtn');
+
+calStdBtn.addEventListener('click', function(event) {
+    changeContents('calendar-common', 'lecture', 'studentEtc');
+    changeContents('sidebar');
+});
+
+subjectBtn.addEventListener('click', function(event) {
+    changeContents('lecture', 'calendar-common', 'studentEtc', 'sidebar');
+
+
+    ajaxPost("/toast_cal/department/", "json", "POST", 1)
+        .then(function(data) {
+            $('#department').empty(); //기존 옵션 값 삭제
+            $("#department").find("option").end().append("<option value='전체'>전체</option>");
+            $('#subject').empty();
+            $('#lecture_type').empty();
+
+            for (var count = 0; count < data.length; count++) {
+                var option = $("<option>" + data[count].fields.name + "</option>");
+                $('#department').append(option);
+            }
+        })
+        .catch(function(err) {
+            alert(err);
+        });
+});
+
+etcBtn.addEventListener('click', function(event) {
+    changeContents('studentEtc', 'lecture', 'calendar-common', 'sidebar');
+
+
+});
 
 // 학과 선택시 해당 과목 옵션 출력
 function change_subject(department, subject, lecture_type) {
@@ -151,25 +185,3 @@ $("#lecture_save_btn").click(function() {
         alert("과목을 선택하세요.");
     }
 });
-
-
-
-
-// if (document.getElementById("test2").style.display == "block") {
-//     // 학과 옵션 출력
-//     ajaxPost("/toast_cal/department/", "json", "POST", 1)
-//         .then(function(data) {
-//             $('#department').empty(); //기존 옵션 값 삭제
-//             $("#department").find("option").end().append("<option value='전체'>전체</option>");
-//             $('#subject').empty();
-//             $('#lecture_type').empty();
-
-//             for (var count = 0; count < data.length; count++) {
-//                 var option = $("<option>" + data[count].fields.name + "</option>");
-//                 $('#department').append(option);
-//             }
-//         })
-//         .catch(function(err) {
-//             alert(err);
-//         });
-// }

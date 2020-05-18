@@ -1,4 +1,8 @@
 /* 전체적으로 적용되는 css */
+a {
+    color: black;
+}
+
 body {
     font-family: sans-serif;
     background: whitesmoke;
@@ -20,13 +24,24 @@ body {
 
 
 /* 상단 버튼 부분 관련 css*/
-.bg-light {
-    border: 1px solid black;
-    width: 60%;
-    margin-left: 3em;
+.bg {
+    width: 100%;
+    margin: auto;
+    text-align: center;
 }
 
+.bg ul {
+    margin-left: 14%;
+}
 
+.bg ul li {
+    margin-left: 20px;
+}
+
+.btn-outline-secondary {
+    background-color: white;
+    border-color: #c4b5c4;
+}
 
 /* calendar 부분 관련 css */
 #navi {
@@ -51,6 +66,12 @@ body {
     float: left;
 }
 
+#change_day {
+    width: 4em;
+    padding: 1px;
+    background-color: white;
+}
+
 #nextBtn {
     float: right;
 }
@@ -63,7 +84,6 @@ body {
 
 
 /* 사이드바 */
-
 #sidebar {
     float: left;
     display: block;
@@ -96,8 +116,25 @@ body {
 
 
 
+/* 학생 과목 페이지 관련 css */
+#lecture {
+    margin-left: 15%;
+}
+
+.lecture-table-wrap {
+    overflow: auto;
+    height: 350px;
+}
+
+#lecture_save_btn {
+    float: right;
+}
+
+
+
 /* 교수 투표페이지 관련 css */
 #professor1 {
+    margin-left: 15%;
     margin-top: 10px;
     display: block;
     position: relative;
@@ -105,6 +142,7 @@ body {
 
 #table-wrap {
     overflow: auto;
+    border: 1px solid #CDCDCD;
     height: 350px;
 }
 
@@ -112,16 +150,12 @@ body {
     text-align: center;
 }
 
-.vote-professor a {
-    text-decoration: none;
-    color: black;
-}
-
 #vote-status {
     margin-bottom: 10px;
 }
 
 #vote-detail-donut {
+    padding-top: 3em;
     display: inline-block;
     width: 400px;
     margin: 0;
@@ -138,35 +172,18 @@ tspan {
     font-size: 15px;
 }
 
+svg {
+    border: 1px solid black;
+}
 
 /* 사용자 메뉴 관련 css */
+/* 기본위치 지정*/
 #right_nav {
     display: block;
     float: left;
     position: relative;
+    left: 60px;
     width: 30%;
-}
-
-#userinfo_layer {
-    display: block;
-    float: left;
-    width: 30%;
-    padding: 3.5em 0em 0em 0em;
-}
-
-#userInfo {
-    border: 1px solid #cdcdcd;
-    border-radius: 5px;
-    background: #fff;
-    padding: 2em 1em;
-    width: 350px;
-    margin-left: 3em;
-    text-align: center;
-}
-
-#logoutBtn {
-    text-decoration: none;
-    color: #666666;
 }
 
 .tab_area {
@@ -176,13 +193,64 @@ tspan {
     padding: 0em 0em 0em 0em;
 }
 
+.nav-link {
+    opacity: 0.5;
+}
+
+/* 선택된 탭 글씨강조 */
+.nav-link.active {
+    font-weight: bolder;
+    border-width: 1.5px;
+    opacity: 1.0;
+}
+
+
+
+/*사용자 메뉴 상단 관련 css*/
 #tab_box {
     border: 1px solid #cdcdcd;
     float: left;
     border-radius: 5px;
     background: #fff;
+    height: 503px;
     padding: 0.2em 0.2em;
     width: 350px;
     margin-left: 3em;
     text-align: center;
+}
+
+#first_tab, #second_tab, #third_tab {
+    height: 450px;
+    overflow: scroll;
+}
+
+
+#today_list_argu {
+    border-bottom: 2px #dee2e6 dotted;
+    font-size: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#userinfo_layer {
+    display: block;
+    float: left;
+    width: 30%;
+    position: relative;
+    margin: 3.5em 0em 0em 0em;
+}
+
+#userInfo {
+    border: 1px solid #cdcdcd;
+    border-radius: 5px;
+    background: #fff;
+    padding: 1em 1em;
+    width: 350px;
+    margin-left: 3em;
+    text-align: center;
+}
+
+#logoutBtn {
+    text-decoration: none;
+    color: #666666;
 }

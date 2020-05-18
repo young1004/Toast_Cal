@@ -4,15 +4,16 @@ var voteProBtn = document.getElementById("voteProBtn");
 var shareProBtn = document.getElementById("shareProBtn");
 
 calProBtn.addEventListener('click', function(event) {
-    changeContents('calendar-pro', 'professor1', 'professor2');
+    changeContents('calendar-common', 'professor1', 'professor2');
+    changeContents('sidebar');
 });
 
 voteProBtn.addEventListener('click', function(event) {
-    changeContents('professor1', 'calendar-pro', 'professor2');
+    changeContents('professor1', 'calendar-common', 'professor2', 'sidebar');
 });
 
 shareProBtn.addEventListener('click', function(event) {
-    changeContents('professor2', 'professor1', 'calendar-pro');
+    changeContents('professor2', 'professor1', 'calendar-common', 'sidebar');
 });
 
 // 교수 투표 페이지 관련 select, button DOM
@@ -21,14 +22,29 @@ var voteStatus = document.getElementById('vote-status');
 var voteTableBtn = document.getElementById('voteTableBtn');
 
 // 서버에서 filter를 적용할 투표 페이지 관련 데이터 object
-var voteData = {}
+var voteData = {
+    lecture_type: "일반 교양",
+    vote_status: "투표중"
+}
+ajaxPost("/toast_cal/voteTable/", 'json', "POST", voteData).then(function(data) {
+        $('#vote-info').empty();
 
+        for (var count = 0; count < data.length; count++) {
+            var tr = $("<tr><td>" + data[count].fields.code + "</td>" +
+                "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
+                "<td>" + data[count].fields.vote_status + "</td>" + "<td><button type=\"button\" class=\"voteBtn\">상세</button></td>");
+            $('#vote-info').append(tr);
+        }
+
+    })
+    .catch(function(err) {
+        console.log(err);
+    })
 
 voteTableBtn.addEventListener('click', function(event) {
-    voteData = {
-        lecture_type: voteClass.options[voteClass.selectedIndex].value,
-        vote_status: voteStatus.options[voteStatus.selectedIndex].value
-    }
+    voteData.lecture_type = voteClass.value;
+    voteData.vote_status = voteStatus.value;
+
     // console.log(voteData);
     ajaxPost("/toast_cal/voteTable/", 'json', "POST", voteData).then(function(data) {
             $('#vote-info').empty();
@@ -63,7 +79,7 @@ $(document).on("click", ".voteBtn", function() {
 
     ajaxPost("/toast_cal/voteChart/", 'json', "POST", chartData).then(function(data) {
             // console.log(data.length);
-            console.log(data);
+            // console.log(data);
             if (data.length > 0) {
                 //toast UI Chart 세팅
                 var doughnut = document.getElementById('chart-area');
@@ -83,6 +99,22 @@ $(document).on("click", ".voteBtn", function() {
                         }
                     ]
                 };
+
+                var theme = {
+                    series: {
+                        colors: [
+                            '#87CE00', '#FF4848', '#BDBDBD'
+                        ],
+                        label: {
+                            color: '#000000',
+                            fontFamily: 'sans-serif'
+                        }
+                    }
+                };
+
+                tui.chart.registerTheme('myTheme', theme);
+
+
                 var doughnutOption = {
                     chart: {
                         width: 400,
@@ -107,25 +139,10 @@ $(document).on("click", ".voteBtn", function() {
                     },
                     legend: {
                         align: 'right'
-                    }
-                };
-                var theme = {
-                    series: {
-                        series: {
-                            colors: [
-                                '#83b14e', '#458a3f', '#295ba0',
-                                '#289399', '#617178', '#8a9a9a',
-                            ]
-                        },
-                        label: {
-                            color: '#000000',
-                            fontFamily: 'sans-serif'
-                        }
-                    }
+                    },
+                    theme: 'myTheme'
                 };
 
-                tui.chart.registerTheme('myTheme', theme);
-                options.theme = 'myTheme';
 
                 chart = tui.chart.pieChart(doughnut, doughnutData, doughnutOption);
             }

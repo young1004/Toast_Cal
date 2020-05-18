@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-
-
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.5.0.js"
         integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
@@ -34,8 +32,6 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 
-
-
     <link href="{% static 'styles/index.css' %}" rel="stylesheet">
 
     <title>캘린더 테스트</title>
@@ -46,29 +42,29 @@
 
     <div id="wrap">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg">
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <!-- 학생과 교수가 다르게 보이는 부분 -->
                     {% if request.session.userType == "student" %}
                     <!-- id에 addEventListner 추가 -->
                     <li>
-                        <button onclick="changeContents('calendar-pro', 'test2', 'test3')">일정 관리</button>
+                        <button type="button" class="btn btn-outline-secondary" id="calStdBtn">일정 관리</button>
                     </li>
                     <li>
-                        <button onclick="changeContents('test2', 'calendar-pro', 'test3')">과목</button>
+                        <button type="button" class="btn btn-outline-secondary" id="subjectBtn">과목</button>
                     </li>
-                    <li><button onclick="changeContents('test3', 'test2', 'calendar-pro')">기타</button></li>
+                    <li><button type="button" class="btn btn-outline-secondary" id="etcBtn">기타</button></li>
                     <!-- 테스트 -->
                     {% elif request.session.userType == "professor" %}
                     <li>
-                        <button type="button" id="calProBtn">일정 관리</button>
+                        <button type="button" class="btn btn-outline-secondary" id="calProBtn">일정 관리</button>
                     </li>
                     <li>
-                        <button type="button" id="voteProBtn">투표 현황</button>
+                        <button type="button" class="btn btn-outline-secondary" id="voteProBtn">투표 현황</button>
                     </li>
                     <li>
-                        <button type="button" id="shareProBtn">공유 캘린더?</button>
+                        <button type="button" class="btn btn-outline-secondary" id="shareProBtn">공유 캘린더</button>
                     </li>
                     {% endif %}
                 </ul>
@@ -92,7 +88,7 @@
 
         {% if request.session.userID %}
         <!-- 학생/교수 다쓰는 부분 -->
-        <div class="contents" id="calendar-pro">
+        <div class="contents" id="calendar-common">
             <div id="navi">
                 <button type="button" id="prevBtn">
                     &lt;&lt; </button>
@@ -114,7 +110,7 @@
         </div>
         <!-- 학생과 교수가 다르게 보이는 부분 -->
         {% if request.session.userType == "student" %}
-        <div class="contents" id="test2" style="display: none;">
+        <div class="contents" id="lecture" style="display: none;">
             <h3>강의</h3>
             <div>
                 <label class="" for="">학과: </label>
@@ -127,24 +123,26 @@
                 <select class="selectpicker" id="lecture_type" name="lecture_type"></select>
                 <button class="btn btn-default" onclick="lecture_lookup()">조회</button>
             </div>
-            <table class="table table-hover" id="lecture_table">
-                <thead>
-                    <tr>
-                        <th scope="col">학수번호</th>
-                        <th scope="col">학과</th>
-                        <th scope="col">이수구분</th>
-                        <th scope="col">교과목명</th>
-                        <th scope="col">교수</th>
-                        <th scope="col">교시</th>
-                    </tr>
-                </thead>
-                <tbody id="lecture_tbody">
-                </tbody>
-            </table>
+            <div class="lecture-table-wrap">
+                <table class="table table-hover" id="lecture_table">
+                    <thead>
+                        <tr>
+                            <th scope="col">학수번호</th>
+                            <th scope="col">학과</th>
+                            <th scope="col">이수구분</th>
+                            <th scope="col">교과목명</th>
+                            <th scope="col">교수</th>
+                            <th scope="col">교시</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lecture_tbody">
+                    </tbody>
+                </table>
+            </div>
             <button type="button" class="btn btn-outline-dark" id="lecture_save_btn">저장</button>
         </div>
 
-        <div class="contents" id="test3" style="display: none;">
+        <div class="contents" id="studentEtc" style="display: none;">
             변경2
         </div>
 
@@ -192,10 +190,12 @@
     <div id="right_nav">
         <div id="userinfo_layer">
             <div id="userInfo">
+
+                <!-- 학생과 교수에 따라 문구를 변경 username으로 변경예정-->
                 {% if request.session.userID %}
                 {% if request.session.userType == "student" %}
                 <p> {{ request.session.userName }} 학생 안녕하세요!</p>
-                {% else %}
+                {% elif request.session.userType == "professor" %}
                 <p> {{ request.session.userName }} 교수님 안녕하세요!</p>
                 {% endif %}
                 <span id=logout-navi>
@@ -211,42 +211,44 @@
             <div id="tab_box">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#first_tab">하루일정</a>
+                        <a class="nav-link active" id="today" data-toggle="tab" href="#first_tab">하루일정</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#second_tab">이번주 일정</a>
+                        <a class="nav-link" id="thisweek" data-toggle="tab" href="#second_tab">이번주 일정</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#third_tab">지난주 일정</a>
+                        <a class="nav-link" id="lastweek" data-toggle="tab" href="#third_tab">지난주 일정</a>
                     </li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="first_tab">
-                        <div class=first_tab_content>
-                            test1
+                        <div class="content_index">
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="second_tab">
-                    </div>
-                    <div class="tab-pane fade" id="third_tab">
+                </div>
+                <div class="tab-pane fade" id="second_tab">
+                    <div class="content_index">
+                        <!-- 어제 일정탭 -->
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    </div>
+                <div class="tab-pane fade" id="third_tab">
+                    <div class="content_index">
+                        <!-- 내일 일정탭 -->
+                    </div>
+                </div>
+            </div> <!-- tab_content-->
+        </div> <!-- tab_box-->
+    </div> <!-- tab_area-->
     <script src="{% static 'scripts/calFunc.js' %}"></script>
     <script src="{% static 'scripts/calSet.js' %}"></script>
     <script src="{% static 'scripts/calMain.js' %}"></script>
+    <script src="{% static 'scripts/rightNav.js' %}"></script>
 
     {% if request.session.userType == "student" %}
     <script src="{% static 'scripts/students.js' %}"></script>
     {% elif request.session.userType == "professor" %}
     <script src="{% static 'scripts/professors.js' %}"></script>
     {% endif %}
-
-
-
 
 </body>
 

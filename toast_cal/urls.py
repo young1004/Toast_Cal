@@ -11,6 +11,7 @@ urlpatterns = [
     path("create/", crud.createData, name="createData"),
     path("update/", crud.updateData, name="updateData"),
     path("delete/", crud.deleteData, name="deleteData"),
+    path("dateList/", crud.dateList, name="dateList"),  # 우측 네비게이션
     path("checked/", crud.checked, name="checked"),  # 학생 기능들
     path("department/", crud.department, name="department"),  # 강의 버튼클릭시 학과 가져옴
     path("subject/", crud.subject, name="subject"),  # 학과 선택시 해당 과목 가져옴
