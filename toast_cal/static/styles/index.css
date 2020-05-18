@@ -1,256 +1,59 @@
 /* 전체적으로 적용되는 css */
-a {
-    color: black;
-}
-
 body {
-    font-family: sans-serif;
-    background: whitesmoke;
+    padding: 100px;
+    background-color: #f5f6f7;
 }
 
-#wrap {
-    width: 1700px;
-    padding: 3em 5em;
-}
-
-.contents {
-    display: block;
-    width: 55%;
-    height: 20%;
-    padding: 1em 1em 5em 1em;
-    float: left;
-}
-
-
-
-/* 상단 버튼 부분 관련 css*/
-.bg {
-    width: 100%;
-    margin: auto;
-    text-align: center;
-}
-
-.bg ul {
-    margin-left: 14%;
-}
-
-.bg ul li {
-    margin-left: 20px;
-}
-
-.btn-outline-secondary {
-    background-color: white;
-    border-color: #c4b5c4;
-}
-
-/* calendar 부분 관련 css */
-#navi {
-    margin-bottom: 1em;
-    text-align: center;
-}
-
-#navi button {
-    width: 4em;
-    background-color: white;
-    border: 1px solid #cdcdcd;
-    border-radius: 3px;
-}
-
-#year_month {
-    font-weight: 700;
-    color: rgb(41, 47, 53);
-    margin-right: 100px;
-}
-
-#prevBtn, #today, #change_day {
-    float: left;
-}
-
-#change_day {
-    width: 4em;
-    padding: 1px;
-    background-color: white;
-}
-
-#nextBtn {
-    float: right;
-}
-
-#calendar {
-    border: 1px solid #cdcdcd;
-    border-radius: 3px;
-}
-
-
-
-/* 사이드바 */
-#sidebar {
-    float: left;
-    display: block;
-    width: 15%;
-}
-
-#sidebar ul {
-    list-style: none;
-}
-
-.side_area {
-    padding: 3.5em 1.5em;
-}
-
-.side_menu {
-    border: 1px solid #cdcdcd;
-    border-radius: 3px;
-    background: #fff;
-}
-
-.side_title {
-    padding: 1.5em 0em 1em 0em;
-    text-align: center;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-    border-bottom: 1px solid #cdcdcd;
-    font-size: 1.05em;
+p {
+    /* text-decoration: none; */
+    color: rgb(36, 44, 53);
+    font-size: 40px;
     font-weight: 700;
 }
 
-
-
-/* 학생 과목 페이지 관련 css */
-#lecture {
-    margin-left: 15%;
-}
-
-.lecture-table-wrap {
-    overflow: auto;
-    height: 350px;
-}
-
-#lecture_save_btn {
-    float: right;
-}
-
-
-
-/* 교수 투표페이지 관련 css */
-#professor1 {
-    margin-left: 15%;
-    margin-top: 10px;
-    display: block;
-    position: relative;
-}
-
-#table-wrap {
-    overflow: auto;
-    border: 1px solid #CDCDCD;
-    height: 350px;
-}
-
-.vote-professor {
-    text-align: center;
-}
-
-#vote-status {
-    margin-bottom: 10px;
-}
-
-#vote-detail-donut {
-    padding-top: 3em;
-    display: inline-block;
-    width: 400px;
-    margin: 0;
-}
-
-#chart-area {
-    width: 400px;
-    font-size: 5px;
-    margin: 0;
-    color: white;
-}
-
-tspan {
-    font-size: 15px;
-}
-
-svg {
-    border: 1px solid black;
-}
-
-/* 사용자 메뉴 관련 css */
-/* 기본위치 지정*/
-#right_nav {
-    display: block;
-    float: left;
-    position: relative;
-    left: 60px;
-    width: 30%;
-}
-
-.tab_area {
-    display: block;
-    position: relative;
-    width: 30%;
-    padding: 0em 0em 0em 0em;
-}
-
-.nav-link {
-    opacity: 0.5;
-}
-
-/* 선택된 탭 글씨강조 */
-.nav-link.active {
-    font-weight: bolder;
-    border-width: 1.5px;
-    opacity: 1.0;
-}
-
-
-
-/*사용자 메뉴 상단 관련 css*/
-#tab_box {
-    border: 1px solid #cdcdcd;
-    float: left;
-    border-radius: 5px;
-    background: #fff;
-    height: 503px;
-    padding: 0.2em 0.2em;
-    width: 350px;
-    margin-left: 3em;
-    text-align: center;
-}
-
-#first_tab, #second_tab, #third_tab {
-    height: 450px;
-    overflow: scroll;
-}
-
-
-#today_list_argu {
-    border-bottom: 2px #dee2e6 dotted;
-    font-size: 15px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-}
-
-#userinfo_layer {
-    display: block;
-    float: left;
-    width: 30%;
-    position: relative;
-    margin: 3.5em 0em 0em 0em;
-}
-
-#userInfo {
-    border: 1px solid #cdcdcd;
-    border-radius: 5px;
-    background: #fff;
-    padding: 1em 1em;
-    width: 350px;
-    margin-left: 3em;
-    text-align: center;
-}
-
-#logoutBtn {
+a {
     text-decoration: none;
-    color: #666666;
+}
+
+.main {
+    margin: auto;
+    width: 70%;
+    text-align: center;
+}
+
+/* 가운데 텍스트 관련 css */
+h1 {
+    font-size: 50px;
+    color: rgb(67, 84, 100);
+}
+
+#content {
+    margin-bottom: 50px;
+}
+
+/* box 관련 css */
+.box {
+    display: inline-block;
+}
+
+.box-content {
+    display: inline-block;
+    margin: 0 auto;
+    border: 1px solid black;
+    border-radius: 20px;
+    width: 400px;
+    height: 12em;
+    padding-top: 40px;
+}
+
+/*line-height: 0px; */
+
+.box {
+    /* margin: 0 auto; */
+    padding-left: 10px;
+}
+
+.detail {
+    padding-top: 20px;
+    margin: 0px 30px;
 }

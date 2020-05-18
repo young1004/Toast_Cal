@@ -10,6 +10,10 @@ def index(request):
     return render(request, "index.html")
 
 
+def calendar(request):
+    return render(request, "calendar.html")
+
+
 # 회원가입과 로그인 기능에서 Student, Professor 조건문으로 분기
 # 회원가입 페이지
 def signup(request):

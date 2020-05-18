@@ -5,7 +5,7 @@ from toast_cal import views, crud
 app_name = "toast_cal"
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", views.calendar, name="calendar"),  # 로그인시 메인 화면
     path("ourstores/", crud.ourstores, name="ourstores"),  # 캘린더 기능들
     path("calSetData/", crud.calSetData, name="calSetData"),
     path("create/", crud.createData, name="createData"),

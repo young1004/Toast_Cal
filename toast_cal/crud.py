@@ -211,4 +211,3 @@ def dateList(request):
     return HttpResponse(
         serializers.serialize("json", date_list), content_type="application/json"
     )
-
