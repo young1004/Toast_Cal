@@ -20,7 +20,7 @@ class CalID(models.Model):
 class Calendar(models.Model):  # pk값이 별도로 지정됨
     userID = models.CharField(max_length=30, null=False)  # 유저 id의 session값
     calendarId = models.ForeignKey(
-        CalID, on_delete=models.PROTECT, default="전공 필수"
+        CalID, on_delete=models.CASCADE, default="전공 필수"
     )  # calendar 분류(현재는 전필, 전선, 교양)
     title = models.CharField(max_length=30)
     category = models.CharField(max_length=30, default="time")
