@@ -138,14 +138,17 @@ body {
 
 
 
-/* 교수 투표페이지 관련 css */
-#professor1 {
+/* 교수 페이지 전체적으로 적용되는 css */
+#professor1, #professor2, #professor3 {
     margin-left: 15%;
     margin-top: 10px;
     display: block;
     position: relative;
 }
 
+
+
+/* 교수 투표페이지 관련 css */
 #table-wrap {
     overflow: auto;
     border: 1px solid #CDCDCD;
@@ -182,12 +185,32 @@ svg {
     border: 1px solid black;
 }
 
+
+
+/* 교수 강의 개설 페이지 css */
+#make-table {
+    overflow: auto;
+    border: 1px solid #CDCDCD;
+    height: 350px;
+}
+
+#make-lecture {
+    border: 1px solid #CDCDCD;
+    height: 350px;
+}
+
+#make-lecture input {
+    width: 100px;
+}
+
+
+
 /* 사용자 메뉴 관련 css */
 /* 사용자 메뉴 기본위치 지정*/
 #right_nav {
     display: block;
     float: left;
-    margin-top: 3em;
+    margin-top: 3.9em;
     position: relative;
     left: 60px;
     width: 30%;

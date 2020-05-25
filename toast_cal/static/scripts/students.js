@@ -125,10 +125,11 @@ function lecture_lookup() {
                 $('#lecture_tbody').empty(); //table 초기화
 
                 for (var count = 0; count < data.length; count++) {
-                    var tr = $("<tr scope='row' onclick='clickTrEvent(this)'><td>" + data[count].pk + "</td>" +
-                        "<td>" + data[count].fields.department + "</td>" + "<td>" + data[count].fields.lecture_type + "</td>" +
-                        "<td>" + data[count].fields.name + "</td>" + "<td>" + data[count].fields.professor + "</td>" +
-                        "<td>" + data[count].fields.period + "</td></tr>");
+                    var tr = $("<tr scope='row' onclick='clickTrEvent(this)'><td>" + data[count].fields.code + "</td>" +
+                        "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
+                        "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
+                        "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td>" +
+                        "<td>" + data[count].fields.stdCount + "</td></tr>");
                     $('#lecture_tbody').append(tr);
                 }
             })

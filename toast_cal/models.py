@@ -19,8 +19,8 @@ class CalID(models.Model):
 # 일정 정보가 저장되는 데이터베이스 모델
 class Calendar(models.Model):  # pk값이 별도로 지정됨
     userID = models.CharField(max_length=30, null=False)  # 유저 id의 session값
-    calendarId = models.ForeignKey(
-        CalID, on_delete=models.CASCADE, default="전공 필수"
+    calendarId = models.CharField(
+        max_length=30, default="전공 필수"
     )  # calendar 분류(현재는 전필, 전선, 교양)
     title = models.CharField(max_length=30)
     category = models.CharField(max_length=30, default="time")
@@ -77,11 +77,13 @@ class Professor(models.Model):
 # 과목
 class Subject(models.Model):
     name = models.CharField(max_length=30)  # 강의명
-    code = models.CharField(max_length=20, primary_key=True)  # 강의 코드
+    code = models.CharField(max_length=20)  # 강의 코드
+    codeClass = models.CharField(max_length=5, default="A")  # 분반
     professor = models.CharField(max_length=20)  # 담당교수
     period = models.CharField(max_length=20)  # 교시
     lecture_type = models.CharField(max_length=10)  # 이수구분
     department = models.CharField(max_length=20)  # 학과
+    stdCount = models.IntegerField(default=0)  # 수강인원
 
     def __str__(self):
         return self.name

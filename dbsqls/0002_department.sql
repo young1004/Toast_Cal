@@ -1,5 +1,7 @@
 use caldb;
 
+truncate Department;
+
 INSERT INTO Department(name)
 VALUES("컴퓨터공학부");
 INSERT INTO Department(name)

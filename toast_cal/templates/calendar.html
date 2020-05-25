@@ -61,6 +61,9 @@
                         <button type="button" class="btn btn-outline-secondary" id="calProBtn">일정 관리</button>
                     </li>
                     <li>
+                        <button type="button" class="btn btn-outline-secondary" id="subProBtn">강의 개설</button>
+                    </li>
+                    <li>
                         <button type="button" class="btn btn-outline-secondary" id="voteProBtn">투표 현황</button>
                     </li>
                     <li>
@@ -110,6 +113,7 @@
         </div>
         <!-- 학생과 교수가 다르게 보이는 부분 -->
         {% if request.session.userType == "student" %}
+        <!-- 학생 강의 수강 페이지 -->
         <div class="contents" id="lecture" style="display: none;">
             <h3>강의</h3>
             <div>
@@ -128,11 +132,13 @@
                     <thead>
                         <tr>
                             <th scope="col">학수번호</th>
+                            <th scope="col">분반</th>
                             <th scope="col">학과</th>
                             <th scope="col">이수구분</th>
                             <th scope="col">교과목명</th>
                             <th scope="col">교수</th>
                             <th scope="col">교시</th>
+                            <th scope="col">수강 인원</th>
                         </tr>
                     </thead>
                     <tbody id="lecture_tbody">
@@ -141,13 +147,44 @@
             </div>
             <button type="button" class="btn btn-outline-dark" id="lecture_save_btn">저장</button>
         </div>
-
+        <!-- 학생 두번째 기능탭 -->
         <div class="contents" id="studentEtc" style="display: none;">
-            변경2
+            학생 두번째 기능
         </div>
 
         {% elif request.session.userType == "professor" %}
+        <!-- 교수 강의 개설 페이지-->
         <div class="contents" id="professor1" style="display: none;">
+            <!-- 교수 개설 강의 목록 table -->
+            <div id="make-table">
+                <table class="table make-professor">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">학수번호</th>
+                            <th scope="col">분반</th>
+                            <th scope="col">이수구분</th>
+                            <th scope="col">교과목명</th>
+                            <th scope="col">담당교수</th>
+                            <th scope="col">교시</th>
+                        </tr>
+                    </thead>
+                    <tbody id="make-info">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 교수 강의 개설하는 페이지 -->
+            <div id="make-lecture">
+                <span>학수번호<input type="text" style="width: 70px;"> - <input type="text" style="width: 30px;"></span>
+                <span>이수구분<input type="text"></span>
+                <span>교과목명<input type="text"></span>
+                <span>담당교수<input type="text"></span>
+                <span>교시<input type="text"></span>
+                <button type="button" value="개설">개설</button>
+            </div>
+        </div>
+        <!-- 교수 투표 관련 페이지 -->
+        <div class="contents" id="professor2" style="display: none;">
             <span>강의 분류:</span>
             <select id="lecture-class" name="lectureClass">
                 <option value="전공 필수">전공 필수</option>
@@ -175,70 +212,71 @@
                     </tbody>
                 </table>
             </div>
+            <!-- toast UI Chart 부분 -->
             <div id="vote-detail-donut">
                 <div id="chart-area"></div>
             </div>
         </div>
-
-        <div class=" contents" id="professor2" style="display: none;">
-            변경2
+        <!-- 공유 캘린더 구현 예정 -->
+        <div class=" contents" id="professor3" style="display: none;">
+            공유 캘린더
         </div>
         {% endif %}
         {% endif %}
-    </div>
 
-    <div id="right_nav">
-        <div id="userinfo_layer">
-            <div id="userInfo">
+        <div id="right_nav">
+            <div id="userinfo_layer">
+                <div id="userInfo">
 
-                <!-- 학생과 교수에 따라 문구를 변경 username으로 변경예정-->
-                {% if request.session.userID %}
-                {% if request.session.userType == "student" %}
-                <p> {{ request.session.userName }} 학생 안녕하세요!</p>
-                {% elif request.session.userType == "professor" %}
-                <p> {{ request.session.userName }} 교수님 안녕하세요!</p>
-                {% endif %}
-                <span id=logout-navi>
-                    <a type="button" id="logoutBtn" href="{% url 'logout' %}">로그아웃</a>
-                </span>
-                {% else %}
-                <p> 로그인이 필요합니다.</p>
-                {% endif %}
+                    <!-- 학생과 교수에 따라 문구를 변경 username으로 변경예정-->
+                    {% if request.session.userID %}
+                    {% if request.session.userType == "student" %}
+                    <p> {{ request.session.userName }} 학생 안녕하세요!</p>
+                    {% elif request.session.userType == "professor" %}
+                    <p> {{ request.session.userName }} 교수님 안녕하세요!</p>
+                    {% endif %}
+                    <span id=logout-navi>
+                        <a type="button" id="logoutBtn" href="{% url 'logout' %}">로그아웃</a>
+                    </span>
+                    {% else %}
+                    <p> 로그인이 필요합니다.</p>
+                    {% endif %}
 
+                </div>
             </div>
-        </div>
-        <div class="tab_area">
-            <div id="tab_box">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="today" data-toggle="tab" href="#first_tab">하루일정</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="thisweek" data-toggle="tab" href="#second_tab">이번주 일정</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="lastweek" data-toggle="tab" href="#third_tab">지난주 일정</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="first_tab">
+            <div class="tab_area">
+                <div id="tab_box">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="today" data-toggle="tab" href="#first_tab">하루일정</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="thisweek" data-toggle="tab" href="#second_tab">이번주 일정</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="lastweek" data-toggle="tab" href="#third_tab">지난주 일정</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="first_tab">
+                            <div class="content_index">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="second_tab">
                         <div class="content_index">
+                            <!-- 어제 일정탭 -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="third_tab">
+                        <div class="content_index">
+                            <!-- 내일 일정탭 -->
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="second_tab">
-                    <div class="content_index">
-                        <!-- 어제 일정탭 -->
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="third_tab">
-                    <div class="content_index">
-                        <!-- 내일 일정탭 -->
-                    </div>
-                </div>
-            </div> <!-- tab_content-->
-        </div> <!-- tab_box-->
-    </div> <!-- tab_area-->
+            </div>
+        </div>
+    </div>
     <script src="{% static 'scripts/calFunc.js' %}"></script>
     <script src="{% static 'scripts/calSet.js' %}"></script>
     <script src="{% static 'scripts/calMain.js' %}"></script>

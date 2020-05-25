@@ -1,19 +1,24 @@
 // 교수용 페이지 버튼과 이벤트리스너
 var calProBtn = document.getElementById("calProBtn");
+var subProBtn = document.getElementById("subProBtn");
 var voteProBtn = document.getElementById("voteProBtn");
 var shareProBtn = document.getElementById("shareProBtn");
 
 calProBtn.addEventListener('click', function(event) {
-    changeContents('calendar-common', 'professor1', 'professor2');
+    changeContents('calendar-common', 'professor1', 'professor2', 'professor3');
     changeContents('sidebar');
 });
 
+subProBtn.addEventListener('click', function(event) {
+    changeContents('professor1', 'calendar-common', 'professor2', 'sidebar', 'professor3');
+});
+
 voteProBtn.addEventListener('click', function(event) {
-    changeContents('professor1', 'calendar-common', 'professor2', 'sidebar');
+    changeContents('professor2', 'calendar-common', 'professor1', 'sidebar', 'professor3');
 });
 
 shareProBtn.addEventListener('click', function(event) {
-    changeContents('professor2', 'professor1', 'calendar-common', 'sidebar');
+    changeContents('professor3', 'professor2', 'calendar-common', 'sidebar', 'professor1');
 });
 
 // 교수 투표 페이지 관련 select, button DOM
