@@ -92,22 +92,12 @@ class Subject(models.Model):
         db_table = "Subject"
 
 
-# 학과
-class Department(models.Model):
-    name = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = "Department"
-
-
 # 학생 강의
 class Student_lecture(models.Model):
     student_id = models.CharField(max_length=30)  # 학생ID
     name = models.CharField(max_length=30)  # 강의명
     code = models.CharField(max_length=20)  # 강의 코드
+    codeClass = models.CharField(max_length=5, default="A")  # 분반
     professor = models.CharField(max_length=20)  # 담당교수
     period = models.CharField(max_length=20)  # 교시
     lecture_type = models.CharField(max_length=10)  # 이수구분
@@ -121,6 +111,17 @@ class Student_lecture(models.Model):
         db_table = "Student_lecture"
 
 
+# 학과
+class Department(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "Department"
+
+
 # 투표 테이블
 class Vote(models.Model):
     professor_id = models.CharField(max_length=30)  # 교수ID
@@ -128,6 +129,8 @@ class Vote(models.Model):
     name = models.CharField(max_length=30)  # 강의명
     lecture_type = models.CharField(max_length=30)  # 이수구분
     vote_status = models.CharField(max_length=30)  # 투표 상태
+    start = models.DateTimeField()  # 시험 시작 시간
+    end = models.DateTimeField()  # 시험 끝나는 시간
     agree_votes = models.IntegerField()  # 찬성 표 수
     reject_votes = models.IntegerField()  # 반대 표 수
     all_students = models.IntegerField()  # 전체 학생수

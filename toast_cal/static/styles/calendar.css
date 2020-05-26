@@ -123,7 +123,7 @@ body {
 
 
 /* 학생 과목 페이지 관련 css */
-#lecture {
+#lecture, #studentLectureLoad {
     margin-left: 15%;
 }
 
@@ -132,7 +132,7 @@ body {
     height: 350px;
 }
 
-#lecture_save_btn {
+#lecture_save_btn, #lecture_delete_btn {
     float: right;
 }
 

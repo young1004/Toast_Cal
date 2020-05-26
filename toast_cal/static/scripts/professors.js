@@ -158,3 +158,25 @@ $(document).on("click", ".voteBtn", function() {
         });
 
 });
+
+var lecMakeBtn = document.getElementById("lecMakeBtn");
+
+lecMakeBtn.addEventListener('click', function(event) {
+    let makeData = {
+        name: document.getElementById("lec-name").value,
+        code: document.getElementById("lec-code").value,
+        codeClass: document.getElementById("lec-class").value,
+        period: document.getElementById("lec-time").value,
+        lecture_type: document.getElementById("lec-type").value,
+        department: document.getElementById("lec-depart").value,
+    };
+    document.getElementById("make-lecture-wrap").reset();
+
+    ajaxPost("/toast_cal/makeSubject/", "json", "POST", makeData)
+        .then(function(data) {
+            alert("강좌가 개설되었습니다.")
+        })
+        .catch(function(err) {
+            alert(err);
+        })
+});

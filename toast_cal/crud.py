@@ -169,11 +169,36 @@ def lecture_save(request):
                     code=request.POST["data[" + str(data) + "][code]"],
                     department=request.POST["data[" + str(data) + "][department]"],
                     lecture_type=request.POST["data[" + str(data) + "][lecture_type]"],
+                    codeClass=request.POST["data[" + str(data) + "][codeClass]"],
                     name=request.POST["data[" + str(data) + "][name]"],
                     professor=request.POST["data[" + str(data) + "][professor]"],
                     period=request.POST["data[" + str(data) + "][period]"],
                 )
         return HttpResponse("저장 완료!!")
+
+
+# 학생 강의 불러오기
+def student_lecture_load(request):
+    if request.method == "POST":
+        date_list = Student_lecture.objects.filter(student_id=request.session["userID"])
+        return HttpResponse(
+            serializers.serialize("json", date_list), content_type="application/json"
+        )
+
+
+# 학생 강의 삭제
+def student_lecture_delete(request):
+    if request.method == "POST":
+        for data in range(int(len(request.POST) / 6)):
+            query = Student_lecture.objects.get(
+                student_id=request.session["userID"],
+                code=request.POST["data[" + str(data) + "][code]"],
+            )
+            query.delete()
+        date_list = Student_lecture.objects.all()
+        return HttpResponse(
+            serializers.serialize("json", date_list), content_type="application/json"
+        )
 
 
 # 교수 기능
@@ -198,6 +223,22 @@ def voteChart(request):
     )
 
 
+# ajax로 들어온 데이터로 강의 개설
+def makeSubject(request):
+    Subject.objects.create(
+        name=request.POST["name"],
+        code=request.POST["code"],
+        codeClass=request.POST["codeClass"],
+        professor=request.session["userName"],
+        period=request.POST["period"],
+        lecture_type=request.POST["lecture_type"],
+        department=request.POST["department"],
+        stdCount=0,
+    )
+    return HttpResponse(1)
+
+
+# 공통 기능
 # right nav 부분 ajax 통신
 def dateList(request):
     if request.method == "POST":

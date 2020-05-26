@@ -54,7 +54,7 @@
                     <li>
                         <button type="button" class="btn btn-outline-secondary" id="subjectBtn">과목</button>
                     </li>
-                    <li><button type="button" class="btn btn-outline-secondary" id="etcBtn">기타</button></li>
+                    <li><button type="button" class="btn btn-outline-secondary" id="subjectLoad">과목 조회</button></li>
                     <!-- 테스트 -->
                     {% elif request.session.userType == "professor" %}
                     <li>
@@ -147,9 +147,27 @@
             </div>
             <button type="button" class="btn btn-outline-dark" id="lecture_save_btn">저장</button>
         </div>
-        <!-- 학생 두번째 기능탭 -->
-        <div class="contents" id="studentEtc" style="display: none;">
-            학생 두번째 기능
+
+        <div class="contents" id="studentLectureLoad" style="display: none;">
+            <h3>강의 조회</h3>
+            <div class="lecture-table-wrap">
+                <table class="table table-hover" id="lecture_load_table">
+                    <thead>
+                        <tr>
+                            <th scope="col">학수번호</th>
+                            <th scope="col">분반</th>
+                            <th scope="col">학과</th>
+                            <th scope="col">이수구분</th>
+                            <th scope="col">교과목명</th>
+                            <th scope="col">교수</th>
+                            <th scope="col">교시</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lecture_load_tbody">
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-outline-dark" id="lecture_delete_btn">삭제</button>
         </div>
 
         {% elif request.session.userType == "professor" %}
@@ -175,12 +193,15 @@
 
             <!-- 교수 강의 개설하는 페이지 -->
             <div id="make-lecture">
-                <span>학수번호<input type="text" style="width: 70px;"> - <input type="text" style="width: 30px;"></span>
-                <span>이수구분<input type="text"></span>
-                <span>교과목명<input type="text"></span>
-                <span>담당교수<input type="text"></span>
-                <span>교시<input type="text"></span>
-                <button type="button" value="개설">개설</button>
+                <form id="make-lecture-wrap">
+                    <span>학수번호<input type="text" style="width: 70px;" id="lec-code"> - <input type="text" id="lec-class"
+                            style="width: 30px;"></span>
+                    <span>이수구분<input type="text" id="lec-type"></span>
+                    <span>교과목명<input type="text" id="lec-name"></span>
+                    <span>학과<input type="text" id="lec-depart"></span>
+                    <span>교시<input type="text" id="lec-time"></span>
+                </form>
+                <button type="button" id="lecMakeBtn" value="개설">개설</button>
             </div>
         </div>
         <!-- 교수 투표 관련 페이지 -->
@@ -283,6 +304,7 @@
     <script src="{% static 'scripts/rightNav.js' %}"></script>
 
     {% if request.session.userType == "student" %}
+    <script src="{% static 'scripts/stdFunc.js' %}"></script>
     <script src="{% static 'scripts/students.js' %}"></script>
     {% elif request.session.userType == "professor" %}
     <script src="{% static 'scripts/professors.js' %}"></script>
