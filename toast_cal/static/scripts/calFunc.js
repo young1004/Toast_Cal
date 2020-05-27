@@ -205,7 +205,6 @@ function newCalObj(id, calendarId, title, category, location, start, end, isAllD
 function create(calendar, data) {
     var i;
 
-
     for (i = 0; i < data.length; i++) {
         schedule = newCalObj(
             data[i].pk,

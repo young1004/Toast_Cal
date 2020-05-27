@@ -209,18 +209,17 @@ lecMakeBtn.addEventListener('click', async function(event) {
 
     await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
         .then(function(data) {
-            alert(data);
-
+            // alert(data);
         })
         .catch(function(err) {
             alert(err);
         });
 
-    calendar.clear();
-
     ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
         .then(function(data) {
+            calendar.clear();
             create(calendar, data);
+            window.location.reload();
         })
         .catch(function(err) {
             alert(err);

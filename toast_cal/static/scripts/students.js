@@ -52,12 +52,15 @@ subjectLoad.addEventListener('click', function(event) {
 });
 
 // 저장 버튼
-$("#lecture_save_btn").click(function() {
+$("#lecture_save_btn").click(async function() {
     var tr = $("#lecture_tbody").children();
-
+    var flag = false;
     var obj = {};
 
+    let scheduleData;
+
     for (var i = 0; i < tr.length; i++) {
+
         if (tr[i].style.backgroundColor == "rgb(177, 179, 182)") { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
             var td = tr[i].children;
             obj.code = td[0].innerText;
@@ -67,20 +70,65 @@ $("#lecture_save_btn").click(function() {
             obj.name = td[4].innerText;
             obj.professor = td[5].innerText;
             obj.period = td[6].innerText;
+
+            await ajaxPost("/toast_cal/lecture_save/", "json", "POST", obj)
+                .then(function(data) {
+                    // alert(data);
+
+                    var timeData = periodSplit(obj.period);
+                    var convData = periodConvert(timeData);
+                    var calData = [];
+                    // console.log(convData);
+                    for (var i = 0; i < 15; i++) {
+                        var dateArr = getTimeData(convData, i * 7);
+                        console.log(dateArr);
+                        for (var j = 0; j < 2; j++) {
+                            var calobj = {};
+                            // console.log(dateArr[j].startDate);
+                            // console.log(dateArr[j].endDate);
+                            calobj = newCalObj(1, obj.lecture_type,
+                                obj.name, "time", "미정", dateArr[j].startDate,
+                                dateArr[j].endDate, convertBooleanData(false),
+                                "busy", "public");
+                            calData.push(calobj);
+                        }
+
+                    }
+                    // console.log(calData);
+                    scheduleData = calData;
+
+                    flag = true;
+                })
+                .catch(function(err) {
+                    // alert(err);
+                });
+
+            console.log(scheduleData);
+            scheduleData = {
+                scheduleData
+            };
+            await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
+                .then(function(data) {
+                    // alert(data);
+                })
+                .catch(function(err) {
+                    alert(err);
+                });
+
+            ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+                .then(function(data) {
+                    calendar.clear();
+                    create(calendar, data);
+                    window.location.reload();
+                })
+                .catch(function(err) {
+                    alert(err);
+                });
+
+
         }
     }
-    if (obj.length != 0) { //과목 선택을 했으면 데이터 저장
-
-        ajaxPost("/toast_cal/lecture_save/", "json", "POST", obj)
-            .then(function(data) {
-                alert(data);
-            })
-            .catch(function(err) {
-                alert(err);
-            });
-    } else {
-        alert("과목을 선택하세요.");
-    }
+    if (flag == false) alert('과목을 선택하세요');
 });
 
 // 삭제 버튼
