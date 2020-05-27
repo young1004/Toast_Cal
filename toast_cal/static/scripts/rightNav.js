@@ -17,7 +17,7 @@ var todayData = {
 
 ajaxPost("/toast_cal/dateList/", 'json', 'POST', todayData)
     .then(function(data) {
-        console.log(data);
+        // console.log(data);
 
         for (i = 0; i < data.length; i++) {
 

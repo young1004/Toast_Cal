@@ -48,6 +48,122 @@ function getYearMonth(year, month, calendar) {
 }
 
 /**
+ * 특정 날짜를 주면 그 주의 특정 요일의 날짜를 반환하는 함수
+ * @param {-mm-dd} monthday 시작할 달과 날짜
+ * @param {int} value 특정 요일의 날짜를 계산하기 위한 숫자(0~6 + a)
+ */
+function getDayDate(monthday, value) {
+    var nowYear = new Date();
+    var now = new Date(nowYear.getFullYear() + monthday); // 들어온 monthday를 기준으로 잡음
+    var day = now.getDay(); // 들어온 monthday의 요일값을 저장
+    var nowDay = now.getDate(); // 들어온 monthday의 날짜를 저장
+    var nowMonth = now.getMonth(); // 들어온 monthday의 달을 저장
+    var nowYear = now.getFullYear(); // 현재의 년도를 저장
+
+    /* 만약 3월 2일이 화요일이면, day의 값은 2, 이를 value값으로 보정하여 특정 날짜 뽑기*/
+    var DayOfWeek = value - day; //들어온 값에서 0~6의 값을 뺌
+
+    var weekDate = new Date(nowYear, nowMonth, nowDay + DayOfWeek);
+
+    var newMonth = weekDate.getMonth() + 1;
+    var newDate = weekDate.getDate();
+
+    if (newMonth < 10) newMonth = "0" + newMonth;
+    if (newDate < 10) newDate = "0" + newDate;
+
+    var newDate = weekDate.getFullYear() + "-" + newMonth + "-" + newDate;
+
+    return newDate;
+}
+
+/**
+ * 특정 강의의 교시 정보를 요일과 교시로 잘라 배열로 반환하는 함수
+ * @param {String} period 특정 강의 교시 정보(ex.월78 월910)
+ * @returns {Array} 입력된 강의 정보를 잘라 담아놓은 배열
+ */
+function periodSplit(period) {
+    var cutDataArray = [];
+    var firstCutData = period.split(' ');
+
+    var theDay;
+    var stdClass;
+
+    for (var i = 0; i < firstCutData.length; i++) {
+        console.log(firstCutData[i]);
+        theDay = firstCutData[i].substring(0, 1);
+        stdClass = firstCutData[i].substring(1);
+        cutDataArray.push(theDay);
+        cutDataArray.push(stdClass);
+    }
+
+    return cutDataArray;
+}
+
+/**
+ * 들어온 요일 문자열을 해당하는 요일의 숫자값으로 반환하는 함수
+ * @param {String} day 변환되기전 요일값
+ * @returns 각 요일의 숫자값
+ */
+function dayConvert(day) {
+
+    if (day == "일") return 0;
+    if (day == "월") return 1;
+    if (day == "화") return 2;
+    if (day == "수") return 3;
+    if (day == "목") return 4;
+    if (day == "금") return 5;
+    if (day == "토") return 6;
+}
+
+/**
+ * 들어온 교시값에 따라 시간을 반환하는 함수
+ * @param {String} time 시간으로 변환할 교시값 문자열
+ * @returns {Array} 시간으로 변환된 시작시간과 끝시간이 담긴 배열
+ */
+function timeConvert(time) {
+    if (time == "12") return ["09:30", "10:45"];
+    if (time == "34") return ["11:00", "12:15"];
+    if (time == "78") return ["13:00", "14:15"];
+    if (time == "910") return ["14:30", "15:45"];
+    if (time == "1112") return ["16:00", "17:15"];
+    if (time == "1314") return ["17:30", "18:45"];
+}
+
+/**
+ * periodSplit으로 반환된 교시값의 데이터 배열을 변환해주는 함수
+ * @param {Array} period 변환이 되기전 잘라져서 들어올 데이터
+ * @returns {Array} 변환이 완료된 데이터의 배열
+ */
+function periodConvert(period) {
+    var convertedData = []
+    for (var i = 0; i < period.length; i++) {
+        if (i % 2 == 0) convertedData.push(dayConvert(period[i]));
+        else if (i % 2 != 0) convertedData.push(timeConvert(period[i]));
+    }
+    return convertedData;
+}
+
+/**
+ * periodConvert로 변환한 데이터를 yyyy-mm-dd hh:mm 형식으로 반환하는 함수
+ * @param {Array} convertedData periodConvert로 변환된 데이터 배열
+ * @param {int} day 특정 요일의 날짜를 계산하기 위한 숫자(0~6 + a)
+ * @returns {Array} 시작시간과 끝시간이 담겨있는 오브젝트들을 담은 배열
+ */
+function getTimeData(convertedData, day) {
+    var dateData = [];
+    for (var j = 0; j < 2; j++) {
+        var tmpobj = {};
+        var date = getDayDate('-03-02', convertedData[2 * j] + day);
+        var startDate = date + " " + convertedData[1 + 2 * j][0];
+        var endDate = date + " " + convertedData[1 + 2 * j][1];
+        tmpobj.startDate = startDate;
+        tmpobj.endDate = endDate;
+        dateData.push(tmpobj);
+    }
+    return dateData;
+}
+
+/**
  * 서버에서 주고받는 데이터를 통일해서 생성하기 위한 함수(총 10개의 파라미터)
  * @param {String|Number} id 캘린더의 scheduleID(database 키 값)
  * @param {String} calendarId 캘린더의 setCalendars로 지정된 값(ex. "Major Subject")

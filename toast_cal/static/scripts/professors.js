@@ -161,7 +161,7 @@ $(document).on("click", ".voteBtn", function() {
 
 var lecMakeBtn = document.getElementById("lecMakeBtn");
 
-lecMakeBtn.addEventListener('click', function(event) {
+lecMakeBtn.addEventListener('click', async function(event) {
     let makeData = {
         name: document.getElementById("lec-name").value,
         code: document.getElementById("lec-code").value,
@@ -171,12 +171,58 @@ lecMakeBtn.addEventListener('click', function(event) {
         department: document.getElementById("lec-depart").value,
     };
     document.getElementById("make-lecture-wrap").reset();
+    let scheduleData;
 
-    ajaxPost("/toast_cal/makeSubject/", "json", "POST", makeData)
+    await ajaxPost("/toast_cal/makeSubject/", "json", "POST", makeData)
         .then(function(data) {
-            alert("강좌가 개설되었습니다.")
+
+            var timeData = periodSplit(data[0].fields.period);
+            var convData = periodConvert(timeData);
+            var calData = [];
+            // console.log(convData);
+            for (var i = 0; i < 15; i++) {
+                var dateArr = getTimeData(convData, i * 7);
+                // console.log(dateArr);
+                for (var j = 0; j < 2; j++) {
+                    var calobj = {};
+                    // console.log(dateArr[j].startDate);
+                    // console.log(dateArr[j].endDate);
+                    calobj = newCalObj(1, data[0].fields.lecture_type,
+                        data[0].fields.name, "time", "미정", dateArr[j].startDate,
+                        dateArr[j].endDate, convertBooleanData(false),
+                        "busy", "public");
+                    calData.push(calobj);
+                }
+
+            }
+            // console.log(calData);
+            scheduleData = calData;
         })
         .catch(function(err) {
             alert(err);
+        });
+
+    console.log(scheduleData);
+    scheduleData = {
+        scheduleData
+    };
+
+    await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
+        .then(function(data) {
+            alert(data);
+
         })
+        .catch(function(err) {
+            alert(err);
+        });
+
+    calendar.clear();
+
+    ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+        .then(function(data) {
+            create(calendar, data);
+        })
+        .catch(function(err) {
+            alert(err);
+        });
 });

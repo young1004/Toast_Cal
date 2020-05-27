@@ -53,13 +53,12 @@ subjectLoad.addEventListener('click', function(event) {
 
 // 저장 버튼
 $("#lecture_save_btn").click(function() {
-    var tr = $("tr");
-    var data = [];
-    var husks = {};
+    var tr = $("#lecture_tbody").children();
+
+    var obj = {};
 
     for (var i = 0; i < tr.length; i++) {
         if (tr[i].style.backgroundColor == "rgb(177, 179, 182)") { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
-            var obj = {};
             var td = tr[i].children;
             obj.code = td[0].innerText;
             obj.codeClass = td[1].innerText;
@@ -68,12 +67,11 @@ $("#lecture_save_btn").click(function() {
             obj.name = td[4].innerText;
             obj.professor = td[5].innerText;
             obj.period = td[6].innerText;
-            data.push(obj);
         }
     }
-    if (data.length != 0) { //과목 선택을 했으면 데이터 저장
-        husks.data = data;
-        ajaxPost("/toast_cal/lecture_save/", "json", "POST", husks)
+    if (obj.length != 0) { //과목 선택을 했으면 데이터 저장
+
+        ajaxPost("/toast_cal/lecture_save/", "json", "POST", obj)
             .then(function(data) {
                 alert(data);
             })

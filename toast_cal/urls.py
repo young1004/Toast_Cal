@@ -31,4 +31,5 @@ urlpatterns = [
     path("voteTable/", crud.voteTable, name="voteTable"),  # 교수 기능들
     path("voteChart/", crud.voteChart, name="voteChart"),
     path("makeSubject/", crud.makeSubject, name="makeSubject"),
+    path("makeCalendars/", crud.makeCalendars, name="makeCalendars"),
 ]

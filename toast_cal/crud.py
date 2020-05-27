@@ -156,25 +156,23 @@ def lecture_lookup(request):
 # 과목 저장
 def lecture_save(request):
     if request.method == "POST":
-        for data in range(int(len(request.POST) / 6)):
-            flag = Student_lecture.objects.filter(
+        flag = Student_lecture.objects.filter(
+            student_id=request.session["userID"], code=request.POST["code"],
+        ).exists()
+        if flag:
+            return HttpResponse("중복된 데이터입니다. 수강 강의를 확인하세요.")
+        else:
+            new_instance = Student_lecture.objects.create(
                 student_id=request.session["userID"],
-                code=request.POST["data[" + str(data) + "][code]"],
-            ).exists()
-            if flag:
-                print("중복된 데이터입니다.")
-            else:
-                new_instance = Student_lecture.objects.create(
-                    student_id=request.session["userID"],
-                    code=request.POST["data[" + str(data) + "][code]"],
-                    department=request.POST["data[" + str(data) + "][department]"],
-                    lecture_type=request.POST["data[" + str(data) + "][lecture_type]"],
-                    codeClass=request.POST["data[" + str(data) + "][codeClass]"],
-                    name=request.POST["data[" + str(data) + "][name]"],
-                    professor=request.POST["data[" + str(data) + "][professor]"],
-                    period=request.POST["data[" + str(data) + "][period]"],
-                )
-        return HttpResponse("저장 완료!!")
+                code=request.POST["code"],
+                department=request.POST["department"],
+                lecture_type=request.POST["lecture_type"],
+                codeClass=request.POST["codeClass"],
+                name=request.POST["name"],
+                professor=request.POST["professor"],
+                period=request.POST["period"],
+            )
+            return HttpResponse("저장 성공")
 
 
 # 학생 강의 불러오기
@@ -189,7 +187,7 @@ def student_lecture_load(request):
 # 학생 강의 삭제
 def student_lecture_delete(request):
     if request.method == "POST":
-        for data in range(int(len(request.POST) / 6)):
+        for data in range(int(len(request.POST) / 7)):
             query = Student_lecture.objects.get(
                 student_id=request.session["userID"],
                 code=request.POST["data[" + str(data) + "][code]"],
@@ -225,7 +223,9 @@ def voteChart(request):
 
 # ajax로 들어온 데이터로 강의 개설
 def makeSubject(request):
-    Subject.objects.create(
+    # print("---------makeSubject--------------------------")
+    # print(request.POST)
+    makedData = Subject.objects.create(
         name=request.POST["name"],
         code=request.POST["code"],
         codeClass=request.POST["codeClass"],
@@ -235,7 +235,38 @@ def makeSubject(request):
         department=request.POST["department"],
         stdCount=0,
     )
-    return HttpResponse(1)
+    makedData.save()
+
+    createdData = Subject.objects.filter(id=makedData.id)
+
+    # print("---------makeSubject--------------------------")
+    return HttpResponse(
+        serializers.serialize("json", createdData), content_type="application/json"
+    )
+
+
+# ajax로 들어온 데이터들로 calendar DB에 저장
+def makeCalendars(request):
+    # print("-----------makeCalendars--------------")
+    # print(request.POST)
+
+    for i in range(int(len(request.POST) / 10)):
+        new_instance = Calendar.objects.create(
+            userID=request.session["userID"],
+            calendarId=request.POST["scheduleData[" + str(i) + "][calendarId]"],
+            title=request.POST["scheduleData[" + str(i) + "][title]"],
+            category=request.POST["scheduleData[" + str(i) + "][category]"],
+            location=request.POST["scheduleData[" + str(i) + "][location]"],
+            start=request.POST["scheduleData[" + str(i) + "][start]"],
+            end=request.POST["scheduleData[" + str(i) + "][end]"],
+            isAllDay=request.POST["scheduleData[" + str(i) + "][isAllDay]"],
+            state=request.POST["scheduleData[" + str(i) + "][state]"],
+            calendarClass=request.POST["scheduleData[" + str(i) + "][class]"],
+        )
+
+    # print("-----------makeCalendars--------------")
+
+    return HttpResponse("강의 일정 저장 완료!")
 
 
 # 공통 기능
@@ -248,7 +279,6 @@ def dateList(request):
             start__startswith=request.POST["todayData"],
             end__startswith=request.POST["todayData"],
         )
-
     return HttpResponse(
         serializers.serialize("json", date_list), content_type="application/json"
     )

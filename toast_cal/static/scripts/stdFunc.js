@@ -104,7 +104,11 @@ function lecture_lookup() {
 
 function clickTrEvent(tr) { //tr tag
     if (tr.style.backgroundColor == "") {
-        tr.style.backgroundColor = '#b1b3b6';
+        var tbody_tr = $("#lecture_tbody").children();
+        for (var i = 0; i < tbody_tr.length; i++) {
+            tbody_tr[i].style.backgroundColor = "";
+        }
+        tr.style.backgroundColor = "#b1b3b6";
     } else {
         tr.style.backgroundColor = "";
     }
