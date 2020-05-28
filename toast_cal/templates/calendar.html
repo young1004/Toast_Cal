@@ -191,15 +191,64 @@
                 </table>
             </div>
 
-            <!-- 교수 강의 개설하는 페이지 -->
+            <!-- 교수 강의 개설하는 div -->
             <div id="make-lecture">
                 <form id="make-lecture-wrap">
-                    <span>학수번호<input type="text" style="width: 70px;" id="lec-code"> - <input type="text" id="lec-class"
-                            style="width: 30px;"></span>
-                    <span>이수구분<input type="text" id="lec-type"></span>
-                    <span>교과목명<input type="text" id="lec-name"></span>
-                    <span>학과<input type="text" id="lec-depart"></span>
-                    <span>교시<input type="text" id="lec-time"></span>
+                    <span>학수번호<input type="text" style="width: 70px;" id="lec-code"> -
+                        <select name="lecClass" id="lec-class" style="width: 45px;">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                        </select>
+                    </span>
+                    <span>이수구분
+                        <select name="lecType" id="lec-type">
+                            <option value="전공 필수">전공 필수</option>
+                            <option value="전공 선택">전공 선택</option>
+                            <option value="일반 교양">일반 교양</option>
+                        </select>
+                    </span>
+                    <span>교과목명<input type="text" id="lec-name" width="50px">
+                    </span>
+                    <span>학과
+                        <select name="lecDepart" id="lec-depart">
+                        </select>
+                    </span>
+                    <span>교시
+                        <select name="lecType1" id="lec-type1">
+                            <option value="월">월</option>
+                            <option value="화">화</option>
+                            <option value="수">수</option>
+                            <option value="목">목</option>
+                            <option value="금">금</option>
+                            <option value="토">토</option>
+                            <option value="일">일</option>
+                        </select>
+                        <select name="lecType2" id="lec-type2">
+                            <option value="12">12</option>
+                            <option value="34">34</option>
+                            <option value="56">56</option>
+                            <option value="78">78</option>
+                            <option value="910">910</option>
+                            <option value="1112">1112</option>
+                        </select>
+                        <select name="lecType3" id="lec-type3">
+                            <option value="월">월</option>
+                            <option value="화">화</option>
+                            <option value="수">수</option>
+                            <option value="목">목</option>
+                            <option value="금">금</option>
+                            <option value="토">토</option>
+                            <option value="일">일</option>
+                        </select>
+                        <select name="lecType4" id="lec-type4">
+                            <option value="12">12</option>
+                            <option value="34">34</option>
+                            <option value="56">56</option>
+                            <option value="78">78</option>
+                            <option value="910">910</option>
+                            <option value="1112">1112</option>
+                        </select>
+                    </span>
                 </form>
                 <button type="button" id="lecMakeBtn" value="개설">개설</button>
             </div>
