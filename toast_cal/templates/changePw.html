@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'styles/signup.css' %}" rel="stylesheet">
+    <title>PW변경</title>
+</head>
+<body>
+    <div id="page">
+        <div id="header" role="banner">
+            <a href="" class="main_logo">
+                PW변경하기
+            </a>
+        </div>
+    </div>
+    <form id="change_pw_form" method="POST" action="{% url 'changePw' %}">
+        {% csrf_token %}
+        <div id="container" role="main">
+            <div id="content">
+                <div>
+                    <h3 class="join_title">
+                        <label for="userid">아이디</label>
+                    </h3>
+                    <span id="select_area">
+                        <input type="text" name="userID" class="user_info" maxlength="20" placeholder="아이디">
+                        <select id="user_type_select" name="userType">
+                            <option value="student">학생</option>
+                            <option value="professor">교수</option>
+                        </select>
+                    </span>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label for="psw1">비밀번호</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="password" name="password" class="user_info" maxlength="20" placeholder="비밀번호">
+                    </span>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label for="psw2">새 비밀번호</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="password" name="password2" class="user_info" maxlength="20" placeholder="새 비밀번호">
+                    </span>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label for="psw2">새 비밀번호 확인</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="password" name="password2_check" class="user_info" maxlength="20" placeholder="새 비밀번호 확인">
+                    </span>
+                </div>
+                <div class="btn_area">
+                    <input type="submit" class="btn_type" name="submit" value="변경하기">
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

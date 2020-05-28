@@ -210,7 +210,7 @@ svg {
 #right_nav {
     display: block;
     float: left;
-    margin-top: 3.9em;
+    margin-top: 3em;
     position: relative;
     left: 60px;
     width: 30%;
@@ -235,8 +235,8 @@ svg {
 }
 
 
-
 /*사용자 메뉴 상단 관련 css*/
+/*사용자 메뉴 관련 css*/
 #tab_box {
     border: 1px solid #cdcdcd;
     float: left;
@@ -254,8 +254,33 @@ svg {
     overflow: scroll;
 }
 
+#first_tab {
+    display: block;
+}
+
+#second_tab {
+    display: none;
+}
+
+#third_tab {
+    display: none;
+}
 
 #today_list_argu {
+    border-bottom: 2px #dee2e6 dotted;
+    font-size: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#thisweek_list_argu {
+    border-bottom: 2px #dee2e6 dotted;
+    font-size: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#lastweek_list_argu {
     border-bottom: 2px #dee2e6 dotted;
     font-size: 15px;
     padding-top: 15px;

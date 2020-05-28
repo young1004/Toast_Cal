@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 찾기</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="{% static 'styles/signup.css' %}">
+</head>
+
+<body>
+
+    <div id="page">
+        <div id="header" role="banner">
+            <p class="title">
+                비밀번호 찾기
+            </p>
+        </div>
+    </div>
+    <form id="newUser_form" method="POST" action="{% url 'findPass' %}">
+        {% csrf_token %}
+        <div id="container" role="main">
+            <div id="content">
+                <div>
+                    <h3 class="join_title">
+                        <label for="userid">구분</label>
+                    </h3>
+                    <select id="select_area" name="userType">
+                        <option value="student">학생</option>
+                        <option value="professor">교수</option>
+                    </select>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label for="userid">아이디</label>
+                    </h3>
+                    <span id="select_area">
+                        <input type="text" name="userID" class="user_info" maxlength="20" placeholder="아이디">
+                    </span>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label for="username">이름</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="text" name="username" class="user_info" maxlength="20" placeholder="이름">
+                    </span>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label for="userdep">학과</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="text" name="department" class="user_info" maxlength="20" placeholder="학과">
+                    </span>
+                </div>
+                <div class="btn_area">
+                    <input type="submit" class="btn_type" value="찾기">
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

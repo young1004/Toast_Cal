@@ -76,7 +76,7 @@ select {
     background-color: white;
 }
 
-#select_area {
+#select_area{
     display: block;
     padding: 10px 160px 10px 14px;
     position: relative;
@@ -87,7 +87,7 @@ select {
     background-color: white;
 }
 
-#user_type_select {
+#user_type_select{
     position: absolute;
     top: 16px;
     right: 13px;
@@ -122,12 +122,4 @@ select {
     border-style: none;
     color: #fff;
     background-color: lightslategrey;
-}
-
-.title {
-    font-weight: 700;
-    font-size: 40px;
-    color: rgb(67, 84, 100);
-    margin-top: 0px;
-    margin-bottom: 0px;
 }

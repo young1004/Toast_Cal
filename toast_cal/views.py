@@ -93,3 +93,168 @@ def logout(request):
     request.session.pop("userType")
 
     return redirect("login")
+
+
+# 아이디 / 비밀번호 찾는 페이지
+def findInfo(request):
+    return render(request, "findInfo.html")
+
+
+# 아이디 찾기
+def findId(request):
+    if request.method == "POST":
+        userType = request.POST["userType"]
+        username = request.POST["username"]
+        department = request.POST["department"]
+        phone = request.POST["phone"]
+
+        if userType == "student":
+            try:
+                user_data = Student.objects.get(
+                    username=username, department=department, phone=phone
+                )
+                return render(request, "getMessage.html", {"message": user_data.userID})
+            except Student.DoesNotExist:
+                return render(
+                    request, "getMessage.html", {"message": "일치하는 아이디가 없습니다."}
+                )
+        elif userType == "professor":
+            try:
+                user_data = Professor.objects.get(
+                    username=username, department=department, phone=phone
+                )
+                return render(request, "getMessage.html", {"message": user_data.userID})
+            except Professor.DoesNotExist:
+                return render(
+                    request, "getMessage.html", {"message": "일치하는 아이디가 없습니다."}
+                )
+
+    return render(request, "findId.html")
+
+
+# 비밀번호 찾기
+def findPass(request):
+    if request.method == "POST":
+        userType = request.POST["userType"]
+        userID = request.POST["userID"]
+        username = request.POST["username"]
+        department = request.POST["department"]
+
+        if userType == "student":
+            try:
+                user_data = Student.objects.get(
+                    pk=userID, username=username, department=department
+                )
+                update = Student.objects.filter(
+                    pk=userID, username=username, department=department
+                ).update(
+                    department=user_data.department,
+                    studentID=user_data.studentID,
+                    username=user_data.username,
+                    email=user_data.email,
+                    password=make_password(user_data.userID),
+                    phone=user_data.phone,
+                )
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "임시 비밀번호로 변경합니다.(비밀번호는 ID와 일치)"},
+                )
+            except Student.DoesNotExist:
+                return render(
+                    request, "getMessage.html", {"message": "데이터가 일치하지 않습니다."}
+                )
+        elif userType == "professor":
+            try:
+                user_data = Professor.objects.get(
+                    pk=userID, username=username, department=department
+                )
+                update = Professor.objects.filter(
+                    pk=userID, username=username, department=department
+                ).update(
+                    department=user_data.department,
+                    username=user_data.username,
+                    email=user_data.email,
+                    password=make_password(user_data.userID),
+                    phone=user_data.phone,
+                )
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "임시 비밀번호로 변경합니다.(비밀번호는 ID와 일치)"},
+                )
+            except Professor.DoesNotExist:
+                return render(
+                    request, "getMessage.html", {"message": "데이터가 일치하지 않습니다."}
+                )
+
+    return render(request, "findPass.html")
+
+
+# 비밀번호 변경
+def changePw(request):
+    if request.method == "POST":
+        userType = request.POST["userType"]
+        userID = request.POST["userID"]
+        password = request.POST["password"]
+        password2 = request.POST["password2"]
+        password2_check = request.POST["password2_check"]
+
+        if userType == "student":
+
+            user_data = Student.objects.get(pk=userID)
+
+            if check_password(password, user_data.password):
+                if password2 == password2_check:
+                    try:
+                        update = Student.objects.filter(pk=userID).update(
+                            department=user_data.department,
+                            studentID=user_data.studentID,
+                            username=user_data.username,
+                            email=user_data.email,
+                            password=make_password(password2),
+                            phone=user_data.phone,
+                        )
+                        return render(
+                            request, "modifypw.html", {"massage": "비밀번호가 변경되었습니다."}
+                        )
+                    except Student.DoesNotExist:
+                        return render(
+                            request, "modifyfail.html", {"massage": "잘못입력된 값이 있습니다."}
+                        )
+                else:
+                    return render(
+                        request, "modifyfail.html", {"massage": "새로입력한 비밀번호가 일치하지않습니다."}
+                    )
+            else:
+                return render(request, "modifyfail.html", {"massage": "비밀번호가 다릅니다."})
+
+        elif userType == "professor":
+
+            user_data = Professor.objects.get(pk=userID)
+
+            if check_password(password, user_data.password):
+                if password2 == password2_check:
+                    try:
+                        update = Professor.objects.filter(pk=userID).update(
+                            department=user_data.department,
+                            username=user_data.username,
+                            email=user_data.email,
+                            password=make_password(password2),
+                            phone=user_data.phone,
+                        )
+                        return render(
+                            request, "modifypw.html", {"massage": "비밀번호가 변경되었습니다."}
+                        )
+                    except Professor.DoesNotExist:
+                        return render(
+                            request, "modifyfail.html", {"massage": "잘못입력된 값이 있습니다."}
+                        )
+                else:
+                    return render(
+                        request, "modifyfail.html", {"massage": "새로입력한 비밀번호가 일치하지않습니다."}
+                    )
+            else:
+                return render(request, "modifyfail.html", {"massage": "비밀번호가 다릅니다."})
+    else:
+        return render(request, "changePw.html")

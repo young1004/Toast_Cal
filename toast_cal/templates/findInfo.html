@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디/비밀번호 찾기</title>
+    <link rel="stylesheet" href="{% static 'styles/findInfo.css' %}">
+</head>
+
+<body>
+    <div class="main">
+        <p>개인정보 찾기/변경</p>
+    </div>
+    <div id="content">
+        <ul class="find_list">
+            <li>
+                <a href="{% url 'findId' %}" class="find">
+                    아이디 찾기
+                    <span>></span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'findPass' %}" class="find">
+                    비밀번호 찾기
+                    <span>></span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'changePw' %}" class="find">
+                    비밀번호 변경
+                    <span>></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>

@@ -282,3 +282,14 @@ def dateList(request):
     return HttpResponse(
         serializers.serialize("json", date_list), content_type="application/json"
     )
+
+def getWeekSchedule(request):
+    if request.method == "POST":
+        date_list = Calendar.objects.filter(
+            userID=request.session["userID"],
+            start__range=[request.POST["StartDate"], request.POST["EndDate"]]
+        ).order_by('start')
+
+    return HttpResponse(
+        serializers.serialize("json", date_list), content_type="application/json"
+    )

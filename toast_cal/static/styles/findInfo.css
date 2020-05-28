@@ -1,0 +1,64 @@
+body {
+    padding: 40px 100px 100px 100px;
+    background-color: #f5f6f7;
+}
+
+.main {
+    margin: auto;
+    width: 70%;
+    text-align: center;
+}
+
+p {
+    font-size: 40px;
+    font-weight: 700;
+    color: rgb(67, 84, 100);
+}
+
+#content {
+    float: none;
+    width: 600px;
+    margin: 0 auto;
+    padding: 25px 0 20px;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.find_list li:first-child {
+    margin-top: 24px;
+}
+
+.find_list li {
+    margin: 26px 0;
+    border: solid 1px #cdcdcd;
+    border-radius: 10px;
+}
+
+.find {
+    display: block;
+    position: relative;
+    width: 530px;
+    height: 80px;
+    margin: 45px 0 0 30px;
+    color: black;
+    font-size: 1.3em;
+    font-weight: 700;
+}
+
+.find span {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    color: black;
+    font-size: 1.3em;
+    font-weight: 700;
+}
+
+a {
+    text-decoration: none;
+}

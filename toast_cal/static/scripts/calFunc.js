@@ -77,6 +77,31 @@ function getDayDate(monthday, value) {
 }
 
 /**
+ * 
+ * @param {int}} flag 0~6의 숫자(일~토)
+ * @param {int} value 현재날짜에서 더할 숫자
+ * @returns {String} 뽑아낸 날짜의 String
+ */
+function getDate(flag, value) {
+    var now = new Date();
+    var nowDayOfWeek = now.getDay();
+    var nowDay = now.getDate();
+    var nowMonth = now.getMonth();
+    var nowYear = now.getFullYear();
+
+    if (flag == 0)
+        var DayOfWeek = value - nowDayOfWeek;
+    else if (flag == 1)
+        var DayOfWeek = value + (6 - nowDayOfWeek);
+
+    var weekDate = new Date(nowYear, nowMonth, nowDay + DayOfWeek);
+
+    var newDate = weekDate.getFullYear() + "-" + (weekDate.getMonth() + 1) + "-" + weekDate.getDate();
+
+    return newDate;
+}
+
+/**
  * 특정 강의의 교시 정보를 요일과 교시로 잘라 배열로 반환하는 함수
  * @param {String} period 특정 강의 교시 정보(ex.월78 월910)
  * @returns {Array} 입력된 강의 정보를 잘라 담아놓은 배열
