@@ -43,7 +43,7 @@
     <div id="nav-wrap">
         <nav class="navbar navbar-expand-lg navbar-light bg">
             <div class="collapse navbar-collapse" id="navbarNav">
-                <a class="logo" href="#">
+                <a class="logo" href="">
                     HScalendar
                 </a>
                 <ul class="navbar-nav">
@@ -51,25 +51,25 @@
                     {% if request.session.userType == "student" %}
                     <!-- id에 addEventListner 추가 -->
                     <li>
-                        <button type="button" class="btn btn-outline-secondary" id="calStdBtn">일정 관리</button>
+                        <button type="button" class="btn btn-outline-light" id="calStdBtn">일정 관리</button>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-outline-secondary" id="subjectBtn">과목</button>
+                        <button type="button" class="btn btn-outline-light" id="subjectBtn">과목</button>
                     </li>
-                    <li><button type="button" class="btn btn-outline-secondary" id="subjectLoad">과목 조회</button></li>
+                    <li><button type="button" class="btn btn-outline-light" id="subjectLoad">과목 조회</button></li>
                     <!-- 테스트 -->
                     {% elif request.session.userType == "professor" %}
                     <li>
-                        <button type="button" class="btn btn-outline-secondary" id="calProBtn">일정 관리</button>
+                        <button type="button" class="btn btn-outline-light" id="calProBtn">일정 관리</button>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-outline-secondary" id="subProBtn">강의 개설</button>
+                        <button type="button" class="btn btn-outline-light" id="subProBtn">강의 개설</button>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-outline-secondary" id="voteProBtn">투표 현황</button>
+                        <button type="button" class="btn btn-outline-light" id="voteProBtn">투표 현황</button>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-outline-secondary" id="shareProBtn">공유 캘린더</button>
+                        <button type="button" class="btn btn-outline-light" id="shareProBtn">공유 캘린더</button>
                     </li>
                     {% endif %}
                 </ul>
@@ -78,9 +78,6 @@
     </div>
 
     <div id="wrap">
-
-
-
         <!-- 사이드바 생성 -->
         <div id="sidebar">
             <div class="side_area">
@@ -236,10 +233,10 @@
                         <select name="lecType2" id="lec-type2">
                             <option value="12">12</option>
                             <option value="34">34</option>
-                            <option value="56">56</option>
                             <option value="78">78</option>
                             <option value="910">910</option>
                             <option value="1112">1112</option>
+                            <option value="1314">1314</option>
                         </select>
                         <select name="lecType3" id="lec-type3">
                             <option value="월">월</option>
@@ -253,10 +250,10 @@
                         <select name="lecType4" id="lec-type4">
                             <option value="12">12</option>
                             <option value="34">34</option>
-                            <option value="56">56</option>
                             <option value="78">78</option>
                             <option value="910">910</option>
                             <option value="1112">1112</option>
+                            <option value="1314">1314</option>
                         </select>
                     </span>
                     <span>수용인원<input type="text" id="lec-count" width="50px">

@@ -14,7 +14,7 @@ subProBtn.addEventListener('click', function(event) {
 
     //교수의 강의 테이블 출력
     ajaxPost("/toast_cal/pro_lecture_table/", "json", "POST", 1)
-        .then(function (data) {
+        .then(function(data) {
             $('#pro_lec_load_tbody').empty();
 
             for (var count = 0; count < data.length; count++) {
@@ -27,7 +27,7 @@ subProBtn.addEventListener('click', function(event) {
                 $('#pro_lec_load_tbody').append(tr);
             }
         })
-        .catch(function (err) {
+        .catch(function(err) {
             alert(err);
         });
 
@@ -103,7 +103,7 @@ voteTableBtn.addEventListener('click', function(event) {
 
 
 // 교수 강의 삭제
-$(document).on("click", ".pro_lec_del_btn", async function () {
+$(document).on("click", ".pro_lec_del_btn", async function() {
     var delete_btn = $(this);
 
     var tr = delete_btn.parent().parent();
@@ -115,7 +115,7 @@ $(document).on("click", ".pro_lec_del_btn", async function () {
     console.log(subject);
 
     ajaxPost("/toast_cal/professor_lecture_delete/", 'json', "POST", subject)
-        .then(function (data) {
+        .then(function(data) {
             $('#pro_lec_load_tbody').empty();
 
             for (var count = 0; count < data.length; count++) {
@@ -128,7 +128,7 @@ $(document).on("click", ".pro_lec_del_btn", async function () {
                 $('#pro_lec_load_tbody').append(tr);
             }
         })
-        .catch(function (err) {
+        .catch(function(err) {
             alert(err)
         })
     var json = {};
@@ -136,20 +136,20 @@ $(document).on("click", ".pro_lec_del_btn", async function () {
     json.title = td[4].innerText;
 
     await ajaxPost("/toast_cal/deleteCalendars/", "json", "POST", json)
-        .then(function (data) {
+        .then(function(data) {
             alert(data);
         })
-        .catch(function (err) {
+        .catch(function(err) {
             alert(err);
         });
 
     ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
-        .then(function (data) {
+        .then(function(data) {
             calendar.clear();
             create(calendar, data);
             window.location.reload();
         })
-        .catch(function (err) {
+        .catch(function(err) {
             alert(err);
         });
 });
@@ -281,7 +281,7 @@ lecMakeBtn.addEventListener('click', async function(event) {
             var calData = [];
             // console.log(convData);
             for (var i = 0; i < 15; i++) {
-                var dateArr = getTimeData(convData, i * 7);
+                var dateArr = getTimeData(convData, '-03-02', i * 7);
                 // console.log(dateArr);
                 for (var j = 0; j < 2; j++) {
                     var calobj = {};

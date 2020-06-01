@@ -51,7 +51,7 @@ subjectLoad.addEventListener('click', function(event) {
 });
 
 // 저장 버튼
-$("#lecture_save_btn").click(async function () {
+$("#lecture_save_btn").click(async function() {
     var tr = $("#lecture_tbody").children();
     var flag = "";
     var obj = {};
@@ -71,14 +71,14 @@ $("#lecture_save_btn").click(async function () {
             obj.period = td[6].innerText;
 
             await ajaxPost("/toast_cal/lecture_save/", "json", "POST", obj)
-                .then(function (data) {
+                .then(function(data) {
                     if (data == "저장 성공") {
                         var timeData = periodSplit(obj.period);
                         var convData = periodConvert(timeData);
                         var calData = [];
 
                         for (var i = 0; i < 15; i++) {
-                            var dateArr = getTimeData(convData, i * 7);
+                            var dateArr = getTimeData(convData, '-03-02', i * 7);
 
                             for (var j = 0; j < 2; j++) {
                                 var calobj = {};
@@ -100,7 +100,7 @@ $("#lecture_save_btn").click(async function () {
                         alert(data)
                     }
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     alert(err);
                 });
 
@@ -109,18 +109,18 @@ $("#lecture_save_btn").click(async function () {
                     scheduleData
                 };
                 await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
-                    .then(function (data) {})
-                    .catch(function (err) {
+                    .then(function(data) {})
+                    .catch(function(err) {
                         alert(err);
                     });
 
                 ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
-                    .then(function (data) {
+                    .then(function(data) {
                         calendar.clear();
                         create(calendar, data);
                         window.location.reload();
                     })
-                    .catch(function (err) {
+                    .catch(function(err) {
                         alert(err);
                     });
             }
@@ -130,7 +130,7 @@ $("#lecture_save_btn").click(async function () {
 });
 
 // 삭제 버튼
-$("#lecture_delete_btn").click(async function () {
+$("#lecture_delete_btn").click(async function() {
     var tr = $("tr");
     var array = [];
     var husks = {};
@@ -152,7 +152,7 @@ $("#lecture_delete_btn").click(async function () {
     if (array.length != 0) { //과목 선택을 했을때
         husks.array = array;
         ajaxPost("/toast_cal/student_lecture_delete/", "json", "POST", husks)
-            .then(function (data) {
+            .then(function(data) {
                 $('#lecture_load_tbody').empty();
 
                 for (var count = 0; count < data.length; count++) {
@@ -163,7 +163,7 @@ $("#lecture_delete_btn").click(async function () {
                     $('#lecture_load_tbody').append(tr);
                 }
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 alert(err);
             });
 
@@ -171,20 +171,20 @@ $("#lecture_delete_btn").click(async function () {
         json.array = array;
         console.log(json);
         await ajaxPost("/toast_cal/deleteCalendars/", "json", "POST", json)
-            .then(function (data) {
+            .then(function(data) {
                 alert(data);
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 alert(err);
             });
 
         ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
-            .then(function (data) {
+            .then(function(data) {
                 calendar.clear();
                 create(calendar, data);
                 window.location.reload();
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 alert(err);
             });
     } else {

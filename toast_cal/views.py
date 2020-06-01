@@ -71,9 +71,12 @@ def login(request):
                 userName = user_data.username
                 userType = "student"
             except Student.DoesNotExist:
-                user_data = Professor.objects.get(userID=userID)
-                userName = user_data.username
-                userType = "professor"
+                try:
+                    user_data = Professor.objects.get(userID=userID)
+                    userName = user_data.username
+                    userType = "professor"
+                except Professor.DoesNotExist:
+                    return render(request, "login.html", {"error": "아이디가 존재하지 않습니다."})
 
             if check_password(password, user_data.password):
                 request.session["userID"] = userID
@@ -82,7 +85,7 @@ def login(request):
                 request.session["email"] = user_data.email
                 return redirect("/toast_cal/")
             else:
-                return render(request, "login.html", {"error": "비밀번호를 틀렸습니다."})
+                return render(request, "login.html", {"error": "비밀번호가 일치하지 않습니다."})
     else:
         return render(request, "login.html")
 
@@ -112,16 +115,36 @@ def findId(request):
 
         if userType == "student":
             try:
-                user_data = Student.objects.get(username=username, department=department, phone=phone)
-                return render(request, "getMessage.html", {"message": user_data.userID, "sep": "findId"})
+                user_data = Student.objects.get(
+                    username=username, department=department, phone=phone
+                )
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": user_data.userID, "sep": "findId"},
+                )
             except Student.DoesNotExist:
-                return render(request, "getMessage.html", {"message": "일치하는 아이디가 없습니다.", "log_sep":"false"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "일치하는 아이디가 없습니다.", "log_sep": "false"},
+                )
         elif userType == "professor":
             try:
-                user_data = Professor.objects.get(username=username, department=department, phone=phone)
-                return render(request, "getMessage.html", {"message": user_data.userID, "sep": "findId"})
+                user_data = Professor.objects.get(
+                    username=username, department=department, phone=phone
+                )
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": user_data.userID, "sep": "findId"},
+                )
             except Professor.DoesNotExist:
-                return render(request, "getMessage.html", {"message": "일치하는 아이디가 없습니다.", "log_sep":"false"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "일치하는 아이디가 없습니다.", "log_sep": "false"},
+                )
 
     return render(request, "findId.html")
 
@@ -136,8 +159,12 @@ def findPass(request):
 
         if userType == "student":
             try:
-                user_data = Student.objects.get(pk=userID, username=username, department=department)
-                update = Student.objects.filter(pk=userID, username=username, department=department).update(
+                user_data = Student.objects.get(
+                    pk=userID, username=username, department=department
+                )
+                update = Student.objects.filter(
+                    pk=userID, username=username, department=department
+                ).update(
                     department=user_data.department,
                     studentID=user_data.studentID,
                     username=user_data.username,
@@ -145,91 +172,143 @@ def findPass(request):
                     password=make_password(user_data.userID),
                     phone=user_data.phone,
                 )
-                return render(request, "getMessage.html", {"message": "임시 비밀번호로 변경합니다.(비밀번호는 ID와 일치)", "log_sep":"false"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "임시 비밀번호로 변경합니다.(비밀번호는 ID와 일치)", "log_sep": "false"},
+                )
             except Student.DoesNotExist:
-                return render(request, "getMessage.html", {"message": "데이터가 일치하지 않습니다.", "log_sep":"false"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "데이터가 일치하지 않습니다.", "log_sep": "false"},
+                )
         elif userType == "professor":
             try:
-                user_data = Professor.objects.get(pk=userID, username=username, department=department)
-                update = Professor.objects.filter(pk=userID, username=username, department=department).update(
+                user_data = Professor.objects.get(
+                    pk=userID, username=username, department=department
+                )
+                update = Professor.objects.filter(
+                    pk=userID, username=username, department=department
+                ).update(
                     department=user_data.department,
                     username=user_data.username,
                     email=user_data.email,
                     password=make_password(user_data.userID),
                     phone=user_data.phone,
                 )
-                return render(request, "getMessage.html", {"message": "임시 비밀번호로 변경합니다.(비밀번호는 ID와 일치)", "log_sep":"false"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "임시 비밀번호로 변경합니다.(비밀번호는 ID와 일치)", "log_sep": "false"},
+                )
             except Professor.DoesNotExist:
-                return render(request, "getMessage.html", {"message": "데이터가 일치하지 않습니다.", "log_sep":"false"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "데이터가 일치하지 않습니다.", "log_sep": "false"},
+                )
 
     return render(request, "findPass.html")
 
 
 # 비밀번호 변경
 def changePw(request):
-    if request.method =="POST":
+    if request.method == "POST":
         userType = request.POST["userType"]
         userID = request.POST["userID"]
         password = request.POST["password"]
         password2 = request.POST["password2"]
         password2_check = request.POST["password2_check"]
 
-        if userType =="student":
+        if userType == "student":
 
-            user_data = Student.objects.get(pk = userID)
+            user_data = Student.objects.get(pk=userID)
 
             if check_password(password, user_data.password):
-                if(password2 == password2_check):
+                if password2 == password2_check:
                     try:
-                        update= Student.objects.filter(pk = userID ).update(
+                        update = Student.objects.filter(pk=userID).update(
                             department=user_data.department,
                             studentID=user_data.studentID,
                             username=user_data.username,
                             email=user_data.email,
                             password=make_password(password2),
                             phone=user_data.phone,
-                            )
+                        )
                         if request.session._session:
                             request.session.pop("userID")
                             request.session.pop("userName")
                             request.session.pop("userType")
                             request.session.pop("email")
 
-                        return render(request, "getMessage.html", {"message": "비밀번호가 변경되었습니다.", "sep":"changePw"})
+                        return render(
+                            request,
+                            "getMessage.html",
+                            {"message": "비밀번호가 변경되었습니다.", "sep": "changePw"},
+                        )
                     except Student.DoesNotExist:
-                        return render(request, "getMessage.html", {"message": "잘못입력된 값이 있습니다.", "sep":"changePw"})
+                        return render(
+                            request,
+                            "getMessage.html",
+                            {"message": "잘못입력된 값이 있습니다.", "sep": "changePw"},
+                        )
                 else:
-                    return render(request, "getMessage.html", {"message": "새로입력한 비밀번호가 일치하지않습니다.", "sep":"changePw"})
+                    return render(
+                        request,
+                        "getMessage.html",
+                        {"message": "새로입력한 비밀번호가 일치하지않습니다.", "sep": "changePw"},
+                    )
             else:
-                return render(request, "getMessage.html", {"message": "비밀번호가 다릅니다.", "sep":"changePw"})
-        
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "비밀번호가 다릅니다.", "sep": "changePw"},
+                )
+
         elif userType == "professor":
 
-            user_data = Professor.objects.get(pk = userID)
-            
+            user_data = Professor.objects.get(pk=userID)
+
             if check_password(password, user_data.password):
-                if(password2 == password2_check):
+                if password2 == password2_check:
                     try:
-                        update= Professor.objects.filter(pk = userID ).update(
+                        update = Professor.objects.filter(pk=userID).update(
                             department=user_data.department,
                             username=user_data.username,
                             email=user_data.email,
                             password=make_password(password2),
                             phone=user_data.phone,
-                            )
+                        )
                         if request.session._session:
                             request.session.pop("userID")
                             request.session.pop("userName")
                             request.session.pop("userType")
                             request.session.pop("email")
 
-                        return render(request, "getMessage.html", {"message": "비밀번호가 변경되었습니다.", "sep":"changePw"})
+                        return render(
+                            request,
+                            "getMessage.html",
+                            {"message": "비밀번호가 변경되었습니다.", "sep": "changePw"},
+                        )
                     except Professor.DoesNotExist:
-                        return render(request, "getMessage.html", {"message": "잘못입력된 값이 있습니다.", "sep":"changePw"})
+                        return render(
+                            request,
+                            "getMessage.html",
+                            {"message": "잘못입력된 값이 있습니다.", "sep": "changePw"},
+                        )
                 else:
-                    return render(request, "getMessage.html", {"message": "새로입력한 비밀번호가 일치하지않습니다.", "sep":"changePw"})
+                    return render(
+                        request,
+                        "getMessage.html",
+                        {"message": "새로입력한 비밀번호가 일치하지않습니다.", "sep": "changePw"},
+                    )
             else:
-                return render(request, "getMessage.html", {"message": "비밀번호가 다릅니다.", "sep":"changePw"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "비밀번호가 다릅니다.", "sep": "changePw"},
+                )
     else:
         return render(request, "changePw.html")
 
@@ -238,29 +317,44 @@ def changePw(request):
 def manageInfo(request):
     return render(request, "manageInfo.html")
 
+
 # 로그인 정보 받아오는 기능 수행
 def loginInfo(request):
     if request.session._session:
         userType = request.session["userType"]
         userID = request.session["userID"]
     else:
-        return render(request, "getMessage.html", {"message": "로그인 정보가 없습니다.", "log_sep":"true"})
+        return render(
+            request, "getMessage.html", {"message": "로그인 정보가 없습니다.", "log_sep": "true"}
+        )
 
     if userType == "student":
         user_data = Student.objects.get(pk=userID)
 
-        return render(request, "modifyInfo.html", {"department": user_data.department, 
-        "studentID": user_data.studentID, 
-        "username": user_data.username, 
-        "email": user_data.email,
-        "phone": user_data.phone})
+        return render(
+            request,
+            "modifyInfo.html",
+            {
+                "department": user_data.department,
+                "studentID": user_data.studentID,
+                "username": user_data.username,
+                "email": user_data.email,
+                "phone": user_data.phone,
+            },
+        )
     elif userType == "professor":
         user_data = Professor.objects.get(pk=userID)
 
-        return render(request, "modifyInfo.html", {"department": user_data.department, 
-        "username": user_data.username, 
-        "email": user_data.email,
-        "phone": user_data.phone})
+        return render(
+            request,
+            "modifyInfo.html",
+            {
+                "department": user_data.department,
+                "username": user_data.username,
+                "email": user_data.email,
+                "phone": user_data.phone,
+            },
+        )
 
 
 # 개인정보 변경
@@ -286,9 +380,15 @@ def modifyInfo(request):
                     phone=phone,
                 )
 
-                return render(request, "getMessage.html", {"message": "개인정보가 변경되었습니다.", "log_sep":"true"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "개인정보가 변경되었습니다.", "log_sep": "true"},
+                )
             except Exception:
-                return render(request, "getMessage.html", {"message": "수정 에러", "log_sep":"true"})
+                return render(
+                    request, "getMessage.html", {"message": "수정 에러", "log_sep": "true"}
+                )
         elif userType == "professor":
             try:
                 user_data = Professor.objects.get(pk=userID)
@@ -300,9 +400,15 @@ def modifyInfo(request):
                     phone=phone,
                 )
 
-                return render(request, "getMessage.html", {"message": "개인정보가 변경되었습니다.", "log_sep":"true"})
+                return render(
+                    request,
+                    "getMessage.html",
+                    {"message": "개인정보가 변경되었습니다.", "log_sep": "true"},
+                )
             except Exception:
-                return render(request, "getMessage.html", {"message": "수정 에러", "log_sep":"true"})
+                return render(
+                    request, "getMessage.html", {"message": "수정 에러", "log_sep": "true"}
+                )
 
     return render(request, "modifyInfo.html")
 
@@ -314,7 +420,7 @@ def signout(request):
         userID = request.session["userID"]
         confirm = request.POST["confirm"]
 
-        if(confirm == "탈퇴합니다"):
+        if confirm == "탈퇴합니다":
             if userType == "student":
                 cal_del = Calendar.objects.filter(userID=userID)
                 cal_del.delete()
@@ -341,12 +447,16 @@ def signout(request):
             elif userType == "professor":
                 cal_Sdel = Calendar.objects.filter(userID=userID)
                 lec_del = Student_lecture.objects.filter(professor=userID)
-                
+
                 for i in range(lec_del.count()):
                     for j in range(cal_Sdel.count()):
-                        cal_Pdel = Calendar.objects.filter(userID=lec_del[i].student_id,start=cal_Sdel[j].start,end=cal_Sdel[j].end)
+                        cal_Pdel = Calendar.objects.filter(
+                            userID=lec_del[i].student_id,
+                            start=cal_Sdel[j].start,
+                            end=cal_Sdel[j].end,
+                        )
                         cal_Pdel.delete()
-                
+
                 cal_Sdel.delete()
                 sub_del = Subject.objects.filter(professor=userID)
                 sub_del.delete()
@@ -361,8 +471,14 @@ def signout(request):
                 request.session.pop("userType")
                 request.session.pop("email")
 
-            return render(request, "getMessage.html", {"message": "회원탈퇴 되었습니다.", "sep":"signout"})
+            return render(
+                request, "getMessage.html", {"message": "회원탈퇴 되었습니다.", "sep": "signout"}
+            )
         else:
-            return render(request, "getMessage.html", {"message": "잘못 입력하였습니다.", "log_sep":"true"})
+            return render(
+                request,
+                "getMessage.html",
+                {"message": "잘못 입력하였습니다.", "log_sep": "true"},
+            )
 
     return render(request, "signout.html")

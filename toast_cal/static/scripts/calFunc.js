@@ -48,6 +48,31 @@ function getYearMonth(year, month, calendar) {
 }
 
 /**
+ * 
+ * @param {int} flag 줘야하는 플래그(0,1)
+ * @param {int} value 현재날짜에서 더할 숫자
+ * @returns {String} 뽑아낸 날짜의 String
+ */
+function getDate(flag, value) {
+    var now = new Date();
+    var nowDayOfWeek = now.getDay();
+    var nowDay = now.getDate();
+    var nowMonth = now.getMonth();
+    var nowYear = now.getFullYear();
+
+    if (flag == 0)
+        var DayOfWeek = value - nowDayOfWeek;
+    else if (flag == 1)
+        var DayOfWeek = value + (6 - nowDayOfWeek);
+
+    var weekDate = new Date(nowYear, nowMonth, nowDay + DayOfWeek);
+
+    var newDate = weekDate.getFullYear() + "-" + (weekDate.getMonth() + 1) + "-" + weekDate.getDate();
+
+    return newDate;
+}
+
+/**
  * 특정 날짜를 주면 그 주의 특정 요일의 날짜를 반환하는 함수
  * @param {-mm-dd} monthday 시작할 달과 날짜
  * @param {int} value 특정 요일의 날짜를 계산하기 위한 숫자(0~6 + a)
@@ -72,31 +97,6 @@ function getDayDate(monthday, value) {
     if (newDate < 10) newDate = "0" + newDate;
 
     var newDate = weekDate.getFullYear() + "-" + newMonth + "-" + newDate;
-
-    return newDate;
-}
-
-/**
- * 
- * @param {int}} flag 0~6의 숫자(일~토)
- * @param {int} value 현재날짜에서 더할 숫자
- * @returns {String} 뽑아낸 날짜의 String
- */
-function getDate(flag, value) {
-    var now = new Date();
-    var nowDayOfWeek = now.getDay();
-    var nowDay = now.getDate();
-    var nowMonth = now.getMonth();
-    var nowYear = now.getFullYear();
-
-    if (flag == 0)
-        var DayOfWeek = value - nowDayOfWeek;
-    else if (flag == 1)
-        var DayOfWeek = value + (6 - nowDayOfWeek);
-
-    var weekDate = new Date(nowYear, nowMonth, nowDay + DayOfWeek);
-
-    var newDate = weekDate.getFullYear() + "-" + (weekDate.getMonth() + 1) + "-" + weekDate.getDate();
 
     return newDate;
 }
@@ -171,14 +171,15 @@ function periodConvert(period) {
 /**
  * periodConvert로 변환한 데이터를 yyyy-mm-dd hh:mm 형식으로 반환하는 함수
  * @param {Array} convertedData periodConvert로 변환된 데이터 배열
+ * @param {-mm-dd} monthday 시작할 달과 날짜
  * @param {int} day 특정 요일의 날짜를 계산하기 위한 숫자(0~6 + a)
  * @returns {Array} 시작시간과 끝시간이 담겨있는 오브젝트들을 담은 배열
  */
-function getTimeData(convertedData, day) {
+function getTimeData(convertedData, monthday, day) {
     var dateData = [];
     for (var j = 0; j < 2; j++) {
         var tmpobj = {};
-        var date = getDayDate('-03-02', convertedData[2 * j] + day);
+        var date = getDayDate(monthday, convertedData[2 * j] + day);
         var startDate = date + " " + convertedData[1 + 2 * j][0];
         var endDate = date + " " + convertedData[1 + 2 * j][1];
         tmpobj.startDate = startDate;

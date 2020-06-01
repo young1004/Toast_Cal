@@ -87,9 +87,13 @@ def department(request):
     if request.session["userType"] == "student":
         department_list = Department.objects.all().order_by("name")
     elif request.session["userType"] == "professor":
-        pro_department = Professor.objects.get(userID= request.session["userID"]).department
+        pro_department = Professor.objects.get(
+            userID=request.session["userID"]
+        ).department
         print(pro_department)
-        department_list = Department.objects.filter(name=pro_department).order_by("name")
+        department_list = Department.objects.filter(name=pro_department).order_by(
+            "name"
+        )
 
     return HttpResponse(
         serializers.serialize("json", department_list), content_type="application/json"
@@ -164,10 +168,10 @@ def lecture_save(request):
         boolean_name = Student_lecture.objects.filter(
             student_id=request.session["userID"], name=request.POST["name"],
         ).exists()
-        
+
         Count = Subject.objects.get(code=request.POST["code"])
 
-        if Count.stdCount != Count.total_stdCount:
+        if Count.stdCount < Count.total_stdCount:
             if boolean_name:
                 return HttpResponse("중복된 데이터입니다. 수강 강의를 확인하세요.")
             else:
@@ -192,7 +196,9 @@ def lecture_save(request):
 # 학생 강의 불러오기
 def student_lecture_load(request):
     if request.method == "POST":
-        date_list = Student_lecture.objects.filter(student_id=request.session["userID"]).order_by("code")
+        date_list = Student_lecture.objects.filter(
+            student_id=request.session["userID"]
+        ).order_by("code")
         return HttpResponse(
             serializers.serialize("json", date_list), content_type="application/json"
         )
@@ -263,14 +269,20 @@ def makeSubject(request):
             serializers.serialize("json", createdData), content_type="application/json"
         )
 
-#교수 강의 테이블 출력
+
+# 교수 강의 테이블 출력
 def pro_lecture_table(request):
     if request.method == "POST":
         userID = request.session["userID"]
         professor = Professor.objects.get(userID=userID)
-        pro_subject = Subject.objects.filter(professor=professor.username, department=professor.department)
+        pro_subject = Subject.objects.filter(
+            professor=professor.username, department=professor.department
+        )
 
-        return HttpResponse(serializers.serialize("json", pro_subject), content_type="application/json")
+        return HttpResponse(
+            serializers.serialize("json", pro_subject), content_type="application/json"
+        )
+
 
 # 교수 강의 삭제
 def professor_lecture_delete(request):
@@ -283,7 +295,6 @@ def professor_lecture_delete(request):
         return HttpResponse(
             serializers.serialize("json", date_list), content_type="application/json"
         )
-
 
 
 # 공통 기능
@@ -300,12 +311,13 @@ def dateList(request):
         serializers.serialize("json", date_list), content_type="application/json"
     )
 
+
 def getWeekSchedule(request):
     if request.method == "POST":
         date_list = Calendar.objects.filter(
             userID=request.session["userID"],
-            start__range=[request.POST["StartDate"], request.POST["EndDate"]]
-        ).order_by('start')
+            start__range=[request.POST["StartDate"], request.POST["EndDate"]],
+        ).order_by("start")
 
     return HttpResponse(
         serializers.serialize("json", date_list), content_type="application/json"
@@ -339,8 +351,10 @@ def makeCalendars(request):
 # 학생 강의 일정 삭제
 def deleteCalendars(request):
     if request.method == "POST":
-        for i in range(int(len(request.POST)/7)):
-            title = request.POST["array["+str(i)+"][name]"]
-            new_instance = Calendar.objects.filter(userID=request.session["userID"], title=title)
+        for i in range(int(len(request.POST) / 7)):
+            title = request.POST["array[" + str(i) + "][name]"]
+            new_instance = Calendar.objects.filter(
+                userID=request.session["userID"], title=title
+            )
             new_instance.delete()
         return HttpResponse("db와 일정 데이터 삭제 성공")

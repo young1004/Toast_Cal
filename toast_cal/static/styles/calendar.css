@@ -15,6 +15,7 @@ body {
 
 #wrap {
     width: 1700px;
+    margin-top: 2em;
     padding: 0em 0em;
     background-color: lightslategray;
 }
@@ -26,6 +27,12 @@ body {
     height: 20%;
     padding: 2em 1em 5em 1em;
     float: left;
+}
+
+.btn {
+    border: none;
+    color: black;
+    font-weight: bold;
 }
 
 
@@ -61,12 +68,13 @@ body {
 
 }
 
-.btn {
-    border: none;
+#nav-wrap .btn {
     color: white;
-    font-weight: bold;
 }
 
+.btn-outline-light:hover {
+    background-color: #6c757d;
+}
 
 
 /* calendar 부분 관련 css */
