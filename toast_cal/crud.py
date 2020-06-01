@@ -348,13 +348,23 @@ def makeCalendars(request):
     return HttpResponse("강의 일정 저장 완료!")
 
 
-# 학생 강의 일정 삭제
+# 학생,교수 기능 공유 부분
+# 공통 부분 : 강의 일정 삭제
 def deleteCalendars(request):
     if request.method == "POST":
-        for i in range(int(len(request.POST) / 7)):
-            title = request.POST["array[" + str(i) + "][name]"]
+        print(request.POST)
+        if request.session["userType"] == "student":
+            for i in range(int(len(request.POST) / 7)):
+                title = request.POST["array[" + str(i) + "][name]"]
+                new_instance = Calendar.objects.filter(
+                    userID=request.session["userID"], title=title
+                )
+                new_instance.delete()
+            return HttpResponse("db와 일정 데이터 삭제 성공")
+        elif request.session["userType"] == "professor":
+            title = request.POST["title"]
             new_instance = Calendar.objects.filter(
                 userID=request.session["userID"], title=title
             )
             new_instance.delete()
-        return HttpResponse("db와 일정 데이터 삭제 성공")
+            return HttpResponse("db와 일정 데이터 삭제 성공")

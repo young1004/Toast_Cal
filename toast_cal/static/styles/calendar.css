@@ -29,11 +29,11 @@ body {
     float: left;
 }
 
-.btn {
+/* .btn {
     border: none;
     color: black;
     font-weight: bold;
-}
+} */
 
 
 
@@ -69,6 +69,8 @@ body {
 }
 
 #nav-wrap .btn {
+    border: none;
+    font-weight: bold;
     color: white;
 }
 
@@ -204,6 +206,10 @@ body {
     font-size: 5px;
     margin: 0;
     color: white;
+}
+
+#voteTableBtn {
+    font-size: 12px;
 }
 
 tspan {
