@@ -1,4 +1,18 @@
 <script>
-    alert("{{ message }}");
-    window.location.href = "{% url 'findInfo' %}";
+    if("{{ log_sep }}" == "true") {
+        alert("{{ message }}");
+        window.location.href = "{% url 'toast_cal:manageInfo' %}";
+    }
+    else if("{{ sep }}" == "changePw") {
+        alert("{{ message }}");
+        window.location.href = "{% url 'login' %}";
+    }
+    else if("{{ sep }}" == "signout") {
+        alert("{{ message }}");
+        window.location.href = "{% url 'index' %}";
+    }
+    else {
+        alert("{{ message }}");
+        window.location.href = "{% url 'findInfo' %}";
+    }
 </script>

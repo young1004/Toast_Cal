@@ -131,3 +131,13 @@ select {
     margin-top: 0px;
     margin-bottom: 0px;
 }
+
+
+
+.caution_area {
+    padding-bottom: 30px;
+}
+
+.caution {
+    line-height: 30px;
+}

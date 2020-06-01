@@ -44,7 +44,6 @@ subjectLoad.addEventListener('click', function(event) {
                     "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td></tr>");
                 $('#lecture_load_tbody').append(tr);
             }
-
         })
         .catch(function(err) {
             alert(err);
@@ -52,9 +51,9 @@ subjectLoad.addEventListener('click', function(event) {
 });
 
 // 저장 버튼
-$("#lecture_save_btn").click(async function() {
+$("#lecture_save_btn").click(async function () {
     var tr = $("#lecture_tbody").children();
-    var flag = false;
+    var flag = "";
     var obj = {};
 
     let scheduleData;
@@ -72,69 +71,68 @@ $("#lecture_save_btn").click(async function() {
             obj.period = td[6].innerText;
 
             await ajaxPost("/toast_cal/lecture_save/", "json", "POST", obj)
-                .then(function(data) {
-                    // alert(data);
+                .then(function (data) {
+                    if (data == "저장 성공") {
+                        var timeData = periodSplit(obj.period);
+                        var convData = periodConvert(timeData);
+                        var calData = [];
 
-                    var timeData = periodSplit(obj.period);
-                    var convData = periodConvert(timeData);
-                    var calData = [];
-                    // console.log(convData);
-                    for (var i = 0; i < 15; i++) {
-                        var dateArr = getTimeData(convData, i * 7);
-                        console.log(dateArr);
-                        for (var j = 0; j < 2; j++) {
-                            var calobj = {};
-                            // console.log(dateArr[j].startDate);
-                            // console.log(dateArr[j].endDate);
-                            calobj = newCalObj(1, obj.lecture_type,
-                                obj.name, "time", "미정", dateArr[j].startDate,
-                                dateArr[j].endDate, convertBooleanData(false),
-                                "busy", "public");
-                            calData.push(calobj);
+                        for (var i = 0; i < 15; i++) {
+                            var dateArr = getTimeData(convData, i * 7);
+
+                            for (var j = 0; j < 2; j++) {
+                                var calobj = {};
+
+                                calobj = newCalObj(1, obj.lecture_type,
+                                    obj.name, "time", "미정", dateArr[j].startDate,
+                                    dateArr[j].endDate, convertBooleanData(false),
+                                    "busy", "public");
+                                calData.push(calobj);
+                            }
                         }
-
+                        scheduleData = calData;
+                        flag = "일정 생성됨";
+                    } else if (data == "수강 인원이 초과된 과목입니다.") {
+                        flag = "수강인원 초과";
+                        alert(data)
+                    } else {
+                        flag = "중복된 데이터";
+                        alert(data)
                     }
-                    // console.log(calData);
-                    scheduleData = calData;
-
-                    flag = true;
                 })
-                .catch(function(err) {
-                    // alert(err);
-                });
-
-            console.log(scheduleData);
-            scheduleData = {
-                scheduleData
-            };
-            await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
-                .then(function(data) {
-                    // alert(data);
-                })
-                .catch(function(err) {
+                .catch(function (err) {
                     alert(err);
                 });
 
-            ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
-                .then(function(data) {
-                    calendar.clear();
-                    create(calendar, data);
-                    window.location.reload();
-                })
-                .catch(function(err) {
-                    alert(err);
-                });
+            if (flag == "일정 생성됨") {
+                scheduleData = {
+                    scheduleData
+                };
+                await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
+                    .then(function (data) {})
+                    .catch(function (err) {
+                        alert(err);
+                    });
 
-
+                ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+                    .then(function (data) {
+                        calendar.clear();
+                        create(calendar, data);
+                        window.location.reload();
+                    })
+                    .catch(function (err) {
+                        alert(err);
+                    });
+            }
         }
     }
-    if (flag == false) alert('과목을 선택하세요');
+    if (flag == "") alert('과목을 선택하세요');
 });
 
 // 삭제 버튼
-$("#lecture_delete_btn").click(function() {
+$("#lecture_delete_btn").click(async function () {
     var tr = $("tr");
-    var data = [];
+    var array = [];
     var husks = {};
 
     for (var i = 0; i < tr.length; i++) {
@@ -148,13 +146,13 @@ $("#lecture_delete_btn").click(function() {
             obj.name = td[4].innerText;
             obj.professor = td[5].innerText;
             obj.period = td[6].innerText;
-            data.push(obj);
+            array.push(obj);
         }
     }
-    if (data.length != 0) { //과목 선택을 했을때
-        husks.data = data;
+    if (array.length != 0) { //과목 선택을 했을때
+        husks.array = array;
         ajaxPost("/toast_cal/student_lecture_delete/", "json", "POST", husks)
-            .then(function(data) {
+            .then(function (data) {
                 $('#lecture_load_tbody').empty();
 
                 for (var count = 0; count < data.length; count++) {
@@ -165,7 +163,28 @@ $("#lecture_delete_btn").click(function() {
                     $('#lecture_load_tbody').append(tr);
                 }
             })
-            .catch(function(err) {
+            .catch(function (err) {
+                alert(err);
+            });
+
+        var json = {};
+        json.array = array;
+        console.log(json);
+        await ajaxPost("/toast_cal/deleteCalendars/", "json", "POST", json)
+            .then(function (data) {
+                alert(data);
+            })
+            .catch(function (err) {
+                alert(err);
+            });
+
+        ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+            .then(function (data) {
+                calendar.clear();
+                create(calendar, data);
+                window.location.reload();
+            })
+            .catch(function (err) {
                 alert(err);
             });
     } else {

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>회원탈퇴</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="{% static 'styles/signup.css' %}">
+</head>
+
+<body>
+
+    <div id="page">
+        <div id="header" role="banner">
+            <a href="" class="main_logo">
+                회원탈퇴
+            </a>
+        </div>
+    </div>
+    <form id="newUser_form" method="POST" action="">
+        {% csrf_token %}
+        <div id="container" role="main">
+            <div id="content">
+                <div class="caution_area">
+                    <h2>주의</h2>
+                    <span class="caution">회원탈퇴를 진행하면 개인 일정 및 강의 시간표가 삭제되며, 
+                        이 과정의 진행으로 인해 소멸된 개인 일정데이터는 복구할 수 없습니다.</span>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label>따라서 입력해 주세요.</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="text" name="confirm" class="user_info" maxlength="20" placeholder="탈퇴합니다">
+                    </span>
+                </div>
+                <div class="btn_area">
+                    <input type="submit" class="btn_type" value="탈퇴하기">
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

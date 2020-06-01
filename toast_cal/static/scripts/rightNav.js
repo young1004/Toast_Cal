@@ -14,13 +14,13 @@ var todayData = {
 };
 
 var NowRange = {
-    StartDate: getDate(0, 0),
-    EndDate: getDate(1, 0)
+    StartDate: getDate(0, 1),
+    EndDate: getDate(1, 2)
 };
 
 var PreviousRange = {
-    StartDate: getDate(0, -7),
-    EndDate: getDate(1, -7)
+    StartDate: getDate(0, -6),
+    EndDate: getDate(1, -5)
 };
 
 var thisWeek = document.getElementById("thisweek");
@@ -189,6 +189,9 @@ lastWeek.addEventListener('click', function(event) {
                     "</div>")
                 $("#third_tab").append(task)
             }
+
+            console.log("StartDate: " + getDate(0, -7));
+            console.log("EndDate: " + getDate(1, -7));
         })
         .catch(function(err) {
             alert(err);

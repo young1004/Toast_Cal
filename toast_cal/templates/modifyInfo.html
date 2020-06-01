@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>개인정보 변경</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="{% static 'styles/signup.css' %}">
+</head>
+
+<body>
+
+    <div id="page">
+        <div id="header" role="banner">
+            <a href="" class="main_logo">
+                개인정보 변경
+            </a>
+        </div>
+    </div>
+    <form id="newUser_form" method="POST" action="{% url 'toast_cal:modifyInfo' %}">
+        {% csrf_token %}
+        <div id="container" role="main">
+            <div id="content">
+                <div>
+                    <h3 class="join_title">
+                        <label for="username">이름</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="text" name="username" class="user_info" maxlength="20" value="{{ username }}">
+                    </span>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label for="userdep">학과</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="text" name="department" class="user_info" maxlength="20" value="{{ department }}">
+                    </span>
+                    <h3 class="join_title">
+                        <label for="userno">학번</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="text" name="studentID" class="user_info" maxlength="20" placeholder="학번(학생만 입력)" value="{{ studentID }}">
+                    </span>
+                </div>
+
+                <div>
+                    <h3 class="join_title">
+                        <label for="email">이메일</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="text" id="email" name="email" class="user_info" maxlength="100" value="{{ email }}">
+                    </span>
+                </div>
+                <div>
+                    <h3 class="join_title">
+                        <label for="phone">전화번호</label>
+                    </h3>
+                    <span class="ps_box">
+                        <input type="text" name="phone" class="user_info" maxlength="100" value="{{ phone }}">
+                    </span>
+                </div>
+                <div class="btn_area">
+                    <input type="submit" class="btn_type" value="변경하기">
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

@@ -299,15 +299,53 @@ svg {
     border: 1px solid #cdcdcd;
     border-radius: 5px;
     background: #fff;
-    padding: 1em 1em;
+    padding: 1.5em 2em 1.5em 1.5em;
     width: 350px;
     margin-left: 3em;
-    text-align: center;
+    line-height: 18px;
 }
 
-#logoutBtn {
+.info {
+    width: 200px;
+    padding: 6px 10px 6px 20px;
+    margin-left: 0px;
+}
+
+.username_set {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.my_info {
+    font-size: 11px;
+    color: #505050;
+}
+
+.my_info:hover {
+    color: #505050;
+}
+
+.email_set {
+    padding-top: 1px;
+    color: grey;
+    font-size: 12px;
+}
+
+.btn_logout {
+    font-size: 11px;
+    float: right;
+    margin-top: 20px;
+    padding: 6px 10px 6px 11px;
+    color: #fff;
+    border-radius: 14px;
+    background-color: #ced2d7;
     text-decoration: none;
-    color: #666666;
+}
+
+.btn_logout:hover {
+    background-color: #b4b9bf;
+    color: #fff;
+    text-decoration: none;
 }
 
 /* 사용자 메뉴 스크롤바 관련 css */

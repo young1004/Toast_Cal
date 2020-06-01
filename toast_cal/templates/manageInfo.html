@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 정보 관리</title>
+    <link rel="stylesheet" href="{% static 'styles/findInfo.css' %}">
+</head>
+
+<body>
+    <div class="main">
+        <p>내 정보 관리</p>
+    </div>
+    <div id="content">
+        <ul class="find_list">
+            <li>
+                <a href="{% url 'toast_cal:loginInfo' %}" class="find">
+                    개인정보 변경
+                    <span>></span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'changePw' %}" class="find">
+                    비밀번호 변경
+                    <span>></span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'toast_cal:signout' %}" class="find">
+                    회원 탈퇴
+                    <span>></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>

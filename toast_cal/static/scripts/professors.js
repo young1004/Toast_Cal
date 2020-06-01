@@ -12,9 +12,24 @@ calProBtn.addEventListener('click', function(event) {
 subProBtn.addEventListener('click', function(event) {
     changeContents('professor1', 'calendar-common', 'professor2', 'sidebar', 'professor3');
 
+    //교수의 강의 테이블 출력
+    ajaxPost("/toast_cal/pro_lecture_table/", "json", "POST", 1)
+        .then(function (data) {
+            $('#pro_lec_load_tbody').empty();
 
-
-
+            for (var count = 0; count < data.length; count++) {
+                var tr = $("<tr><td>" + data[count].fields.code + "</td>" +
+                    "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
+                    "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
+                    "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td>" +
+                    "<td>" + data[count].fields.stdCount + "/" + data[count].fields.total_stdCount + "</td>" +
+                    "<td><button type=\"button\" class=\"pro_lec_del_btn\">삭제</button></td>");
+                $('#pro_lec_load_tbody').append(tr);
+            }
+        })
+        .catch(function (err) {
+            alert(err);
+        });
 
     //select 박스 학과 불러오기
     ajaxPost("/toast_cal/department/", "json", "POST", 1)
@@ -85,6 +100,60 @@ voteTableBtn.addEventListener('click', function(event) {
             console.log(err);
         })
 });
+
+
+// 교수 강의 삭제
+$(document).on("click", ".pro_lec_del_btn", async function () {
+    var delete_btn = $(this);
+
+    var tr = delete_btn.parent().parent();
+    var td = tr.children();
+
+    var subject = {
+        code: td.eq(0).text()
+    }
+    console.log(subject);
+
+    ajaxPost("/toast_cal/professor_lecture_delete/", 'json', "POST", subject)
+        .then(function (data) {
+            $('#pro_lec_load_tbody').empty();
+
+            for (var count = 0; count < data.length; count++) {
+                var tr = $("<tr><td>" + data[count].fields.code + "</td>" +
+                    "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
+                    "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
+                    "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td>" +
+                    "<td>" + data[count].fields.stdCount + "/" + data[count].fields.total_stdCount + "</td>" +
+                    "<td><button type=\"button\" class=\"pro_lec_del_btn\">삭제</button></td>");
+                $('#pro_lec_load_tbody').append(tr);
+            }
+        })
+        .catch(function (err) {
+            alert(err)
+        })
+    var json = {};
+
+    json.title = td[4].innerText;
+
+    await ajaxPost("/toast_cal/deleteCalendars/", "json", "POST", json)
+        .then(function (data) {
+            alert(data);
+        })
+        .catch(function (err) {
+            alert(err);
+        });
+
+    ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+        .then(function (data) {
+            calendar.clear();
+            create(calendar, data);
+            window.location.reload();
+        })
+        .catch(function (err) {
+            alert(err);
+        });
+});
+
 
 // chart 표시하기 위한 데이터
 var chart = null;
@@ -196,6 +265,7 @@ lecMakeBtn.addEventListener('click', async function(event) {
         period: periodData,
         lecture_type: document.getElementById('lec-type').value,
         department: document.getElementById("lec-depart").value,
+        total_count: document.getElementById("lec-count").value,
     };
     document.getElementById("make-lecture-wrap").reset();
 

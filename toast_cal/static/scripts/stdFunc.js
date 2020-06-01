@@ -92,7 +92,7 @@ function lecture_lookup() {
                         "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
                         "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
                         "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td>" +
-                        "<td>" + data[count].fields.stdCount + "</td></tr>");
+                        "<td>" + data[count].fields.stdCount + "/" + data[count].fields.total_stdCount+ "</td></tr>");
                     $('#lecture_tbody').append(tr);
                 }
             })

@@ -138,14 +138,14 @@
                             <th scope="col">교과목명</th>
                             <th scope="col">교수</th>
                             <th scope="col">교시</th>
-                            <th scope="col">수강 인원</th>
+                            <th scope="col">인원/전체</th>
                         </tr>
                     </thead>
                     <tbody id="lecture_tbody">
                     </tbody>
                 </table>
             </div>
-            <button type="button" class="btn btn-outline-dark" id="lecture_save_btn">저장</button>
+            <button type="button" class="btn btn-outline-dark" id="lecture_save_btn">수강</button>
         </div>
 
         <div class="contents" id="studentLectureLoad" style="display: none;">
@@ -184,6 +184,7 @@
                             <th scope="col">교과목명</th>
                             <th scope="col">담당교수</th>
                             <th scope="col">교시</th>
+                            <th scope="col">인원/전체</th>
                         </tr>
                     </thead>
                     <tbody id="make-info">
@@ -249,10 +250,13 @@
                             <option value="1112">1112</option>
                         </select>
                     </span>
+                    <span>수용인원<input type="text" id="lec-count" width="50px">
+                    </span>
                 </form>
                 <button type="button" id="lecMakeBtn" value="개설">개설</button>
             </div>
         </div>
+
         <!-- 교수 투표 관련 페이지 -->
         <div class="contents" id="professor2" style="display: none;">
             <span>강의 분류:</span>
@@ -297,21 +301,26 @@
         <div id="right_nav">
             <div id="userinfo_layer">
                 <div id="userInfo">
-
-                    <!-- 학생과 교수에 따라 문구를 변경 username으로 변경예정-->
-                    {% if request.session.userID %}
-                    {% if request.session.userType == "student" %}
-                    <p> {{ request.session.userName }} 학생 안녕하세요!</p>
-                    {% elif request.session.userType == "professor" %}
-                    <p> {{ request.session.userName }} 교수님 안녕하세요!</p>
-                    {% endif %}
-                    <span id=logout-navi>
-                        <a type="button" id="logoutBtn" href="{% url 'logout' %}">로그아웃</a>
-                    </span>
-                    {% else %}
-                    <p> 로그인이 필요합니다.</p>
-                    {% endif %}
-
+                    <a class="btn_logout" href="{% url 'logout' %}">로그아웃</a>
+                    <div class="info">
+                        <div class="info_box">
+                            <span class="username_set">
+                                {% if request.session.userID %}
+                                    {% if request.session.userType == "student" %}
+                                        {{ request.session.userName }} 학생, 안녕하세요!
+                                    {% elif request.session.userType == "professor" %}
+                                        {{ request.session.userName }} 교수님, 안녕하세요!
+                                    {% endif %}
+                                {% endif %}
+                            </span>
+                            <div class="email_set">
+                                {% if request.session.userID %}
+                                    {{ request.session.email }}
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'toast_cal:manageInfo' %}" class="my_info">내 정보</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="tab_area">

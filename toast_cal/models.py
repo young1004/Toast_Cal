@@ -84,6 +84,7 @@ class Subject(models.Model):
     lecture_type = models.CharField(max_length=10)  # 이수구분
     department = models.CharField(max_length=20)  # 학과
     stdCount = models.IntegerField(default=0)  # 수강인원
+    total_stdCount = models.IntegerField(default=0)  # 전체수강인원
 
     def __str__(self):
         return self.name
