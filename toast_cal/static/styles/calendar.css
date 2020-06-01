@@ -8,10 +8,17 @@ body {
     background: whitesmoke;
 }
 
+#nav-wrap {
+    padding: 0em 0em;
+    background-color: lightslategray;
+}
+
 #wrap {
     width: 1700px;
-    padding: 1em 5em;
+    padding: 0em 0em;
+    background-color: lightslategray;
 }
+
 
 .contents {
     display: block;
@@ -23,6 +30,21 @@ body {
 
 
 
+/* 로고css */
+.logo {
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+}
+
+/* 로고 a 테그 속성 조정 */
+.logo:hover {
+    color: white;
+    text-decoration: none;
+}
+
+
+
 /* 상단 버튼 부분 관련 css*/
 .bg {
     width: 100%;
@@ -30,9 +52,8 @@ body {
 }
 
 .bg ul {
-    margin-left: auto;
+    margin-left: 30%;
     margin-right: auto;
-
 }
 
 .bg ul li {
@@ -42,7 +63,7 @@ body {
 
 .btn {
     border: none;
-    color: black;
+    color: white;
     font-weight: bold;
 }
 
@@ -356,6 +377,7 @@ svg {
     /* 가로축 스크롤바 길이 */
     background-color: transparent;
 }
+
 
 ::-webkit-scrollbar-track {
     border-radius: 10px;

@@ -40,10 +40,12 @@
 <body>
     {% csrf_token %}
 
-    <div id="wrap">
-
+    <div id="nav-wrap">
         <nav class="navbar navbar-expand-lg navbar-light bg">
             <div class="collapse navbar-collapse" id="navbarNav">
+                <a class="logo" href="#">
+                    HScalendar
+                </a>
                 <ul class="navbar-nav">
                     <!-- 학생과 교수가 다르게 보이는 부분 -->
                     {% if request.session.userType == "student" %}
@@ -73,6 +75,11 @@
                 </ul>
             </div>
         </nav>
+    </div>
+
+    <div id="wrap">
+
+
 
         <!-- 사이드바 생성 -->
         <div id="sidebar">
@@ -180,14 +187,16 @@
                         <tr>
                             <th scope="col">학수번호</th>
                             <th scope="col">분반</th>
+                            <th scope="col">학과</th>
                             <th scope="col">이수구분</th>
                             <th scope="col">교과목명</th>
                             <th scope="col">담당교수</th>
                             <th scope="col">교시</th>
                             <th scope="col">인원/전체</th>
+                            <th scope="col">-</th>
                         </tr>
                     </thead>
-                    <tbody id="make-info">
+                    <tbody id="pro_lec_load_tbody">
                     </tbody>
                 </table>
             </div>
@@ -306,16 +315,16 @@
                         <div class="info_box">
                             <span class="username_set">
                                 {% if request.session.userID %}
-                                    {% if request.session.userType == "student" %}
-                                        {{ request.session.userName }} 학생, 안녕하세요!
-                                    {% elif request.session.userType == "professor" %}
-                                        {{ request.session.userName }} 교수님, 안녕하세요!
-                                    {% endif %}
+                                {% if request.session.userType == "student" %}
+                                {{ request.session.userName }} 학생, 안녕하세요!
+                                {% elif request.session.userType == "professor" %}
+                                {{ request.session.userName }} 교수님, 안녕하세요!
+                                {% endif %}
                                 {% endif %}
                             </span>
                             <div class="email_set">
                                 {% if request.session.userID %}
-                                    {{ request.session.email }}
+                                {{ request.session.email }}
                                 {% endif %}
                             </div>
                             <a href="{% url 'toast_cal:manageInfo' %}" class="my_info">내 정보</a>

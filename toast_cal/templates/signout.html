@@ -18,13 +18,13 @@
             </a>
         </div>
     </div>
-    <form id="newUser_form" method="POST" action="">
+    <form id="newUser_form" method="POST" action="{% url 'toast_cal:signout' %}">
         {% csrf_token %}
         <div id="container" role="main">
             <div id="content">
                 <div class="caution_area">
                     <h2>주의</h2>
-                    <span class="caution">회원탈퇴를 진행하면 개인 일정 및 강의 시간표가 삭제되며, 
+                    <span class="caution">회원탈퇴를 진행하면 개인 일정 및 강의 시간표가 삭제되며,
                         이 과정의 진행으로 인해 소멸된 개인 일정데이터는 복구할 수 없습니다.</span>
                 </div>
                 <div>

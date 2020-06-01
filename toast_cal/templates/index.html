@@ -14,6 +14,16 @@
         <h1>HS Calendar</h1>
         <div id="content">학생과 교수사이의 시험, 공강 일정조율 프로그램</div>
         <div id="wrap-box">
+            {% if request.session.userID %}
+            <div class="box">
+                <div class="box-content">
+                    <a href=" {% url 'toast_cal:calendar' %}">
+                        <p class="main-btn">캘린더</p>
+                    </a>
+                    <div class="detail"></div>
+                </div>
+            </div>
+            {% else %}
             <div class="box">
                 <div class="box-content">
                     <a href=" {% url 'login' %}" class="first">
@@ -30,6 +40,7 @@
                     <div class="detail"></div>
                 </div>
             </div>
+            {% endif %}
         </div>
 
 

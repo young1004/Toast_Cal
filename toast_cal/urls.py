@@ -34,15 +34,19 @@ urlpatterns = [
     path("voteTable/", crud.voteTable, name="voteTable"),
     path("voteChart/", crud.voteChart, name="voteChart"),
     path("makeSubject/", crud.makeSubject, name="makeSubject"),
-    path("makeCalendars/", crud.makeCalendars, name="makeCalendars"),
-    path("pro_lecture_table/", crud.pro_lecture_table, name="pro_lecture_table"),    #교수 강의 테이블 출력
-    path("professor_lecture_delete/", crud.professor_lecture_delete, name="professor_lecture_delete"), #교수 강의 삭제
-
+    path(
+        "pro_lecture_table/", crud.pro_lecture_table, name="pro_lecture_table"
+    ),  # 교수 강의 테이블 출력
+    path(
+        "professor_lecture_delete/",
+        crud.professor_lecture_delete,
+        name="professor_lecture_delete",
+    ),  # 교수 강의 삭제
     path("manageInfo/", views.manageInfo, name="manageInfo"),
     path("loginInfo/", views.loginInfo, name="loginInfo"),
     path("modifyInfo/", views.modifyInfo, name="modifyInfo"),
-
-    path("signout/", views.signout, name="signout"),
-    # 공통 : 학생과 교수 일정 삭제
+    # 공통 기능들
     path("deleteCalendars/", crud.deleteCalendars, name="deleteCalendars"),
+    path("makeCalendars/", crud.makeCalendars, name="makeCalendars"),
+    path("signout/", views.signout, name="signout"),
 ]

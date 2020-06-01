@@ -1,12 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'styles/signup.css' %}" rel="stylesheet">
     <title>비밀번호 변경</title>
 </head>
+
 <body>
     <div id="page">
         <div id="header" role="banner">
@@ -26,16 +28,16 @@
                     <select id="select_area" name="userType">
 
                         {% if request.session.userID %}
-                            {% if request.session.userType == "student" %}
-                                <option value="student" selected>학생</option>
-                                <option value="professor">교수</option>
-                            {% elif request.session.userType == "professor" %}
-                                    <option value="student">학생</option>
-                                    <option value="professor" selected>교수</option>
-                            {% endif %}
+                        {% if request.session.userType == "student" %}
+                        <option value="student" selected>학생</option>
+                        <option value="professor">교수</option>
+                        {% elif request.session.userType == "professor" %}
+                        <option value="student">학생</option>
+                        <option value="professor" selected>교수</option>
+                        {% endif %}
                         {% else %}
-                            <option value="student">학생</option>
-                            <option value="professor">교수</option>
+                        <option value="student">학생</option>
+                        <option value="professor">교수</option>
                         {% endif %}
                     </select>
                 </div>
@@ -45,9 +47,10 @@
                     </h3>
                     <span id="select_area">
                         {% if request.session.userID %}
-                            <input type="text" name="userID" class="user_info" maxlength="20" value="{{ request.session.userID }}">
+                        <input type="text" name="userID" class="user_info" maxlength="20"
+                            value="{{ request.session.userID }}">
                         {% else %}
-                            <input type="text" name="userID" class="user_info" maxlength="20" placeholder="아이디">
+                        <input type="text" name="userID" class="user_info" maxlength="20" placeholder="아이디">
                         {% endif %}
                     </span>
                 </div>
@@ -72,7 +75,8 @@
                         <label for="psw2">새 비밀번호 확인</label>
                     </h3>
                     <span class="ps_box">
-                        <input type="password" name="password2_check" class="user_info" maxlength="20" placeholder="새 비밀번호 확인">
+                        <input type="password" name="password2_check" class="user_info" maxlength="20"
+                            placeholder="새 비밀번호 확인">
                     </span>
                 </div>
                 <div class="btn_area">
@@ -82,4 +86,5 @@
         </div>
     </form>
 </body>
+
 </html>
