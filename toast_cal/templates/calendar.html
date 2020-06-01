@@ -200,190 +200,196 @@
 
             <!-- 교수 강의 개설하는 div -->
             <div id="make-lecture">
-                <form id="make-lecture-wrap">
-                    <div class="form-row">
-                        <div class="col-md-4 mb-3">
-                            <label for="validationDefault01">학수번호</label>
-                            <div>
-                                <input type="text" id="lec-code" placeholder="학수번호" required> -
-                                <select name="lecClass" id="lec-class">
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="validationDefault02">이수구분</label>
-                            <select name="lecType" class="form-control" id="lec-type">
-                                <option value="전공 필수">전공 필수</option>
-                                <option value="전공 선택">전공 선택</option>
-                                <option value="일반 교양">일반 교양</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="validationDefault03">교과목명</label>
-                            <input type="text" class="form-control" id="lec-name" placeholder="교과목명"
-                                aria-describedby="inputGroupPrepend2" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-4 mb-3">
-                            <label for="validationDefault04">학과</label>
-                            <select name="lecDepart" class="form-control" id="lec-depart">
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="validationDefault05">교시</label>
-                            <span class="form-control">
-                                <select name="lecType1" id="lec-type1">
-                                    <option value="월">월</option>
-                                    <option value="화">화</option>
-                                    <option value="수">수</option>
-                                    <option value="목">목</option>
-                                    <option value="금">금</option>
-                                    <option value="토">토</option>
-                                    <option value="일">일</option>
-                                </select>
-                                <select name="lecType2" id="lec-type2">
-                                    <option value="12">12</option>
-                                    <option value="34">34</option>
-                                    <option value="78">78</option>
-                                    <option value="910">910</option>
-                                    <option value="1112">1112</option>
-                                    <option value="1314">1314</option>
-                                </select>
-                                <select name="lecType3" id="lec-type3">
-                                    <option value="월">월</option>
-                                    <option value="화">화</option>
-                                    <option value="수">수</option>
-                                    <option value="목">목</option>
-                                    <option value="금">금</option>
-                                    <option value="토">토</option>
-                                    <option value="일">일</option>
-                                </select>
-                                <select name="lecType4" id="lec-type4">
-                                    <option value="12">12</option>
-                                    <option value="34">34</option>
-                                    <option value="78">78</option>
-                                    <option value="910">910</option>
-                                    <option value="1112">1112</option>
-                                    <option value="1314">1314</option>
-                                </select>
-                            </span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="validationDefault06">수용인원</label>
-                            <input type="text" class="form-control" id="lec-count" placeholder="인원" required>
-                        </div>
-                    </div>
-                </form>
-                <button type=" button" class="btn btn-outline-dark" id="lecMakeBtn" value="개설">개설</button>
-            </div>
-        </div>
+                <table>
+                    <tbody>
+                        <form id="make-lecture-wrap">
+                            <tr>
+                                <th>교과목명: </th>
+                                <td><input type="text" id="lec-name"></td>
+                            </tr>
 
-        <!-- 교수 투표 관련 페이지 -->
-        <div class="contents" id="professor2" style="display: none;">
-            <span>강의 분류:</span>
-            <select id="lecture-class" name="lectureClass">
-                <option value="전공 필수">전공 필수</option>
-                <option value="전공 선택">전공 선택</option>
-                <option value="일반 교양">일반 교양</option>
-            </select>
-            <span>투표 상태:</span>
-            <select id="vote-status" name="voteStatus">
-                <option value="투표중">투표중</option>
-                <option value="투표 완료">투표 완료</option>
-            </select>
-            <button type="button" class="btn btn-outline-dark" id="voteTableBtn">선택</button>
-            <div id="table-wrap">
-                <table class="table vote-professor">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">강의코드</th>
-                            <th scope="col">강의분류</th>
-                            <th scope="col">강의명</th>
-                            <th scope="col">투표상태</th>
-                            <th scope="col"> - </th>
-                        </tr>
-                    </thead>
-                    <tbody id="vote-info">
+                            <tr>
+                                <th>학수번호: </th>
+                                <td>
+                                    <input type="text" style="width: 70px;" id="lec-code"> -
+                                    <select name="lecClass" id="lec-class" style="width: 45px;">
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                    </select></td>
+                            </tr>
+
+                            <tr>
+                                <th>이수구분: </th>
+                                <td>
+                                    <select name="lecType" id="lec-type">
+                                        <option value="전공 필수">전공 필수</option>
+                                        <option value="전공 선택">전공 선택</option>
+                                        <option value="일반 교양">일반 교양</option>
+                                    </select></td>
+                            </tr>
+
+
+                            <tr>
+                                <th>학과: </th>
+                                <td>
+                                    <select name="lecDepart" id="lec-depart">
+                                    </select></td>
+                            </tr>
+
+                            <tr>
+                                <th>교시: </th>
+                                <td><select name="lecType1" id="lec-type1">
+                                        <option value="월">월</option>
+                                        <option value="화">화</option>
+                                        <option value="수">수</option>
+                                        <option value="목">목</option>
+                                        <option value="금">금</option>
+                                        <option value="토">토</option>
+                                        <option value="일">일</option>
+                                    </select>
+                                    <select name="lecType2" id="lec-type2">
+                                        <option value="12">12</option>
+                                        <option value="34">34</option>
+                                        <option value="56">56</option>
+                                        <option value="78">78</option>
+                                        <option value="910">910</option>
+                                        <option value="1112">1112</option>
+                                    </select>
+                                    ~
+                                    <select name="lecType3" id="lec-type3">
+                                        <option value="월">월</option>
+                                        <option value="화">화</option>
+                                        <option value="수">수</option>
+                                        <option value="목">목</option>
+                                        <option value="금">금</option>
+                                        <option value="토">토</option>
+                                        <option value="일">일</option>
+                                    </select>
+                                    <select name="lecType4" id="lec-type4">
+                                        <option value="12">12</option>
+                                        <option value="34">34</option>
+                                        <option value="56">56</option>
+                                        <option value="78">78</option>
+                                        <option value="910">910</option>
+                                        <option value="1112">1112</option>
+                                    </select></td>
+                            </tr>
+
+                            <tr>
+                                <th>수용인원: </th>
+                                <td><input type="text" id="lec-count" width="50px"></td>
+                            </tr>
+                        </form>
                     </tbody>
                 </table>
-            </div>
-            <!-- toast UI Chart 부분 -->
-            <div id="vote-detail-donut">
-                <div id="chart-area"></div>
+                <button type="button" id="lecMakeBtn" value="개설">개설하기</button>
             </div>
         </div>
-        <!-- 공유 캘린더 구현 예정 -->
-        <div class=" contents" id="professor3" style="display: none;">
-            공유 캘린더
-        </div>
-        {% endif %}
-        {% endif %}
+    </div>
 
-        <div id="right_nav">
-            <div id="userinfo_layer">
-                <div id="userInfo">
-                    <a class="btn_logout" href="{% url 'logout' %}">로그아웃</a>
-                    <div class="info">
-                        <div class="info_box">
-                            <span class="username_set">
-                                {% if request.session.userID %}
-                                {% if request.session.userType == "student" %}
-                                {{ request.session.userName }} 학생, 안녕하세요!
-                                {% elif request.session.userType == "professor" %}
-                                {{ request.session.userName }} 교수님, 안녕하세요!
-                                {% endif %}
-                                {% endif %}
-                            </span>
-                            <div class="email_set">
-                                {% if request.session.userID %}
-                                {{ request.session.email }}
-                                {% endif %}
-                            </div>
-                            <a href="{% url 'toast_cal:manageInfo' %}" class="my_info">내 정보</a>
+    <!-- 교수 투표 관련 페이지 -->
+    <div class="contents" id="professor2" style="display: none;">
+        <span>강의 분류:</span>
+        <select id="lecture-class" name="lectureClass">
+            <option value="전공 필수">전공 필수</option>
+            <option value="전공 선택">전공 선택</option>
+            <option value="일반 교양">일반 교양</option>
+        </select>
+        <span>투표 상태:</span>
+        <select id="vote-status" name="voteStatus">
+            <option value="투표중">투표중</option>
+            <option value="투표 완료">투표 완료</option>
+        </select>
+        <button type="button" class="btn btn-outline-dark" id="voteTableBtn">선택</button>
+        <div id="table-wrap">
+            <table class="table vote-professor">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">강의코드</th>
+                        <th scope="col">강의분류</th>
+                        <th scope="col">강의명</th>
+                        <th scope="col">투표상태</th>
+                        <th scope="col"> - </th>
+                    </tr>
+                </thead>
+                <tbody id="vote-info">
+                </tbody>
+            </table>
+        </div>
+        <!-- toast UI Chart 부분 -->
+        <div id="vote-detail-donut">
+            <div id="chart-area"></div>
+        </div>
+    </div>
+    <!-- 공유 캘린더 구현 예정 -->
+    <div class=" contents" id="professor3" style="display: none;">
+        공유 캘린더
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <div id="right_nav">
+        <div id="userinfo_layer">
+            <div id="userInfo">
+                <a class="btn_logout" href="{% url 'logout' %}">로그아웃</a>
+                <div class="info">
+                    <div class="info_box">
+                        <span class="username_set">
+                            {% if request.session.userID %}
+                            {% if request.session.userType == "student" %}
+                            {{ request.session.userName }} 학생, 안녕하세요!
+                            {% elif request.session.userType == "professor" %}
+                            {{ request.session.userName }} 교수님, 안녕하세요!
+                            {% endif %}
+                            {% endif %}
+                        </span>
+                        <div class="email_set">
+                            {% if request.session.userID %}
+                            {{ request.session.email }}
+                            {% endif %}
                         </div>
+                        <a href="{% url 'toast_cal:manageInfo' %}" class="my_info">내 정보</a>
                     </div>
                 </div>
             </div>
-            <div class="tab_area">
-                <div id="tab_box">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="today" data-toggle="tab" href="#first_tab">하루일정</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="thisweek" data-toggle="tab" href="#second_tab">이번주 일정</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="lastweek" data-toggle="tab" href="#third_tab">지난주 일정</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="first_tab">
-                            <div class="content_index">
-                                <!-- 오늘 일정탭 -->
-                            </div>
+        </div>
+        <div class="tab_area">
+            <div id="tab_box">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="today" data-toggle="tab" href="#first_tab">하루일정</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="thisweek" data-toggle="tab" href="#second_tab">이번주 일정</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="lastweek" data-toggle="tab" href="#third_tab">지난주 일정</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="first_tab">
+                        <div class="content_index">
+                            <!-- 오늘 일정탭 -->
                         </div>
                     </div>
-                    <div class="tab-content">
-                        <div class="tab-pane fade" id="second_tab">
-                            <div class="content_index">
-                                <!-- 지난주 일정탭 -->
-                            </div>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade" id="second_tab">
+                        <div class="content_index">
+                            <!-- 지난주 일정탭 -->
                         </div>
                     </div>
-                    <div class="tab-content">
-                        <div class="tab-pane fade" id="third_tab">
-                            <div class="content_index">
-                                <!-- 이번주 일정탭 -->
-                            </div>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade" id="third_tab">
+                        <div class="content_index">
+                            <!-- 이번주 일정탭 -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="{% static 'scripts/calFunc.js' %}"></script>
     <script src="{% static 'scripts/calSet.js' %}"></script>

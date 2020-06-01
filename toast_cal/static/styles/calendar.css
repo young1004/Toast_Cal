@@ -238,6 +238,34 @@ svg {
     width: 100px;
 }
 
+#make-lecture table {
+    height: 90%;
+    min-width: 100%;
+    border-bottom-style: dotted;
+    border-bottom-color: lightgrey;
+    border-bottom-width: 0.5px;
+}
+
+#make-lecture tr th {
+    border-color: lightgray;
+    border-style: solid;
+    border-width: 0.5px;
+    text-align: center;
+}
+
+#make-lecture tr td {
+    background-color: white;
+    padding-left: 20px;
+    border-color: lightgray;
+    border-style: solid;
+    border-width: 0.5px;
+}
+
+#lecMakeBtn {
+    position: relative;
+    left: 50%;
+}
+
 
 
 /* 사용자 메뉴 관련 css */
