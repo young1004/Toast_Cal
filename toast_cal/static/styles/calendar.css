@@ -230,7 +230,7 @@ svg {
 }
 
 #make-lecture {
-    border: 1px solid #CDCDCD;
+    /* border: 1px solid #CDCDCD; */
     height: 350px;
 }
 
@@ -262,6 +262,7 @@ svg {
 }
 
 #lecMakeBtn {
+    margin-top: 1em;
     position: relative;
     left: 50%;
 }
