@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.core import serializers
 from .models import *
+from django.db.models.aggregates import Count
 
 
 # 서버에서 ajax로 일정 보내주는 함수
@@ -90,7 +91,7 @@ def department(request):
         pro_department = Professor.objects.get(
             userID=request.session["userID"]
         ).department
-        print(pro_department)
+        # print(pro_department)
         department_list = Department.objects.filter(name=pro_department).order_by(
             "name"
         )
@@ -169,10 +170,17 @@ def lecture_save(request):
             student_id=request.session["userID"], name=request.POST["name"],
         ).exists()
 
+        request_period = request.POST["period"].split()
+        first_period = Student_lecture.objects.filter(
+            student_id=request.session["userID"], period__icontains=request_period[0]
+        ).exists()
+        second_period = Student_lecture.objects.filter(
+            student_id=request.session["userID"], period__icontains=request_period[1]
+        ).exists()
         Count = Subject.objects.get(code=request.POST["code"])
 
         if Count.stdCount < Count.total_stdCount:
-            if boolean_name:
+            if boolean_name or first_period or second_period:
                 return HttpResponse("중복된 데이터입니다. 수강 강의를 확인하세요.")
             else:
                 new_instance = Student_lecture.objects.create(
@@ -368,3 +376,16 @@ def deleteCalendars(request):
             )
             new_instance.delete()
             return HttpResponse("db와 일정 데이터 삭제 성공")
+
+
+def testCalendar(request):
+    lecCode = "QWE"
+    testData = Student_lecture.objects.filter(code=lecCode)
+    print(testData)  # testData[0].code
+    finalData = Calendar.objects.filter(userID="NULL")  # 초기화
+    for data in testData:
+        finalData = finalData | Calendar.objects.filter(userID=data.student_id)
+        # print(data.student_id)
+    finalData = finalData.values("start", "end").annotate(count=Count("start"))
+    # print(serializers.serialize("json", finalData) #content_type="application/json"
+    return HttpResponse(finalData)

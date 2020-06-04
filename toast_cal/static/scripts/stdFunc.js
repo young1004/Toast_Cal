@@ -57,7 +57,13 @@ function change_type(subject, lecture_type) {
 
     if (data.name == "전체") {
         $(lecture_type).empty();
-        $(lecture_type).find("option").end().append("<option value='전체'>전체</option>");
+        if (document.getElementById("department").value == "일반교양") {
+            $(lecture_type).find("option").end().append("<option>일반 교양</option>");
+        } else {
+            $(lecture_type).find("option").end().append("<option value='전체'>전체</option>");
+            $(lecture_type).append("<option>전공 필수</option>");
+            $(lecture_type).append("<option>전공 선택</option>");
+        }
     } else {
         ajaxPost("/toast_cal/chanege_type/", "json", "POST", data)
             .then(function(data) {
@@ -92,7 +98,7 @@ function lecture_lookup() {
                         "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
                         "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
                         "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td>" +
-                        "<td>" + data[count].fields.stdCount + "/" + data[count].fields.total_stdCount+ "</td></tr>");
+                        "<td>" + data[count].fields.stdCount + "/" + data[count].fields.total_stdCount + "</td></tr>");
                     $('#lecture_tbody').append(tr);
                 }
             })

@@ -131,7 +131,7 @@ $("#lecture_save_btn").click(async function() {
 
 // 삭제 버튼
 $("#lecture_delete_btn").click(async function() {
-    var tr = $("tr");
+    var tr = $("#lecture_load_tbody").children();
     var array = [];
     var husks = {};
 
