@@ -109,10 +109,21 @@ $(document).on("click", ".pro_lec_del_btn", async function() {
     var tr = delete_btn.parent().parent();
     var td = tr.children();
 
-    var subject = {
-        code: td.eq(0).text()
-    }
-    console.log(subject);
+    var json = {};
+
+    json.title = td[4].innerText;
+
+    await ajaxPost("/toast_cal/deleteCalendars/", "json", "POST", json)
+        .then(function(data) {
+            alert(data);
+        })
+        .catch(function(err) {
+            alert(err);
+        });
+
+    var subject = {};
+
+    subject.code = td[0].innerText;
 
     ajaxPost("/toast_cal/professor_lecture_delete/", 'json', "POST", subject)
         .then(function(data) {
@@ -131,17 +142,6 @@ $(document).on("click", ".pro_lec_del_btn", async function() {
         .catch(function(err) {
             alert(err)
         })
-    var json = {};
-
-    json.title = td[4].innerText;
-
-    await ajaxPost("/toast_cal/deleteCalendars/", "json", "POST", json)
-        .then(function(data) {
-            alert(data);
-        })
-        .catch(function(err) {
-            alert(err);
-        });
 
     ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
         .then(function(data) {

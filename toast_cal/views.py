@@ -445,19 +445,19 @@ def signout(request):
                 request.session.pop("userType")
                 request.session.pop("email")
             elif userType == "professor":
-                cal_Sdel = Calendar.objects.filter(userID=userID)
+                cal_Pdel = Calendar.objects.filter(userID=userID)
                 lec_del = Student_lecture.objects.filter(professor=userID)
 
                 for i in range(lec_del.count()):
-                    for j in range(cal_Sdel.count()):
-                        cal_Pdel = Calendar.objects.filter(
+                    for j in range(cal_Pdel.count()):
+                        cal_Sdel = Calendar.objects.filter(
                             userID=lec_del[i].student_id,
-                            start=cal_Sdel[j].start,
-                            end=cal_Sdel[j].end,
+                            start=cal_Pdel[j].start,
+                            end=cal_Pdel[j].end,
                         )
-                        cal_Pdel.delete()
+                        cal_Sdel.delete()
 
-                cal_Sdel.delete()
+                cal_Pdel.delete()
                 sub_del = Subject.objects.filter(professor=userID)
                 sub_del.delete()
                 lec_del.delete()

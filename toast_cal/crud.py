@@ -295,8 +295,10 @@ def pro_lecture_table(request):
 # 교수 강의 삭제
 def professor_lecture_delete(request):
     if request.method == "POST":
-        query = Subject.objects.get(code=str(request.POST["code"]))
-        query.delete()
+        lec_del = Student_lecture.objects.filter(code=request.POST["code"])
+        sub_del = Subject.objects.get(code=request.POST["code"])
+        lec_del.delete()
+        sub_del.delete()
 
         date_list = Subject.objects.filter(professor=request.session["userName"])
 
@@ -371,10 +373,25 @@ def deleteCalendars(request):
             return HttpResponse("db와 일정 데이터 삭제 성공")
         elif request.session["userType"] == "professor":
             title = request.POST["title"]
-            new_instance = Calendar.objects.filter(
+            cal_Pdel = Calendar.objects.filter(
                 userID=request.session["userID"], title=title
             )
-            new_instance.delete()
+
+            lec_del = Student_lecture.objects.filter(
+                professor=request.session["userID"], name=title
+            )
+
+            for i in range(lec_del.count()):
+                for j in range(cal_Pdel.count()):
+                    cal_Sdel = Calendar.objects.filter(
+                        userID=lec_del[i].student_id,
+                        start=cal_Pdel[j].start,
+                        end=cal_Pdel[j].end,
+                    )
+                    cal_Sdel.delete()
+
+            cal_Pdel.delete()
+
             return HttpResponse("db와 일정 데이터 삭제 성공")
 
 
