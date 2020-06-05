@@ -403,6 +403,10 @@ def testCalendar(request):
     for data in testData:
         finalData = finalData | Calendar.objects.filter(userID=data.student_id)
         # print(data.student_id)
+    print(finalData.query)
     finalData = finalData.values("start", "end").annotate(count=Count("start"))
-    # print(serializers.serialize("json", finalData) #content_type="application/json"
+
+    for i in finalData:
+        print(i["end"])
+    print(finalData)
     return HttpResponse(finalData)

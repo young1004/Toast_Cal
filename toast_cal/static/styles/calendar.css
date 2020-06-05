@@ -330,25 +330,23 @@ svg {
     display: none;
 }
 
-#today_list_argu {
+.today_list_argu {
     border-bottom: 2px #dee2e6 dotted;
     font-size: 15px;
     padding-top: 15px;
     padding-bottom: 15px;
 }
 
-#thisweek_list_argu {
-    border-bottom: 2px #dee2e6 dotted;
+.thisweek_list_argu {
     font-size: 15px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-#lastweek_list_argu {
-    border-bottom: 2px #dee2e6 dotted;
+.lastweek_list_argu {
     font-size: 15px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 #userinfo_layer {
@@ -421,7 +419,6 @@ svg {
     background-color: transparent;
 }
 
-
 ::-webkit-scrollbar-track {
     border-radius: 10px;
 }
@@ -438,4 +435,59 @@ svg {
 
 ::-webkit-resizer {
     background-color: lightslategrey;
+}
+
+
+
+/* 캘린더id에 따른 색상부여 및 위치 조정*/
+/* 전공 필수 */
+.sub0 {
+    color: #ff5583;
+    float: left;
+    width: 20%;
+}
+
+/* 전공 선택 */
+.sub1 {
+    color: #ffbb3b;
+    float: left;
+    width: 20%;
+}
+
+/* 일반 교양 */
+.sub2 {
+    color: #03bd9e;
+    float: left;
+    width: 20%;
+}
+
+/* con클래스의 위치 조정 */
+.con {
+    float: left;
+    width: 40%;
+}
+
+#dayList {
+    height: auto;
+    min-width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* datString클래스 위치 조정 */
+.dayString {
+    height: auto;
+    display: block;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    text-align: center;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+.nav-tabs a:hover {
+    color: black;
 }

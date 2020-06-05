@@ -39,8 +39,19 @@ function loadToday() {
 
             for (i = 0; i < data.length; i++) {
 
-                var start = data[i].fields.start
-                var end = data[i].fields.end
+                // 캘린더id에 따른 색상부여를 위해 넘버 지정
+                var calendaridColor = 0;
+
+                if (data[i].fields.calendarId === "전공 필수") {
+                    calendaridColor = 0;
+                } else if (data[i].fields.calendarId === "전공 선택") {
+                    calendaridColor = 1;
+                } else {
+                    calendaridColor = 2;
+                }
+
+                var start = data[i].fields.start;
+                var end = data[i].fields.end;
 
                 // substr함수 사용(start,end테이블 index 자르기)
                 // 시간출력
@@ -53,28 +64,28 @@ function loadToday() {
                 var endMonth = end.substr(5, 2); // 끝 월
                 var endDay = end.substr(8, 2); // 끝 일
 
-
                 var longStringDay = startTime + " ~ " + endTime;
 
                 var task = $("<div class='first_tab_area'>" +
-                    "<div id='today_list_argu'>" +
-                    "<span class='sub'>" +
-                    data[i].fields.calendarId +
-                    " | </span>" +
-                    "<span class='con'> " +
+                    "<div class ='today_list_argu'>" +
+                    "<span class='sub" + calendaridColor + "'>" +
+                    " ● </span>" +
+                    "<span class='con'>" +
                     data[i].fields.title +
-                    " | </span>" +
-                    "<span class='dayString'>" +
+                    "</span>" +
+                    "<span class='dayStringToday'>" +
                     longStringDay +
                     "</span>" +
                     "</div>" +
                     "</div>")
                 $("#first_tab").append(task)
+
             }
         })
         .catch(function(err) {
             alert(err);
         });
+
 };
 
 loadToday();
@@ -94,15 +105,28 @@ thisWeek.addEventListener('click', function(event) {
             document.querySelector('#third_tab').style.display = 'none';
 
 
+            var Daytmp = "";
             for (i = 0; i < data.length; i++) {
 
-                var start = data[i].fields.start
-                var end = data[i].fields.end
+                // 캘린더id에 따른 색상부여하기
+                var calendaridColor = 0;
+
+                if (data[i].fields.calendarId === "전공 필수") {
+                    calendaridColor = 0;
+                } else if (data[i].fields.calendarId === "전공 선택") {
+                    calendaridColor = 1;
+                } else {
+                    calendaridColor = 2;
+                }
+
+                var start = data[i].fields.start;
+                var end = data[i].fields.end;
 
                 // substr함수 사용(start,end테이블 index 자르기)
                 // 시간 출력
-                // var startTime = start.substr(11, 5);
-                // var endTime = end.substr(11, 5);
+                var startTime = start.substr(11, 5);
+                var endTime = end.substr(11, 5);
+
                 //날짜 출력
                 var startMonth = start.substr(5, 2); //시작 월
                 var startDay = start.substr(8, 2); //시작 일
@@ -112,27 +136,37 @@ thisWeek.addEventListener('click', function(event) {
                 // var startData = startMonth + "월" + startDay + "일";
                 // var endData = endMonth + "월" + endDay + "일";
 
+                // 월일 출력문
                 if (startMonth != endMonth || startDay != endDay) {
                     var longStringDay = startMonth + "월" + startDay + "일 ~ " + endMonth + "월" + endDay + "일";
                 } else {
                     var longStringDay = startMonth + "월" + startDay + "일";
                 }
 
+                var startTimeClass = startTime + " ~ " + endTime
+
                 var task = $("<div class='second_tab_area'>" +
-                    "<div id='thisweek_list_argu'>" +
-                    "<span class=''>" +
-                    "<span class='sub'>" +
-                    data[i].fields.calendarId +
-                    " | </span>" +
+                    "<div class='thisweek_list_argu'>" +
+                    "<div class='dayString'>" +
+                    longStringDay +
+                    "</div>" +
+                    "<span class='sub" + calendaridColor + "'>" +
+                    " ● </span>" +
                     "<span class='con'> " +
                     data[i].fields.title +
-                    " | </span>" +
-                    "<span class='dayString'>" +
-                    longStringDay +
+                    "</span>" +
+                    "<span class='startTime'>" +
+                    startTimeClass +
                     "</span>" +
                     "</div>" +
                     "</div>")
                 $("#second_tab").append(task)
+
+                if (i == 0 || Daytmp != longStringDay) {
+                    Daytmp = longStringDay;
+                } else {
+                    $(".dayString")[i].style.display = "none";
+                }
             }
         })
         .catch(function(err) {
@@ -150,15 +184,30 @@ lastWeek.addEventListener('click', function(event) {
             $("#third_tab").empty();
             document.querySelector('#third_tab').style.display = 'block';
 
+
+
+            var Daytmp = "";
+
             for (i = 0; i < data.length; i++) {
+
+                // 캘린더id에 따른 색상부여를 위해 넘버 지정
+                var calendaridColor = 0;
+
+                if (data[i].fields.calendarId === "전공 필수") {
+                    calendaridColor = 0;
+                } else if (data[i].fields.calendarId === "전공 선택") {
+                    calendaridColor = 1;
+                } else {
+                    calendaridColor = 2;
+                }
 
                 var start = data[i].fields.start
                 var end = data[i].fields.end
 
                 // substr함수 사용(start,end테이블 index 자르기)
                 // 시간 출력
-                // var startTime = start.substr(11, 5);
-                // var endTime = end.substr(11, 5);
+                var startTime = start.substr(11, 5);
+                var endTime = end.substr(11, 5);
 
                 //날짜 출력
                 var startMonth = start.substr(5, 2); //시작 월
@@ -174,20 +223,32 @@ lastWeek.addEventListener('click', function(event) {
                 } else {
                     var longStringDay = startMonth + "월" + startDay + "일";
                 }
-                var task = $("<div class='second_tab_area'>" +
-                    "<div id='thisweek_list_argu'>" +
-                    "<span class='sub'>" +
-                    data[i].fields.calendarId +
-                    " | </span>" +
+
+                var startTimeClass = startTime + " ~ " + endTime;
+
+                var task = $("<div class='third_tab_area'>" +
+                    "<div class = 'lastweek_list_argu'>" +
+                    "<div class = 'dayString'>" +
+                    longStringDay +
+                    "</div>" +
+                    "<span class='sub" + calendaridColor + "'>" +
+                    " ● </span>" +
                     "<span class='con'> " +
                     data[i].fields.title +
-                    " | </span>" +
-                    "<span class='dayString'>" +
-                    longStringDay +
+                    "</span>" +
+                    "<span class='startTime'>" +
+                    startTimeClass +
                     "</span>" +
                     "</div>" +
                     "</div>")
                 $("#third_tab").append(task)
+
+                if (i == 0 || Daytmp != longStringDay) {
+                    Daytmp = longStringDay;
+                } else {
+                    $(".dayString")[i].style.display = "none";
+                }
+
             }
 
             console.log("StartDate: " + getDate(0, -7));
@@ -197,3 +258,7 @@ lastWeek.addEventListener('click', function(event) {
             alert(err);
         });
 });
+
+
+
+// 일자에 따라 주간일정 묶음표시

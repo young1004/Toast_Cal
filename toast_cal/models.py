@@ -141,3 +141,53 @@ class Vote(models.Model):
 
     class Meta:
         db_table = "Vote"
+
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
+# 공용 캘린더 분류에 대한 데이터가 저장될 데이터베이스 모델
+class PubCalID(models.Model):
+    id = models.CharField(max_length=30, primary_key=True)
+    name = models.CharField(max_length=30)
+    color = models.CharField(max_length=30)
+    bgColor = models.CharField(max_length=30)
+    dragBgColor = models.CharField(max_length=30)
+    borderColor = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "PubCalID"
+
+
+# 공용 일정 정보가 저장되는 데이터베이스 모델
+class PubCalendar(models.Model):  # pk값이 별도로 지정됨
+    code = models.CharField(max_length=30, null=False)  # 해당 강의 코드가 입력됨
+    calendarId = models.CharField(
+        max_length=30, default="적음"
+    )  # calendar 분류(시간대에 안되는 비율 : 매우높음, 높음, 적음)
+    title = models.CharField(max_length=30)  # count + 명이 이 시간에 일정이 있습니다.
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    count = models.IntegerField()  # 일정이 겹치는 수
+    conutPer = models.FloatField()  # 전체 수강생에서 일정이 겹치는 수의 비율
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = "PubCalendar"
