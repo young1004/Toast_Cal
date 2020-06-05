@@ -176,9 +176,9 @@ class PubCalID(models.Model):
 
 # 공용 일정 정보가 저장되는 데이터베이스 모델
 class PubCalendar(models.Model):  # pk값이 별도로 지정됨
-    code = models.CharField(max_length=30, primary_key=True)  # 해당 강의 코드가 입력됨
+    code = models.CharField(max_length=30)  # 해당 강의 코드가 입력됨
     calendarId = models.CharField(
-        max_length=30, default="적음"
+        max_length=30, default="낮음"
     )  # calendar 분류(시간대에 안되는 비율 : 매우높음, 높음, 적음)
     title = models.CharField(max_length=30)  # count + 명이 이 시간에 일정이 있습니다.
     start = models.DateTimeField()

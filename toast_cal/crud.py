@@ -405,8 +405,10 @@ def testCalendar(request):
         # print(data.student_id)
     # print(finalData.query)
     finalData = finalData.values("start", "end").annotate(count=Count("start"))
-
+    print(finalData)
     for i in finalData:
-        print(i["end"])
-    # print(finalData)
+        print("start : ", i["start"])
+        print("end", i["end"])
+        print("count", i["count"])
+
     return HttpResponse(finalData)
