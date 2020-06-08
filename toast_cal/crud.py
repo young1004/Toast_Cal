@@ -397,6 +397,7 @@ def deleteCalendars(request):
 
 def pubCalSave(request):
     lecCode = "QWE"  # request에서 온 강의 코드로 가정
+    calID = "낮음"
     stdLecData = Student_lecture.objects.filter(code=lecCode)
     # print("request에서 온 강의를 듣는 학생들의 쿼리셋", stdLecData)
     subjectCount = Subject.objects.filter(code=lecCode)[0].stdCount
@@ -411,7 +412,21 @@ def pubCalSave(request):
     pubCalData = pubCalData.values("start", "end").annotate(count=Count("start"))
     print(pubCalData)
     for i in pubCalData:
-        stdLecData
+        if i["count"] / subjectCount > 0.7:
+            calID = "매우높음"
+        elif i["count"] / subjectCount > 0.5:
+            calID = "높음"
+        else:
+            calID = "낮음"
+        PubCalendar.objects.create(
+            code=lecCode,
+            calendarId=calID,
+            title=str(i["count"]) + "명이 이 시간에 일정이 있음",
+            start=i["start"],
+            end=i["end"],
+            count=i["count"],
+            countPer=i["count"] / subjectCount,
+        )
         # print("start : ", i["start"])
         # print("end", i["end"])
         # print("count", i["count"])
