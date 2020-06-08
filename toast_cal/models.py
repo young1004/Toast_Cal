@@ -179,12 +179,12 @@ class PubCalendar(models.Model):  # pk값이 별도로 지정됨
     code = models.CharField(max_length=30)  # 해당 강의 코드가 입력됨
     calendarId = models.CharField(
         max_length=30, default="낮음"
-    )  # calendar 분류(시간대에 안되는 비율 : 매우높음, 높음, 적음)
+    )  # calendar 분류(시간대에 안되는 비율 : 매우높음, 높음, 낮음)
     title = models.CharField(max_length=30)  # count + 명이 이 시간에 일정이 있습니다.
     start = models.DateTimeField()
     end = models.DateTimeField()
     count = models.IntegerField()  # 일정이 겹치는 수
-    conutPer = models.FloatField()  # 전체 수강생에서 일정이 겹치는 수의 비율
+    countPer = models.FloatField()  # 전체 수강생에서 일정이 겹치는 수의 비율
 
     def __str__(self):
         return self.title

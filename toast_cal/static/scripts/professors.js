@@ -328,10 +328,10 @@ lecMakeBtn.addEventListener('click', async function(event) {
         });
 });
 
-var testCalendar = document.getElementById("testCalendar");
+var pubCalSaveBtn = document.getElementById("pubCalSaveBtn");
 
-testCalendar.addEventListener('click', function() {
-    ajaxPost("/toast_cal/testCalendar/", 'json', "POST", "1")
+pubCalSaveBtn.addEventListener('click', function() {
+    ajaxPost("/toast_cal/pubCalSave/", 'json', "POST", "1")
         .then(function(data) {
             console.log(data);
         })

@@ -49,5 +49,5 @@ urlpatterns = [
     path("deleteCalendars/", crud.deleteCalendars, name="deleteCalendars"),
     path("makeCalendars/", crud.makeCalendars, name="makeCalendars"),
     path("signout/", views.signout, name="signout"),
-    path("testCalendar/", crud.testCalendar, name="testCalendar"),  # 테스트 함수
+    path("pubCalSave/", crud.pubCalSave, name="pubCalSave"),  # 테스트 함수
 ]

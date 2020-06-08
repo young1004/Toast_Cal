@@ -395,20 +395,25 @@ def deleteCalendars(request):
             return HttpResponse("db와 일정 데이터 삭제 성공")
 
 
-def testCalendar(request):
-    lecCode = "QWE"
-    testData = Student_lecture.objects.filter(code=lecCode)
-    print(testData)  # testData[0].code
-    finalData = Calendar.objects.filter(userID="NULL")  # 초기화
-    for data in testData:
-        finalData = finalData | Calendar.objects.filter(userID=data.student_id)
-        # print(data.student_id)
-    # print(finalData.query)
-    finalData = finalData.values("start", "end").annotate(count=Count("start"))
-    print(finalData)
-    for i in finalData:
-        print("start : ", i["start"])
-        print("end", i["end"])
-        print("count", i["count"])
+def pubCalSave(request):
+    lecCode = "QWE"  # request에서 온 강의 코드로 가정
+    stdLecData = Student_lecture.objects.filter(code=lecCode)
+    # print("request에서 온 강의를 듣는 학생들의 쿼리셋", stdLecData)
+    subjectCount = Subject.objects.filter(code=lecCode)[0].stdCount
+    # print("subject 수강 인원 : ", subjectCount)
 
-    return HttpResponse(finalData)
+    pubCalData = Calendar.objects.filter(userID="NULL")  # 초기화
+    for data in stdLecData:  # 강의를 듣는 학생들의 공개 일정을 가져오는 쿼리 생성
+        pubCalData = pubCalData | Calendar.objects.filter(userID=data.student_id)
+        # print(data.student_id) # 학생의 id값
+    # print(pubCalData.query) # 쿼리 확인
+
+    pubCalData = pubCalData.values("start", "end").annotate(count=Count("start"))
+    print(pubCalData)
+    for i in pubCalData:
+        stdLecData
+        # print("start : ", i["start"])
+        # print("end", i["end"])
+        # print("count", i["count"])
+
+    return HttpResponse(pubCalData)
