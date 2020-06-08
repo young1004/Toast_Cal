@@ -321,11 +321,27 @@
         </div>
         <!-- 공유 캘린더 구현 예정 -->
         <div class="contents" id="professor3" style="display: none;">
-            <!-- <div></div> 공용 캘린더 생성할 부분 -->
-            <button id="pubCalSaveBtn">일정 불러오기</button>
+            <div id="pubCalNavi">
+                <span>테스트박스:</span>
+                <select id="lecture-class" name="lectureClass">
+                    <option value="전공 필수">전공 필수</option>
+                    <option value="전공 선택">전공 선택</option>
+                    <option value="일반 교양">일반 교양</option>
+                </select>
+                <span>테스트박스:</span>
+                <select id="lecture-class" name="lectureClass">
+                    <option value="전공 필수">전공 필수</option>
+                    <option value="전공 선택">전공 선택</option>
+                    <option value="일반 교양">일반 교양</option>
+                </select>
+                <button id="pubCalSaveBtn" class="btn btn-outline-dark">일정 새로고침</button>
+            </div>
+            <div id="pubCalendar">
+            </div>
         </div>
         {% endif %}
         {% endif %}
+        <div style="display: none;"></div>
 
         <div id="right_nav">
             <div id="userinfo_layer">
@@ -394,7 +410,9 @@
     <script src="{% static 'scripts/calFunc.js' %}"></script>
     <script src="{% static 'scripts/calSet.js' %}"></script>
     <script src="{% static 'scripts/calMain.js' %}"></script>
+    <script src="{% static 'scripts/pubCalSet.js' %}"></script>
     <script src="{% static 'scripts/rightNav.js' %}"></script>
+
 
     {% if request.session.userType == "student" %}
     <script src="{% static 'scripts/stdFunc.js' %}"></script>

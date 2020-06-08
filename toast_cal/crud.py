@@ -396,6 +396,7 @@ def deleteCalendars(request):
 
 
 def pubCalSave(request):
+    # request : POST, start, end, code
     lecCode = "QWE"  # request에서 온 강의 코드로 가정
     calID = "낮음"
     stdLecData = Student_lecture.objects.filter(code=lecCode)
@@ -410,6 +411,10 @@ def pubCalSave(request):
     # print(pubCalData.query) # 쿼리 확인
 
     pubCalData = pubCalData.values("start", "end").annotate(count=Count("start"))
+
+    beforeData = PubCalendar.objects.filter(code=lecCode)
+    beforeData.delete()
+
     print(pubCalData)
     for i in pubCalData:
         if i["count"] / subjectCount > 0.7:
