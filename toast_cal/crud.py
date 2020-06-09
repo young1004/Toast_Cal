@@ -295,9 +295,13 @@ def pro_lecture_table(request):
 # 교수 강의 삭제
 def professor_lecture_delete(request):
     if request.method == "POST":
-        lec_del = Student_lecture.objects.filter(code=request.POST["code"])
+        try:
+            lec_del = Student_lecture.objects.filter(code=request.POST["code"])
+            lec_del.delete()
+        except lec_del.DoesNotExist:
+            a = "aa"
+
         sub_del = Subject.objects.get(code=request.POST["code"])
-        lec_del.delete()
         sub_del.delete()
 
         date_list = Subject.objects.filter(professor=request.session["userName"])
@@ -377,18 +381,23 @@ def deleteCalendars(request):
                 userID=request.session["userID"], title=title
             )
 
-            lec_del = Student_lecture.objects.filter(
-                professor=request.session["userID"], name=title
-            )
+            try:
+                lec_del = Student_lecture.objects.filter(
+                    professor=request.session["userName"], name=title
+                )
 
-            for i in range(lec_del.count()):
-                for j in range(cal_Pdel.count()):
-                    cal_Sdel = Calendar.objects.filter(
-                        userID=lec_del[i].student_id,
-                        start=cal_Pdel[j].start,
-                        end=cal_Pdel[j].end,
-                    )
-                    cal_Sdel.delete()
+                for i in range(lec_del.count()):
+                    for j in range(cal_Pdel.count()):
+                        cal_Sdel = Calendar.objects.filter(
+                            userID=lec_del[i].student_id,
+                            title=title,
+                            start=cal_Pdel[j].start,
+                            end=cal_Pdel[j].end,
+                        )
+                        cal_Sdel.delete()
+                
+            except lec_del.DoesNotExist:
+                a = "aa"
 
             cal_Pdel.delete()
 

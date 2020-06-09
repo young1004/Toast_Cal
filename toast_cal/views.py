@@ -418,6 +418,8 @@ def signout(request):
     if request.method == "POST":
         userType = request.session["userType"]
         userID = request.session["userID"]
+        userName = request.session["userName"]
+
         confirm = request.POST["confirm"]
 
         if confirm == "탈퇴합니다":
@@ -446,7 +448,7 @@ def signout(request):
                 request.session.pop("email")
             elif userType == "professor":
                 cal_Pdel = Calendar.objects.filter(userID=userID)
-                lec_del = Student_lecture.objects.filter(professor=userID)
+                lec_del = Student_lecture.objects.filter(professor=userName)
 
                 for i in range(lec_del.count()):
                     for j in range(cal_Pdel.count()):
@@ -458,7 +460,7 @@ def signout(request):
                         cal_Sdel.delete()
 
                 cal_Pdel.delete()
-                sub_del = Subject.objects.filter(professor=userID)
+                sub_del = Subject.objects.filter(professor=userName)
                 sub_del.delete()
                 lec_del.delete()
                 pro_del = Professor.objects.filter(userID=userID)
