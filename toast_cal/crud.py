@@ -408,27 +408,23 @@ def pubCalSetData(request):
 
 # 공용 일정 저장하는 함수
 def pubCalSave(request):
-    # request : POST, start, end, code
     lecCode = "QWE"  # request에서 온 강의 코드로 가정
     calID = "낮음"
     stdLecData = Student_lecture.objects.filter(code=lecCode)
     # print("request에서 온 강의를 듣는 학생들의 쿼리셋", stdLecData)
     subjectCount = Subject.objects.filter(code=lecCode)[0].stdCount
     # print("subject 수강 인원 : ", subjectCount)
-
     pubCalData = Calendar.objects.filter(userID="NULL")  # 초기화
     for data in stdLecData:  # 강의를 듣는 학생들의 공개 일정을 가져오는 쿼리 생성
         pubCalData = pubCalData | Calendar.objects.filter(userID=data.student_id)
         # print(data.student_id) # 학생의 id값
-    # print(pubCalData.query) # 쿼리 확인
-
     pubCalData = pubCalData.values("start", "end").annotate(count=Count("start"))
 
     beforeData = PubCalendar.objects.filter(code=lecCode)
     beforeData.delete()
 
-    print(pubCalData)
     for i in pubCalData:
+        stdLecData
         if i["count"] / subjectCount > 0.7:
             calID = "매우 높음"
         elif i["count"] / subjectCount > 0.5:
@@ -444,17 +440,21 @@ def pubCalSave(request):
             count=i["count"],
             countPer=i["count"] / subjectCount,
         )
-        # print("start : ", i["start"])
-        # print("end", i["end"])
-        # print("count", i["count"])
 
     return HttpResponse("일정 저장 완료.")
 
 
 def pubCalLoad(request):
     lecCode = "QWE"  # request에서 온 강의 코드로 가정
+    print(request.POST["start"])
 
-    pubCalData = PubCalendar.objects.filter(code=lecCode)
+    pubCalData = PubCalendar.objects.filter(
+        code=lecCode, start__range=[request.POST["start"], request.POST["end"]]
+    )
+    # date_list = Calendar.objects.filter(
+    #             userID=request.session["userID"],
+    #             start__range=[request.POST["StartDate"], request.POST["EndDate"]],
+    #         ).order_by("start")
 
     return HttpResponse(
         serializers.serialize("json", pubCalData), content_type="application/json"

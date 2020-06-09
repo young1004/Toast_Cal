@@ -10,6 +10,7 @@ const pubOptions = {
 // 캘린더 생성
 const pubCalendar = new tui.Calendar(pubContainer, pubOptions);
 
+// 공유 캘린더 toast UI 캘린더의 Calendar ID값 셋팅
 ajaxPost("/toast_cal/pubCalSetData/", 'json', "POST", "1").then(function(data) {
         var calSetData = new Array();
         for (var i = 0; i < data.length; i++) {
@@ -32,3 +33,47 @@ ajaxPost("/toast_cal/pubCalSetData/", 'json', "POST", "1").then(function(data) {
     .catch(function(err) {
         console.log(err);
     });
+
+var pubCalSaveBtn = document.getElementById("pubCalSaveBtn");
+
+pubCalSaveBtn.addEventListener('click', function() {
+    // let subjectData = {
+    //     subject: document.getElementById("pubcal_select").value
+    // }
+    // console.log(data)
+    ajaxPost("/toast_cal/pubCalSave/", 'json', "POST", "1")
+        .then(function(data) {
+            console.log(data);
+        })
+        .catch(function(err) {
+            alert(err);
+        });
+})
+
+var pubCalLoadBtn = document.getElementById("pubCalLoadBtn");
+
+pubCalLoadBtn.addEventListener('click', function() {
+    var code = document.getElementById("pubcal_select").value
+    var start = document.getElementById("start").value
+    var end = document.getElementById("end").value
+
+    let pubLoadData = {
+        code: code,
+        start: start,
+        end: end,
+    }
+
+    if (start != "" || end != "") {
+        ajaxPost("/toast_cal/pubCalLoad/", 'json', "POST", pubLoadData)
+            .then(function(data) {
+                console.log(data);
+                pubCalendar.clear();
+                pubCreate(pubCalendar, data);
+            })
+            .catch(function(err) {
+                alert(err);
+            });
+    } else {
+        alert("날짜를 선택하세오.")
+    }
+});

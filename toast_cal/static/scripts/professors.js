@@ -327,15 +327,3 @@ lecMakeBtn.addEventListener('click', async function(event) {
             alert(err);
         });
 });
-
-var pubCalSaveBtn = document.getElementById("pubCalSaveBtn");
-
-pubCalSaveBtn.addEventListener('click', function() {
-    ajaxPost("/toast_cal/pubCalSave/", 'json', "POST", "1")
-        .then(function(data) {
-            console.log(data);
-        })
-        .catch(function(err) {
-            alert(err);
-        });
-})
