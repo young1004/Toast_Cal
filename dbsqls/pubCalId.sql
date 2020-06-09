@@ -9,10 +9,10 @@ use caldb;
 truncate pubcalid;
 
 INSERT INTO pubcalid
-VALUES("매우 높음", "매우 높음", "#FF0000", "#FF0000", "#FF0000", "#FF0000");
+VALUES("매우 높음", "매우 높음", "#ffffff", "#ff0000", "#ff0000", "#ff0000");
 
 INSERT INTO pubcalid
-VALUES("높음", "높음", "#FFE400", "#FFE400", "#FFE400", "#FFE400");
+VALUES("높음", "높음", "#ffffff", "#ffe400", "#ffe400", "#ffe400");
 
 INSERT INTO pubcalid
-VALUES("낮음", "낮음", "#BDBDBD", "#BDBDBD", "#BDBDBD", "#BDBDBD");
+VALUES("낮음", "낮음", "#ffffff", "#bdbdbd", "#bdbdbd", "#bdbdbd");

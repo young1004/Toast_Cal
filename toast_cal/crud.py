@@ -395,6 +395,18 @@ def deleteCalendars(request):
             return HttpResponse("db와 일정 데이터 삭제 성공")
 
 
+# 공용 캘린더 부분 기능들
+
+# 공용 캘린더용 calId 보내주는 부분
+def pubCalSetData(request):
+    pubCalSetData = PubCalID.objects.all()
+
+    return HttpResponse(
+        serializers.serialize("json", pubCalSetData), content_type="application/json"
+    )
+
+
+# 공용 일정 저장하는 함수
 def pubCalSave(request):
     # request : POST, start, end, code
     lecCode = "QWE"  # request에서 온 강의 코드로 가정
@@ -418,7 +430,7 @@ def pubCalSave(request):
     print(pubCalData)
     for i in pubCalData:
         if i["count"] / subjectCount > 0.7:
-            calID = "매우높음"
+            calID = "매우 높음"
         elif i["count"] / subjectCount > 0.5:
             calID = "높음"
         else:
@@ -426,7 +438,7 @@ def pubCalSave(request):
         PubCalendar.objects.create(
             code=lecCode,
             calendarId=calID,
-            title=str(i["count"]) + "명이 이 시간에 일정이 있음",
+            title=str(i["count"]) + "명 일정 있음",
             start=i["start"],
             end=i["end"],
             count=i["count"],
@@ -436,4 +448,14 @@ def pubCalSave(request):
         # print("end", i["end"])
         # print("count", i["count"])
 
-    return HttpResponse(pubCalData)
+    return HttpResponse("일정 저장 완료.")
+
+
+def pubCalLoad(request):
+    lecCode = "QWE"  # request에서 온 강의 코드로 가정
+
+    pubCalData = PubCalendar.objects.filter(code=lecCode)
+
+    return HttpResponse(
+        serializers.serialize("json", pubCalData), content_type="application/json"
+    )

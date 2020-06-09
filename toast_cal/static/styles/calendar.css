@@ -276,7 +276,7 @@ svg {
 
 /* 억지로 잡은 css (추후 버그 수정시 우선 체크) */
 .tui-full-calendar-month>div {
-    height: 560px;
+    height: 580px;
 }
 
 
