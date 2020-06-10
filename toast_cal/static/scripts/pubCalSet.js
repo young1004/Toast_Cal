@@ -2,7 +2,7 @@ const pubContainer = document.getElementById('pubCalendar');
 
 // 옵션 오브젝트
 const pubOptions = {
-    defaultView: 'month',
+    defaultView: 'week',
     useCreationPopup: true,
     useDetailPopup: true
 };

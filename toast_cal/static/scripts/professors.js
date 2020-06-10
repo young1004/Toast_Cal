@@ -55,10 +55,10 @@ voteProBtn.addEventListener('click', function(event) {
 });
 
 // 공용 캘린더 버튼 리스너
-shareProBtn.addEventListener('click', function(event) {
+shareProBtn.addEventListener('click', async function(event) {
     changeContents('professor3', 'professor2', 'calendar-common', 'sidebar', 'professor1');
     //select 박스 교수강의 불러오기
-    ajaxPost("/toast_cal/pro_lecture/", "json", "POST", 1)
+    await ajaxPost("/toast_cal/pro_lecture/", "json", "POST", 1)
         .then(function(data) {
             $('#pubcal_select').empty(); //기존 옵션 값 삭제
 
@@ -70,7 +70,10 @@ shareProBtn.addEventListener('click', function(event) {
         .catch(function(err) {
             alert(err);
         });
+    $("#pubCalLoadBtn").trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
 });
+
+
 
 // 교수 투표 페이지 관련 select, button DOM
 var voteClass = document.getElementById('lecture-class');
@@ -141,6 +144,7 @@ $(document).on("click", ".pro_lec_del_btn", async function() {
     var subject = {};
 
     subject.code = td[0].innerText;
+    subject.codeClass = td[1].innerText;
 
     ajaxPost("/toast_cal/professor_lecture_delete/", 'json', "POST", subject)
         .then(function(data) {

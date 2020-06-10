@@ -177,7 +177,9 @@ def lecture_save(request):
         second_period = Student_lecture.objects.filter(
             student_id=request.session["userID"], period__icontains=request_period[1]
         ).exists()
-        Count = Subject.objects.get(code=request.POST["code"])
+        Count = Subject.objects.get(
+            code=request.POST["code"], codeClass=request.POST["codeClass"]
+        )
 
         if Count.stdCount < Count.total_stdCount:
             if boolean_name or first_period or second_period:
@@ -219,6 +221,7 @@ def student_lecture_delete(request):
             query = Student_lecture.objects.get(
                 student_id=request.session["userID"],
                 code=request.POST["array[" + str(data) + "][code]"],
+                codeClass=request.POST["array[" + str(data) + "][codeClass]"],
             )
             query.delete()
             obj = Subject.objects.get(code=query.code)
@@ -311,7 +314,9 @@ def professor_lecture_delete(request):
         except lec_del.DoesNotExist:
             a = "aa"
 
-        sub_del = Subject.objects.get(code=request.POST["code"])
+        sub_del = Subject.objects.get(
+            code=request.POST["code"], codeClass=request.POST["codeClass"]
+        )
         sub_del.delete()
 
         date_list = Subject.objects.filter(professor=request.session["userName"])
