@@ -450,10 +450,14 @@ def pubCalSave(request):
     # print("request에서 온 강의를 듣는 학생들의 쿼리셋", stdLecData)
     subjectCount = Subject.objects.filter(code=lecCode)[0].stdCount
     # print("subject 수강 인원 : ", subjectCount)
+
     pubCalData = Calendar.objects.filter(userID="NULL")  # 초기화
     for data in stdLecData:  # 강의를 듣는 학생들의 공개 일정을 가져오는 쿼리 생성
         pubCalData = pubCalData | Calendar.objects.filter(userID=data.student_id)
         # print(data.student_id) # 학생의 id값
+
+    pubCalData = pubCalData | Calendar.objects.filter(userID=request.session["userID"])
+
     pubCalData = pubCalData.values("start", "end").annotate(count=Count("start"))
 
     beforeData = PubCalendar.objects.filter(code=lecCode)
