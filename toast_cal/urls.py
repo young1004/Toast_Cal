@@ -52,6 +52,7 @@ urlpatterns = [
     path("pubCalSave/", crud.pubCalSave, name="pubCalSave"),
     # 공용 캘린더 부분들
     path("pubCalSetData/", crud.pubCalSetData, name="pubCalSetData"),
+    path("pro_lecture/", crud.pro_lecture, name="pro_lecture"),
     path("pubCalSave/", crud.pubCalSave, name="pubCalSave"),
     path("pubCalLoad/", crud.pubCalLoad, name="pubCalLoad"),
 ]

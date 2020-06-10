@@ -4,11 +4,13 @@ var subProBtn = document.getElementById("subProBtn");
 var voteProBtn = document.getElementById("voteProBtn");
 var shareProBtn = document.getElementById("shareProBtn");
 
+// 교수 캘린더 버튼 리스너
 calProBtn.addEventListener('click', function(event) {
     changeContents('calendar-common', 'professor1', 'professor2', 'professor3');
     changeContents('sidebar');
 });
 
+// 교수 강의 개설 버튼 리스너
 subProBtn.addEventListener('click', function(event) {
     changeContents('professor1', 'calendar-common', 'professor2', 'sidebar', 'professor3');
 
@@ -47,12 +49,27 @@ subProBtn.addEventListener('click', function(event) {
         });
 });
 
+// 투표 기능 버튼 리스너
 voteProBtn.addEventListener('click', function(event) {
     changeContents('professor2', 'calendar-common', 'professor1', 'sidebar', 'professor3');
 });
 
+// 공용 캘린더 버튼 리스너
 shareProBtn.addEventListener('click', function(event) {
     changeContents('professor3', 'professor2', 'calendar-common', 'sidebar', 'professor1');
+    //select 박스 교수강의 불러오기
+    ajaxPost("/toast_cal/pro_lecture/", "json", "POST", 1)
+        .then(function(data) {
+            $('#pubcal_select').empty(); //기존 옵션 값 삭제
+
+            for (var count = 0; count < data.length; count++) {
+                var option = $("<option>" + data[count].fields.code + "</option>");
+                $('#pubcal_select').append(option);
+            }
+        })
+        .catch(function(err) {
+            alert(err);
+        });
 });
 
 // 교수 투표 페이지 관련 select, button DOM
@@ -252,7 +269,7 @@ var lecMakeBtn = document.getElementById("lecMakeBtn");
 
 // 강의 개설 버튼 eventListener
 lecMakeBtn.addEventListener('click', async function(event) {
-
+    let flag = ""
     let periodData = document.getElementById('lec-type1').value +
         document.getElementById('lec-type2').value + " " +
         document.getElementById('lec-type3').value +
@@ -272,58 +289,72 @@ lecMakeBtn.addEventListener('click', async function(event) {
     console.log(makeData);
     let scheduleData;
 
+    // return HttpResponse("강의 코드가 겹치는 강의가 있습니다.")
+
+    // splitdata1, splitdata2 = request.POST["period"].split(" ")
+
+    // if splitdata1 == splitdata2:
+    //     return HttpResponse("강의 시간이 겹치지 않게 설정해주세요")
+
+
     // 강의 개설하는 ajax통신 및 반복일정을 생성할 데이터셋 만들기
     await ajaxPost("/toast_cal/makeSubject/", "json", "POST", makeData)
         .then(function(data) {
+            flag = data;
+            if (flag != "강의 코드가 겹치는 강의가 있습니다." && flag != "강의 시간이 겹치지 않게 설정해주세요") {
+                var timeData = periodSplit(data[0].fields.period);
+                var convData = periodConvert(timeData);
+                var calData = [];
+                // console.log(convData);
+                for (var i = 0; i < 15; i++) {
+                    var dateArr = getTimeData(convData, '-03-02', i * 7);
+                    // console.log(dateArr);
+                    for (var j = 0; j < 2; j++) {
+                        var calobj = {};
+                        // console.log(dateArr[j].startDate);
+                        // console.log(dateArr[j].endDate);
+                        calobj = newCalObj(1, data[0].fields.lecture_type,
+                            data[0].fields.name, "time", "미정", dateArr[j].startDate,
+                            dateArr[j].endDate, convertBooleanData(false),
+                            "busy", "public");
+                        calData.push(calobj);
+                    }
 
-            var timeData = periodSplit(data[0].fields.period);
-            var convData = periodConvert(timeData);
-            var calData = [];
-            // console.log(convData);
-            for (var i = 0; i < 15; i++) {
-                var dateArr = getTimeData(convData, '-03-02', i * 7);
-                // console.log(dateArr);
-                for (var j = 0; j < 2; j++) {
-                    var calobj = {};
-                    // console.log(dateArr[j].startDate);
-                    // console.log(dateArr[j].endDate);
-                    calobj = newCalObj(1, data[0].fields.lecture_type,
-                        data[0].fields.name, "time", "미정", dateArr[j].startDate,
-                        dateArr[j].endDate, convertBooleanData(false),
-                        "busy", "public");
-                    calData.push(calobj);
                 }
+                // console.log(calData);
+                scheduleData = calData;
+            } else alert(flag);
 
-            }
-            // console.log(calData);
-            scheduleData = calData;
         })
         .catch(function(err) {
             alert(err);
         });
 
-    console.log(scheduleData);
-    scheduleData = {
-        scheduleData
-    };
+    // console.log(scheduleData);
+    if (flag != "강의 코드가 겹치는 강의가 있습니다." && flag != "강의 시간이 겹치지 않게 설정해주세요") {
+        scheduleData = {
+            scheduleData
+        };
 
-    // 캘린더 일정에 반복적으로 일정 추가
-    await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
-        .then(function(data) {
-            // alert(data);
-        })
-        .catch(function(err) {
-            alert(err);
-        });
+        // 캘린더 일정에 반복적으로 일정 추가
+        await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
+            .then(function(data) {
+                // alert(data);
+            })
+            .catch(function(err) {
+                alert(err);
+            });
 
-    // 추가된 반복일정을 캘린더에 뿌려주기
-    ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
-        .then(function(data) {
-            calendar.clear();
-            create(calendar, data);
-            window.location.reload();
-        })
-        .catch(function(err) {
-            alert(err);
-        });
+        // 추가된 반복일정을 캘린더에 뿌려주기
+        ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+            .then(function(data) {
+                calendar.clear();
+                create(calendar, data);
+                window.location.reload();
+            })
+            .catch(function(err) {
+                alert(err);
+            });
+    }
+
 });

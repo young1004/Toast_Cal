@@ -257,6 +257,16 @@ def makeSubject(request):
     if request.method == "POST":
         # print("---------makeSubject--------------------------")
         # print(request.POST)
+        if Subject.objects.filter(
+            code=request.POST["code"], codeClass=request.POST["codeClass"]
+        ).exists():
+            return HttpResponse("강의 코드가 겹치는 강의가 있습니다.")
+
+        splitdata1, splitdata2 = request.POST["period"].split(" ")
+
+        if splitdata1 == splitdata2:
+            return HttpResponse("강의 시간이 겹치지 않게 설정해주세요")
+
         makedData = Subject.objects.create(
             name=request.POST["name"],
             code=request.POST["code"],
@@ -395,7 +405,7 @@ def deleteCalendars(request):
                             end=cal_Pdel[j].end,
                         )
                         cal_Sdel.delete()
-                
+
             except lec_del.DoesNotExist:
                 a = "aa"
 
@@ -415,9 +425,21 @@ def pubCalSetData(request):
     )
 
 
+# 공유 캘린더 클릭시 교수의 강의 불러옴
+def pro_lecture(request):
+    if request.method == "POST":
+        professor = Professor.objects.get(userID=request.session["userID"])
+        data = Subject.objects.filter(
+            professor=professor.username, department=professor.department
+        )
+        return HttpResponse(
+            serializers.serialize("json", data), content_type="application/json"
+        )
+
+
 # 공용 일정 저장하는 함수
 def pubCalSave(request):
-    lecCode = "QWE"  # request에서 온 강의 코드로 가정
+    lecCode = request.POST["code"]  # request에서 온 강의 코드로 가정
     calID = "낮음"
     stdLecData = Student_lecture.objects.filter(code=lecCode)
     # print("request에서 온 강의를 듣는 학생들의 쿼리셋", stdLecData)
@@ -454,7 +476,7 @@ def pubCalSave(request):
 
 
 def pubCalLoad(request):
-    lecCode = "QWE"  # request에서 온 강의 코드로 가정
+    lecCode = request.POST["code"]  # request에서 온 강의 코드로 가정
     print(request.POST["start"])
 
     pubCalData = PubCalendar.objects.filter(

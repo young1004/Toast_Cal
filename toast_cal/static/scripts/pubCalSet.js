@@ -37,11 +37,11 @@ ajaxPost("/toast_cal/pubCalSetData/", 'json', "POST", "1").then(function(data) {
 var pubCalSaveBtn = document.getElementById("pubCalSaveBtn");
 
 pubCalSaveBtn.addEventListener('click', function() {
-    // let subjectData = {
-    //     subject: document.getElementById("pubcal_select").value
-    // }
+    let codeData = {
+        code: document.getElementById("pubcal_select").value
+    }
     // console.log(data)
-    ajaxPost("/toast_cal/pubCalSave/", 'json', "POST", "1")
+    ajaxPost("/toast_cal/pubCalSave/", 'json', "POST", codeData)
         .then(function(data) {
             console.log(data);
         })
