@@ -143,21 +143,6 @@ class Vote(models.Model):
         db_table = "Vote"
 
 
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-
 # 공용 캘린더 분류에 대한 데이터가 저장될 데이터베이스 모델
 class PubCalID(models.Model):
     id = models.CharField(max_length=30, primary_key=True)

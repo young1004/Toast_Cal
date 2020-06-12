@@ -56,6 +56,7 @@ voteProBtn.addEventListener('click', function(event) {
 
 // 공용 캘린더 버튼 리스너
 shareProBtn.addEventListener('click', async function(event) {
+    $("#pubCalLoadBtn").trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
     changeContents('professor3', 'professor2', 'calendar-common', 'sidebar', 'professor1');
     //select 박스 교수강의 불러오기
     await ajaxPost("/toast_cal/pro_lecture/", "json", "POST", 1)
@@ -70,7 +71,6 @@ shareProBtn.addEventListener('click', async function(event) {
         .catch(function(err) {
             alert(err);
         });
-    $("#pubCalLoadBtn").trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
 });
 
 
@@ -292,14 +292,6 @@ lecMakeBtn.addEventListener('click', async function(event) {
 
     console.log(makeData);
     let scheduleData;
-
-    // return HttpResponse("강의 코드가 겹치는 강의가 있습니다.")
-
-    // splitdata1, splitdata2 = request.POST["period"].split(" ")
-
-    // if splitdata1 == splitdata2:
-    //     return HttpResponse("강의 시간이 겹치지 않게 설정해주세요")
-
 
     // 강의 개설하는 ajax통신 및 반복일정을 생성할 데이터셋 만들기
     await ajaxPost("/toast_cal/makeSubject/", "json", "POST", makeData)

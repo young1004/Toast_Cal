@@ -114,7 +114,7 @@ function periodSplit(period) {
     var stdClass;
 
     for (var i = 0; i < firstCutData.length; i++) {
-        console.log(firstCutData[i]);
+        // console.log(firstCutData[i]);
         theDay = firstCutData[i].substring(0, 1);
         stdClass = firstCutData[i].substring(1);
         cutDataArray.push(theDay);

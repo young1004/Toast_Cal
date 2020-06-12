@@ -258,8 +258,6 @@ def voteChart(request):
 # ajax로 들어온 데이터로 강의 개설
 def makeSubject(request):
     if request.method == "POST":
-        # print("---------makeSubject--------------------------")
-        # print(request.POST)
         if Subject.objects.filter(
             code=request.POST["code"], codeClass=request.POST["codeClass"]
         ).exists():
@@ -284,8 +282,6 @@ def makeSubject(request):
         makedData.save()
 
         createdData = Subject.objects.filter(id=makedData.id)
-
-        # print("---------makeSubject--------------------------")
         return HttpResponse(
             serializers.serialize("json", createdData), content_type="application/json"
         )
@@ -355,9 +351,6 @@ def getWeekSchedule(request):
 
 # ajax로 들어온 데이터들로 calendar DB에 저장
 def makeCalendars(request):
-    # print("-----------makeCalendars--------------")
-    # print(request.POST)
-
     for i in range(int(len(request.POST) / 10)):
         new_instance = Calendar.objects.create(
             userID=request.session["userID"],
@@ -371,9 +364,6 @@ def makeCalendars(request):
             state=request.POST["scheduleData[" + str(i) + "][state]"],
             calendarClass=request.POST["scheduleData[" + str(i) + "][class]"],
         )
-
-    # print("-----------makeCalendars--------------")
-
     return HttpResponse("강의 일정 저장 완료!")
 
 
@@ -420,7 +410,6 @@ def deleteCalendars(request):
 
 
 # 공용 캘린더 부분 기능들
-
 # 공용 캘린더용 calId 보내주는 부분
 def pubCalSetData(request):
     pubCalSetData = PubCalID.objects.all()
@@ -448,7 +437,7 @@ def pubCalSave(request):
     calID = "낮음"
     stdLecData = Student_lecture.objects.filter(code=lecCode)
     # print("request에서 온 강의를 듣는 학생들의 쿼리셋", stdLecData)
-    subjectCount = Subject.objects.filter(code=lecCode)[0].stdCount
+    subjectCount = Subject.objects.filter(code=lecCode)[0].stdCount + 1  # +1은 교수 카운트
     # print("subject 수강 인원 : ", subjectCount)
 
     pubCalData = Calendar.objects.filter(userID="NULL")  # 초기화
@@ -464,7 +453,6 @@ def pubCalSave(request):
     beforeData.delete()
 
     for i in pubCalData:
-        stdLecData
         if i["count"] / subjectCount > 0.7:
             calID = "매우 높음"
         elif i["count"] / subjectCount > 0.5:
@@ -491,10 +479,6 @@ def pubCalLoad(request):
     pubCalData = PubCalendar.objects.filter(
         code=lecCode, start__range=[request.POST["start"], request.POST["end"]]
     )
-    # date_list = Calendar.objects.filter(
-    #             userID=request.session["userID"],
-    #             start__range=[request.POST["StartDate"], request.POST["EndDate"]],
-    #         ).order_by("start")
 
     return HttpResponse(
         serializers.serialize("json", pubCalData), content_type="application/json"
