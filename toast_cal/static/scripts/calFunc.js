@@ -243,7 +243,7 @@ function create(calendar, data) {
             data[i].fields.state, {
                 class: data[i].fields.calendarClass
             });
-        console.log(schedule);
+        // console.log(schedule);
         calendar.createSchedules([schedule]);
     }
 
@@ -267,7 +267,7 @@ function pubCreate(calendar, data) {
             data[i].fields.end, false, "busy", {
                 class: "public"
             });
-        console.log(schedule);
+        // console.log(schedule);
         createdData.push(schedule);
     }
     calendar.createSchedules(createdData);

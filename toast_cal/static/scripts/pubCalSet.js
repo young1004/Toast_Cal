@@ -66,7 +66,7 @@ pubCalLoadBtn.addEventListener('click', function() {
     if (start != "" || end != "") {
         ajaxPost("/toast_cal/pubCalLoad/", 'json', "POST", pubLoadData)
             .then(function(data) {
-                console.log(data);
+                // console.log(data);
                 pubCalendar.clear();
                 pubCreate(pubCalendar, data);
             })

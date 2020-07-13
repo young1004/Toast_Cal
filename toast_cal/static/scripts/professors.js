@@ -290,7 +290,7 @@ lecMakeBtn.addEventListener('click', async function(event) {
     };
     document.getElementById("make-lecture-wrap").reset();
 
-    console.log(makeData);
+    // console.log(makeData);
     let scheduleData;
 
     // 강의 개설하는 ajax통신 및 반복일정을 생성할 데이터셋 만들기
@@ -298,12 +298,20 @@ lecMakeBtn.addEventListener('click', async function(event) {
         .then(function(data) {
             flag = data;
             if (flag != "강의 코드가 겹치는 강의가 있습니다." && flag != "강의 시간이 겹치지 않게 설정해주세요") {
+                console.log('과목/교시 데이터', data[0].fields.period);
+
                 var timeData = periodSplit(data[0].fields.period);
+                console.log('과목/교시를 분리한 데이터', timeData);
+
                 var convData = periodConvert(timeData);
+                console.log('분리된 데이터를 변환한 데이터', convData)
+
                 var calData = [];
                 // console.log(convData);
                 for (var i = 0; i < 15; i++) {
                     var dateArr = getTimeData(convData, '-03-02', i * 7);
+                    console.log('날짜/시간으로 변환한 데이터', dateArr);
+
                     // console.log(dateArr);
                     for (var j = 0; j < 2; j++) {
                         var calobj = {};
@@ -331,6 +339,7 @@ lecMakeBtn.addEventListener('click', async function(event) {
         scheduleData = {
             scheduleData
         };
+        console.log('캘린더에 일정 추가하기 위한 데이터셋중 일부', scheduleData.scheduleData[0]);
 
         // 캘린더 일정에 반복적으로 일정 추가
         await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
@@ -345,6 +354,7 @@ lecMakeBtn.addEventListener('click', async function(event) {
         ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
             .then(function(data) {
                 calendar.clear();
+                console.log('마지막으로 캘린더에 생성될 마지막 데이터', data[data.length - 1]);
                 create(calendar, data);
                 window.location.reload();
             })
