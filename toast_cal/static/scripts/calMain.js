@@ -1,4 +1,4 @@
-ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+ajaxPost('/toast_cal/ourstores/', 'json', 'POST', '1')
     .then(function(data) {
         create(calendar, data);
     })
@@ -11,7 +11,7 @@ calendar.on('beforeCreateSchedule', function(event) {
     var start = date_to_str(event.start._date);
     var end = date_to_str(event.end._date);
     var title = event.title;
-    var location = document.getElementById("tui-full-calendar-schedule-location").value; // 오류로 인해 직접 받아옴
+    var location = document.getElementById('tui-full-calendar-schedule-location').value; // 오류로 인해 직접 받아옴
     var isAllDay = event.isAllDay;
     var calendarClass = event.raw.class;
     var state = event.state;
@@ -21,14 +21,14 @@ calendar.on('beforeCreateSchedule', function(event) {
     var createData = newCalObj(1, calendarId, title, 'time', location, start, end,
         convertBooleanData(isAllDay), state, calendarClass);
 
-    ajaxPost("/toast_cal/create/", "int", "POST", createData)
+    ajaxPost('/toast_cal/create/', 'int', 'POST', createData)
         .then(function(data) {
             var schedule = createData;
             schedule.id = data;
             schedule.isAllDay = isAllDay;
             calendar.createSchedules([schedule]);
             // 디버깅용 alert
-            // alert("success!!")
+            // alert('success!!')
         })
         .catch(function(err) {
             alert(err);
@@ -46,18 +46,18 @@ calendar.on('beforeUpdateSchedule', function(event) {
     // 캘린더 데이터 값 오류로 인해 넣어줘야 하는 코드들
 
     //event에 changes값이 있으면 넣어줌
-    if (event.changes != null) changes = event.changes;
+    if (event.changes !== null) changes = event.changes;
 
     // public, private 값 포맷팅
-    if (document.getElementsByClassName("tui-full-calendar-public").length == 1)
-        isPrivate = "public"
+    if (document.getElementsByClassName('tui-full-calendar-public').length === 1)
+        isPrivate = 'public'
     else
-        isPrivate = "private";
+        isPrivate = 'private';
 
     // CalendarId 이용 category 수정 로직 넣을 예정
 
     // location값 수동 설정
-    changes.location = document.getElementById("tui-full-calendar-schedule-location").value;
+    changes.location = document.getElementById('tui-full-calendar-schedule-location').value;
     changes.raw = { // public, private 상태 수동 설정
         class: isPrivate
     }
@@ -81,8 +81,8 @@ calendar.on('beforeUpdateSchedule', function(event) {
     }
     updateData.class = isPrivate;
 
-    ajaxPost("/toast_cal/update/", "int", "POST", updateData)
-        .then( /*alert("수정 완료!")*/ )
+    ajaxPost('/toast_cal/update/', 'int', 'POST', updateData)
+        .then( /*alert('수정 완료!')*/ )
         .catch(function(err) {
             alert(err);
         });
@@ -96,10 +96,10 @@ calendar.on('beforeDeleteSchedule', function(event) {
         id: schedule.id
     }
 
-    ajaxPost("/toast_cal/delete/", "int", "POST", delData)
+    ajaxPost('/toast_cal/delete/', 'int', 'POST', delData)
         .then(function(data) {
             calendar.deleteSchedule(schedule.id, schedule.calendarId);
-            // alert("삭제 완료!")
+            // alert('삭제 완료!')
         })
         .catch(function(err) {
             alert(err);
@@ -109,14 +109,14 @@ calendar.on('beforeDeleteSchedule', function(event) {
 
 // 사이드바 이벤트
 $(document).ready(function() {
-    $("input:checkbox").on('click', function() {
+    $('input:checkbox').on('click', function() {
         var checked = {
             checked: $(this).val()
         }
 
         if ($(this).prop('checked')) {
 
-            ajaxPost("/toast_cal/checked/", 'json', "POST", checked)
+            ajaxPost('/toast_cal/checked/', 'json', 'POST', checked)
                 .then(function(data) {
                     create(calendar, data);
                 })
@@ -126,7 +126,7 @@ $(document).ready(function() {
 
 
         } else {
-            ajaxPost("/toast_cal/checked/", "json", "POST", checked)
+            ajaxPost('/toast_cal/checked/', 'json', 'POST', checked)
                 .then(function(data) {
 
                     console.log(data)

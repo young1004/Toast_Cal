@@ -11,7 +11,7 @@ const pubOptions = {
 const pubCalendar = new tui.Calendar(pubContainer, pubOptions);
 
 // 공유 캘린더 toast UI 캘린더의 Calendar ID값 셋팅
-ajaxPost("/toast_cal/pubCalSetData/", 'json', "POST", "1").then(function(data) {
+ajaxPost('/toast_cal/pubCalSetData/', 'json', 'POST', '1').then(function(data) {
         var calSetData = new Array();
         for (var i = 0; i < data.length; i++) {
             calSetData.push({
@@ -34,14 +34,14 @@ ajaxPost("/toast_cal/pubCalSetData/", 'json', "POST", "1").then(function(data) {
         console.log(err);
     });
 
-var pubCalSaveBtn = document.getElementById("pubCalSaveBtn");
+var pubCalSaveBtn = document.getElementById('pubCalSaveBtn');
 
 pubCalSaveBtn.addEventListener('click', function() {
     let codeData = {
-        code: document.getElementById("pubcal_select").value
+        code: document.getElementById('pubcal_select').value
     }
     // console.log(data)
-    ajaxPost("/toast_cal/pubCalSave/", 'json', "POST", codeData)
+    ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', codeData)
         .then(function(data) {
             console.log(data);
         })
@@ -50,12 +50,12 @@ pubCalSaveBtn.addEventListener('click', function() {
         });
 })
 
-var pubCalLoadBtn = document.getElementById("pubCalLoadBtn");
+var pubCalLoadBtn = document.getElementById('pubCalLoadBtn');
 
 pubCalLoadBtn.addEventListener('click', function() {
-    var code = document.getElementById("pubcal_select").value
-    var start = document.getElementById("start").value
-    var end = document.getElementById("end").value
+    var code = document.getElementById('pubcal_select').value
+    var start = document.getElementById('start').value
+    var end = document.getElementById('end').value
 
     let pubLoadData = {
         code: code,
@@ -63,8 +63,8 @@ pubCalLoadBtn.addEventListener('click', function() {
         end: end,
     }
 
-    if (start != "" || end != "") {
-        ajaxPost("/toast_cal/pubCalLoad/", 'json', "POST", pubLoadData)
+    if (start !== '' || end !== '') {
+        ajaxPost('/toast_cal/pubCalLoad/', 'json', 'POST', pubLoadData)
             .then(function(data) {
                 // console.log(data);
                 pubCalendar.clear();
@@ -74,6 +74,6 @@ pubCalLoadBtn.addEventListener('click', function() {
                 alert(err);
             });
     } else {
-        alert("날짜를 선택하세오.")
+        alert('날짜를 선택하세오.')
     }
 });

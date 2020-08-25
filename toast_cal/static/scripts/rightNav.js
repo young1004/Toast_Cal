@@ -5,10 +5,10 @@ var get_month = get_date.getMonth() + 1;
 var get_day = get_date.getDate();
 
 
-if (get_month < 10) get_month = "0" + get_month;
-if (get_day < 10) get_day = "0" + get_day;
+if (get_month < 10) get_month = '0' + get_month;
+if (get_day < 10) get_day = '0' + get_day;
 
-var today = get_year + "-" + get_month + "-" + get_day;
+var today = get_year + '-' + get_month + '-' + get_day;
 var todayData = {
     todayData: today
 };
@@ -23,18 +23,18 @@ var PreviousRange = {
     EndDate: getDate(1, -5)
 };
 
-var thisWeek = document.getElementById("thisweek");
-var lastWeek = document.getElementById("lastweek");
+var thisWeek = document.getElementById('thisweek');
+var lastWeek = document.getElementById('lastweek');
 
 function loadToday() {
-    $("#first_tab").empty();
+    $('#first_tab').empty();
     document.querySelector('#first_tab').style.display = 'block';
-    $("#second_tab").empty();
+    $('#second_tab').empty();
     document.querySelector('#second_tab').style.display = 'none';
-    $("#third_tab").empty();
+    $('#third_tab').empty();
     document.querySelector('#third_tab').style.display = 'none';
 
-    ajaxPost("/toast_cal/dateList/", 'json', 'POST', todayData)
+    ajaxPost('/toast_cal/dateList/', 'json', 'POST', todayData)
         .then(function(data) {
 
             for (i = 0; i < data.length; i++) {
@@ -42,9 +42,9 @@ function loadToday() {
                 // 캘린더id에 따른 색상부여를 위해 넘버 지정
                 var calendaridColor = 0;
 
-                if (data[i].fields.calendarId === "전공 필수") {
+                if (data[i].fields.calendarId === '전공 필수') {
                     calendaridColor = 0;
-                } else if (data[i].fields.calendarId === "전공 선택") {
+                } else if (data[i].fields.calendarId === '전공 선택') {
                     calendaridColor = 1;
                 } else {
                     calendaridColor = 2;
@@ -64,21 +64,21 @@ function loadToday() {
                 var endMonth = end.substr(5, 2); // 끝 월
                 var endDay = end.substr(8, 2); // 끝 일
 
-                var longStringDay = startTime + " ~ " + endTime;
+                var longStringDay = startTime + ' ~ ' + endTime;
 
-                var task = $("<div class='first_tab_area'>" +
-                    "<div class ='today_list_argu'>" +
-                    "<span class='sub" + calendaridColor + "'>" +
-                    " ● </span>" +
-                    "<span class='con'>" +
+                var task = $('<div class="first_tab_area">' +
+                    '<div class ="today_list_argu">' +
+                    '<span class="sub' + calendaridColor + '">' +
+                    ' ● </span>' +
+                    '<span class="con">' +
                     data[i].fields.title +
-                    "</span>" +
-                    "<span class='dayStringToday'>" +
+                    '</span>' +
+                    '<span class="dayStringToday">' +
                     longStringDay +
-                    "</span>" +
-                    "</div>" +
-                    "</div>")
-                $("#first_tab").append(task)
+                    '</span>' +
+                    '</div>' +
+                    '</div>')
+                $('#first_tab').append(task)
 
             }
         })
@@ -95,25 +95,25 @@ $(document).on('click', '#today', function() {
 })
 
 thisWeek.addEventListener('click', function(event) {
-    ajaxPost("/toast_cal/getWeekSchedule/", 'json', 'POST', NowRange)
+    ajaxPost('/toast_cal/getWeekSchedule/', 'json', 'POST', NowRange)
         .then(function(data) {
-            $("#first_tab").empty();
+            $('#first_tab').empty();
             document.querySelector('#first_tab').style.display = 'none';
-            $("#second_tab").empty();
+            $('#second_tab').empty();
             document.querySelector('#second_tab').style.display = 'block';
-            $("#third_tab").empty();
+            $('#third_tab').empty();
             document.querySelector('#third_tab').style.display = 'none';
 
 
-            var Daytmp = "";
+            var Daytmp = '';
             for (i = 0; i < data.length; i++) {
 
                 // 캘린더id에 따른 색상부여하기
                 var calendaridColor = 0;
 
-                if (data[i].fields.calendarId === "전공 필수") {
+                if (data[i].fields.calendarId === '전공 필수') {
                     calendaridColor = 0;
-                } else if (data[i].fields.calendarId === "전공 선택") {
+                } else if (data[i].fields.calendarId === '전공 선택') {
                     calendaridColor = 1;
                 } else {
                     calendaridColor = 2;
@@ -133,39 +133,39 @@ thisWeek.addEventListener('click', function(event) {
                 var endMonth = end.substr(5, 2); // 끝 월
                 var endDay = end.substr(8, 2); // 끝 일
 
-                // var startData = startMonth + "월" + startDay + "일";
-                // var endData = endMonth + "월" + endDay + "일";
+                // var startData = startMonth + '월' + startDay + '일';
+                // var endData = endMonth + '월' + endDay + '일';
 
                 // 월일 출력문
-                if (startMonth != endMonth || startDay != endDay) {
-                    var longStringDay = startMonth + "월" + startDay + "일 ~ " + endMonth + "월" + endDay + "일";
+                if (startMonth !== endMonth || startDay !== endDay) {
+                    var longStringDay = startMonth + '월' + startDay + '일 ~ ' + endMonth + '월' + endDay + '일';
                 } else {
-                    var longStringDay = startMonth + "월" + startDay + "일";
+                    var longStringDay = startMonth + '월' + startDay + '일';
                 }
 
-                var startTimeClass = startTime + " ~ " + endTime
+                var startTimeClass = startTime + ' ~ ' + endTime
 
-                var task = $("<div class='second_tab_area'>" +
-                    "<div class='thisweek_list_argu'>" +
-                    "<div class='dayString'>" +
+                var task = $('<div class="second_tab_area">' +
+                    '<div class="thisweek_list_argu">' +
+                    '<div class="dayString">' +
                     longStringDay +
-                    "</div>" +
-                    "<span class='sub" + calendaridColor + "'>" +
-                    " ● </span>" +
-                    "<span class='con'> " +
+                    '</div>' +
+                    '<span class="sub' + calendaridColor + '">' +
+                    ' ● </span>' +
+                    '<span class="con"> ' +
                     data[i].fields.title +
-                    "</span>" +
-                    "<span class='startTime'>" +
+                    '</span>' +
+                    '<span class="startTime">' +
                     startTimeClass +
-                    "</span>" +
-                    "</div>" +
-                    "</div>")
-                $("#second_tab").append(task)
+                    '</span>' +
+                    '</div>' +
+                    '</div>')
+                $('#second_tab').append(task)
 
-                if (i == 0 || Daytmp != longStringDay) {
+                if (i === 0 || Daytmp !== longStringDay) {
                     Daytmp = longStringDay;
                 } else {
-                    $(".dayString")[i].style.display = "none";
+                    $('.dayString')[i].style.display = 'none';
                 }
             }
         })
@@ -175,27 +175,27 @@ thisWeek.addEventListener('click', function(event) {
 });
 
 lastWeek.addEventListener('click', function(event) {
-    ajaxPost("/toast_cal/getWeekSchedule/", 'json', 'POST', PreviousRange)
+    ajaxPost('/toast_cal/getWeekSchedule/', 'json', 'POST', PreviousRange)
         .then(function(data) {
-            $("#first_tab").empty();
+            $('#first_tab').empty();
             document.querySelector('#first_tab').style.display = 'none';
-            $("#second_tab").empty();
+            $('#second_tab').empty();
             document.querySelector('#second_tab').style.display = 'none';
-            $("#third_tab").empty();
+            $('#third_tab').empty();
             document.querySelector('#third_tab').style.display = 'block';
 
 
 
-            var Daytmp = "";
+            var Daytmp = '';
 
             for (i = 0; i < data.length; i++) {
 
                 // 캘린더id에 따른 색상부여를 위해 넘버 지정
                 var calendaridColor = 0;
 
-                if (data[i].fields.calendarId === "전공 필수") {
+                if (data[i].fields.calendarId === '전공 필수') {
                     calendaridColor = 0;
-                } else if (data[i].fields.calendarId === "전공 선택") {
+                } else if (data[i].fields.calendarId === '전공 선택') {
                     calendaridColor = 1;
                 } else {
                     calendaridColor = 2;
@@ -215,44 +215,44 @@ lastWeek.addEventListener('click', function(event) {
                 var endMonth = end.substr(5, 2); // 끝 월
                 var endDay = end.substr(8, 2); // 끝 일
 
-                // var startData = startMonth + "월" + startDay + "일";
-                // var endData = endMonth + "월" + endDay + "일";
+                // var startData = startMonth + '월' + startDay + '일';
+                // var endData = endMonth + '월' + endDay + '일';
 
-                if (startMonth != endMonth || startDay != endDay) {
-                    var longStringDay = startMonth + "월" + startDay + "일 ~ " + endMonth + "월" + endDay + "일";
+                if (startMonth !== endMonth || startDay !== endDay) {
+                    var longStringDay = startMonth + '월' + startDay + '일 ~ ' + endMonth + '월' + endDay + '일';
                 } else {
-                    var longStringDay = startMonth + "월" + startDay + "일";
+                    var longStringDay = startMonth + '월' + startDay + '일';
                 }
 
-                var startTimeClass = startTime + " ~ " + endTime;
+                var startTimeClass = startTime + ' ~ ' + endTime;
 
-                var task = $("<div class='third_tab_area'>" +
-                    "<div class = 'lastweek_list_argu'>" +
-                    "<div class = 'dayString'>" +
+                var task = $('<div class="third_tab_area">' +
+                    '<div class ="lastweek_list_argu">' +
+                    '<div class ="dayString">' +
                     longStringDay +
-                    "</div>" +
-                    "<span class='sub" + calendaridColor + "'>" +
-                    " ● </span>" +
-                    "<span class='con'> " +
+                    '</div>' +
+                    '<span class="sub' + calendaridColor + '">' +
+                    ' ● </span>' +
+                    '<span class="con"> ' +
                     data[i].fields.title +
-                    "</span>" +
-                    "<span class='startTime'>" +
+                    '</span>' +
+                    '<span class="startTime">' +
                     startTimeClass +
-                    "</span>" +
-                    "</div>" +
-                    "</div>")
-                $("#third_tab").append(task)
+                    '</span>' +
+                    '</div>' +
+                    '</div>')
+                $('#third_tab').append(task)
 
-                if (i == 0 || Daytmp != longStringDay) {
+                if (i === 0 || Daytmp !== longStringDay) {
                     Daytmp = longStringDay;
                 } else {
-                    $(".dayString")[i].style.display = "none";
+                    $('.dayString')[i].style.display = 'none';
                 }
 
             }
 
-            console.log("StartDate: " + getDate(0, -7));
-            console.log("EndDate: " + getDate(1, -7));
+            console.log('StartDate: ' + getDate(0, -7));
+            console.log('EndDate: ' + getDate(1, -7));
         })
         .catch(function(err) {
             alert(err);

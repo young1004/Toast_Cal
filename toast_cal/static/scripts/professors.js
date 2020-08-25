@@ -1,8 +1,8 @@
 // 교수용 페이지 버튼과 이벤트리스너
-var calProBtn = document.getElementById("calProBtn");
-var subProBtn = document.getElementById("subProBtn");
-var voteProBtn = document.getElementById("voteProBtn");
-var shareProBtn = document.getElementById("shareProBtn");
+var calProBtn = document.getElementById('calProBtn');
+var subProBtn = document.getElementById('subProBtn');
+var voteProBtn = document.getElementById('voteProBtn');
+var shareProBtn = document.getElementById('shareProBtn');
 
 // 교수 캘린더 버튼 리스너
 calProBtn.addEventListener('click', function(event) {
@@ -15,17 +15,17 @@ subProBtn.addEventListener('click', function(event) {
     changeContents('professor1', 'calendar-common', 'professor2', 'sidebar', 'professor3');
 
     //교수의 강의 테이블 출력
-    ajaxPost("/toast_cal/pro_lecture_table/", "json", "POST", 1)
+    ajaxPost('/toast_cal/pro_lecture_table/', 'json', 'POST', 1)
         .then(function(data) {
             $('#pro_lec_load_tbody').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var tr = $("<tr><td>" + data[count].fields.code + "</td>" +
-                    "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
-                    "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
-                    "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td>" +
-                    "<td>" + data[count].fields.stdCount + "/" + data[count].fields.total_stdCount + "</td>" +
-                    "<td><button type=\"button\" class=\"btn btn-outline-dark pro_lec_del_btn\">삭제</button></td>");
+                var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
+                    '<td>' + data[count].fields.codeClass + '</td>' + '<td>' + data[count].fields.department + '</td>' +
+                    '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                    '<td>' + data[count].fields.professor + '</td>' + '<td>' + data[count].fields.period + '</td>' +
+                    '<td>' + data[count].fields.stdCount + '/' + data[count].fields.total_stdCount + '</td>' +
+                    '<td><button type="button" class="btn btn-outline-dark pro_lec_del_btn">삭제</button></td>');
                 $('#pro_lec_load_tbody').append(tr);
             }
         })
@@ -34,13 +34,13 @@ subProBtn.addEventListener('click', function(event) {
         });
 
     //select 박스 학과 불러오기
-    ajaxPost("/toast_cal/department/", "json", "POST", 1)
+    ajaxPost('/toast_cal/department/', 'json', 'POST', 1)
         .then(function(data) {
             $('#lec-depart').empty(); //기존 옵션 값 삭제
-            // $("#lec-depart").find("option").end().append("<option value='전체'>전체</option>");
+            // $('#lec-depart').find('option').end().append('<option value='전체'>전체</option>');
 
             for (var count = 0; count < data.length; count++) {
-                var option = $("<option>" + data[count].fields.name + "</option>");
+                var option = $('<option>' + data[count].fields.name + '</option>');
                 $('#lec-depart').append(option);
             }
         })
@@ -56,15 +56,15 @@ voteProBtn.addEventListener('click', function(event) {
 
 // 공용 캘린더 버튼 리스너
 shareProBtn.addEventListener('click', async function(event) {
-    $("#pubCalLoadBtn").trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
+    $('#pubCalLoadBtn').trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
     changeContents('professor3', 'professor2', 'calendar-common', 'sidebar', 'professor1');
     //select 박스 교수강의 불러오기
-    await ajaxPost("/toast_cal/pro_lecture/", "json", "POST", 1)
+    await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
         .then(function(data) {
             $('#pubcal_select').empty(); //기존 옵션 값 삭제
 
             for (var count = 0; count < data.length; count++) {
-                var option = $("<option>" + data[count].fields.code + "</option>");
+                var option = $('<option>' + data[count].fields.code + '</option>');
                 $('#pubcal_select').append(option);
             }
         })
@@ -82,16 +82,16 @@ var voteTableBtn = document.getElementById('voteTableBtn');
 
 // 서버에서 filter를 적용할 투표 페이지 관련 데이터 object
 var voteData = {
-    lecture_type: "일반 교양",
-    vote_status: "투표중"
+    lecture_type: '일반 교양',
+    vote_status: '투표중'
 }
-ajaxPost("/toast_cal/voteTable/", 'json', "POST", voteData).then(function(data) {
+ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) {
         $('#vote-info').empty();
 
         for (var count = 0; count < data.length; count++) {
-            var tr = $("<tr><td>" + data[count].fields.code + "</td>" +
-                "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
-                "<td>" + data[count].fields.vote_status + "</td>" + "<td><button type=\"button\" class=\"btn btn-outline-dark voteBtn\">상세</button></td>");
+            var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
+                '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn">상세</button></td>');
             $('#vote-info').append(tr);
         }
 
@@ -105,13 +105,13 @@ voteTableBtn.addEventListener('click', function(event) {
     voteData.vote_status = voteStatus.value;
 
     // console.log(voteData);
-    ajaxPost("/toast_cal/voteTable/", 'json', "POST", voteData).then(function(data) {
+    ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) {
             $('#vote-info').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var tr = $("<tr><td>" + data[count].fields.code + "</td>" +
-                    "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
-                    "<td>" + data[count].fields.vote_status + "</td>" + "<td><button type=\"button\" class=\"btn btn-outline-dark voteBtn\">상세</button></td>");
+                var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
+                    '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                    '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn">상세</button></td>');
                 $('#vote-info').append(tr);
             }
 
@@ -123,7 +123,7 @@ voteTableBtn.addEventListener('click', function(event) {
 
 
 // 교수 강의 삭제
-$(document).on("click", ".pro_lec_del_btn", async function() {
+$(document).on('click', '.pro_lec_del_btn', async function() {
     var delete_btn = $(this);
 
     var tr = delete_btn.parent().parent();
@@ -133,7 +133,7 @@ $(document).on("click", ".pro_lec_del_btn", async function() {
 
     json.title = td[4].innerText;
 
-    await ajaxPost("/toast_cal/deleteCalendars/", "json", "POST", json)
+    await ajaxPost('/toast_cal/deleteCalendars/', 'json', 'POST', json)
         .then(function(data) {
             alert(data);
         })
@@ -146,17 +146,17 @@ $(document).on("click", ".pro_lec_del_btn", async function() {
     subject.code = td[0].innerText;
     subject.codeClass = td[1].innerText;
 
-    ajaxPost("/toast_cal/professor_lecture_delete/", 'json', "POST", subject)
+    ajaxPost('/toast_cal/professor_lecture_delete/', 'json', 'POST', subject)
         .then(function(data) {
             $('#pro_lec_load_tbody').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var tr = $("<tr><td>" + data[count].fields.code + "</td>" +
-                    "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
-                    "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
-                    "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td>" +
-                    "<td>" + data[count].fields.stdCount + "/" + data[count].fields.total_stdCount + "</td>" +
-                    "<td><button type=\"button\" class=\"btn btn-outline-dark pro_lec_del_btn\">삭제</button></td>");
+                var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
+                    '<td>' + data[count].fields.codeClass + '</td>' + '<td>' + data[count].fields.department + '</td>' +
+                    '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                    '<td>' + data[count].fields.professor + '</td>' + '<td>' + data[count].fields.period + '</td>' +
+                    '<td>' + data[count].fields.stdCount + '/' + data[count].fields.total_stdCount + '</td>' +
+                    '<td><button type="button" class="btn btn-outline-dark pro_lec_del_btn">삭제</button></td>');
                 $('#pro_lec_load_tbody').append(tr);
             }
         })
@@ -164,7 +164,7 @@ $(document).on("click", ".pro_lec_del_btn", async function() {
             alert(err)
         })
 
-    ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+    ajaxPost('/toast_cal/ourstores/', 'json', 'POST', '1')
         .then(function(data) {
             calendar.clear();
             create(calendar, data);
@@ -179,9 +179,9 @@ $(document).on("click", ".pro_lec_del_btn", async function() {
 // chart 표시하기 위한 데이터
 var chart = null;
 
-$(document).on("click", ".voteBtn", function() {
+$(document).on('click', '.voteBtn', function() {
 
-    if (chart != null) chart.destroy();
+    if (chart !== null) chart.destroy();
     var voteBtn = $(this);
 
     var tr = voteBtn.parent().parent();
@@ -191,7 +191,7 @@ $(document).on("click", ".voteBtn", function() {
         code: td.eq(0).text()
     }
 
-    ajaxPost("/toast_cal/voteChart/", 'json', "POST", chartData).then(function(data) {
+    ajaxPost('/toast_cal/voteChart/', 'json', 'POST', chartData).then(function(data) {
             // console.log(data.length);
             // console.log(data);
             if (data.length > 0) {
@@ -269,35 +269,35 @@ $(document).on("click", ".voteBtn", function() {
 });
 
 // 강의 개설 버튼
-var lecMakeBtn = document.getElementById("lecMakeBtn");
+var lecMakeBtn = document.getElementById('lecMakeBtn');
 
 // 강의 개설 버튼 eventListener
 lecMakeBtn.addEventListener('click', async function(event) {
-    let flag = ""
+    let flag = ''
     let periodData = document.getElementById('lec-type1').value +
-        document.getElementById('lec-type2').value + " " +
+        document.getElementById('lec-type2').value + ' ' +
         document.getElementById('lec-type3').value +
         document.getElementById('lec-type4').value;
 
     let makeData = {
-        name: document.getElementById("lec-name").value,
-        code: document.getElementById("lec-code").value,
-        codeClass: document.getElementById("lec-class").value,
+        name: document.getElementById('lec-name').value,
+        code: document.getElementById('lec-code').value,
+        codeClass: document.getElementById('lec-class').value,
         period: periodData,
         lecture_type: document.getElementById('lec-type').value,
-        department: document.getElementById("lec-depart").value,
-        total_count: document.getElementById("lec-count").value,
+        department: document.getElementById('lec-depart').value,
+        total_count: document.getElementById('lec-count').value,
     };
-    document.getElementById("make-lecture-wrap").reset();
+    document.getElementById('make-lecture-wrap').reset();
 
     // console.log(makeData);
     let scheduleData;
 
     // 강의 개설하는 ajax통신 및 반복일정을 생성할 데이터셋 만들기
-    await ajaxPost("/toast_cal/makeSubject/", "json", "POST", makeData)
+    await ajaxPost('/toast_cal/makeSubject/', 'json', 'POST', makeData)
         .then(function(data) {
             flag = data;
-            if (flag != "강의 코드가 겹치는 강의가 있습니다." && flag != "강의 시간이 겹치지 않게 설정해주세요") {
+            if (flag !== '강의 코드가 겹치는 강의가 있습니다.' && flag !== '강의 시간이 겹치지 않게 설정해주세요') {
                 console.log('과목/교시 데이터', data[0].fields.period);
 
                 var timeData = periodSplit(data[0].fields.period);
@@ -318,9 +318,9 @@ lecMakeBtn.addEventListener('click', async function(event) {
                         // console.log(dateArr[j].startDate);
                         // console.log(dateArr[j].endDate);
                         calobj = newCalObj(1, data[0].fields.lecture_type,
-                            data[0].fields.name, "time", "미정", dateArr[j].startDate,
+                            data[0].fields.name, 'time', '미정', dateArr[j].startDate,
                             dateArr[j].endDate, convertBooleanData(false),
-                            "busy", "public");
+                            'busy', 'public');
                         calData.push(calobj);
                     }
 
@@ -335,14 +335,14 @@ lecMakeBtn.addEventListener('click', async function(event) {
         });
 
     // console.log(scheduleData);
-    if (flag != "강의 코드가 겹치는 강의가 있습니다." && flag != "강의 시간이 겹치지 않게 설정해주세요") {
+    if (flag !== '강의 코드가 겹치는 강의가 있습니다.' && flag !== '강의 시간이 겹치지 않게 설정해주세요') {
         scheduleData = {
             scheduleData
         };
         console.log('캘린더에 일정 추가하기 위한 데이터셋중 일부', scheduleData.scheduleData[0]);
 
         // 캘린더 일정에 반복적으로 일정 추가
-        await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
+        await ajaxPost('/toast_cal/makeCalendars/', 'json', 'POST', scheduleData)
             .then(function(data) {
                 // alert(data);
             })
@@ -351,7 +351,7 @@ lecMakeBtn.addEventListener('click', async function(event) {
             });
 
         // 추가된 반복일정을 캘린더에 뿌려주기
-        ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+        ajaxPost('/toast_cal/ourstores/', 'json', 'POST', '1')
             .then(function(data) {
                 calendar.clear();
                 console.log('마지막으로 캘린더에 생성될 마지막 데이터', data[data.length - 1]);

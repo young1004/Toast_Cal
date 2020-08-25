@@ -1,13 +1,13 @@
 /**
  * boolean 데이터를 django 데이터베이스에 맞게 변환해주는 함수
  * @param {Boolean} data django에 맞게 true, False값을 변환할 boolean 데이터
- * @returns {String} "True" 혹은 "False" 문자열
+ * @returns {String} 'True' 혹은 'False' 문자열
  */
 function convertBooleanData(data) {
-    if (data == true) {
-        return "True"
-    } else if (data == false) {
-        return "False"
+    if (data === true) {
+        return 'True'
+    } else if (data === false) {
+        return 'False'
     } else {
         return undefined;
     }
@@ -27,12 +27,12 @@ function date_to_str(data) {
     var hour = data.getHours();
     var min = data.getMinutes();
 
-    if (month < 10) month = "0" + month;
-    if (date < 10) date = "0" + date;
-    if (hour < 10) hour = "0" + hour;
-    if (min < 10) min = "0" + min;
+    if (month < 10) month = '0' + month;
+    if (date < 10) date = '0' + date;
+    if (hour < 10) hour = '0' + hour;
+    if (min < 10) min = '0' + min;
 
-    return year + "-" + month + "-" + date + " " + hour + ":" + min;
+    return year + '-' + month + '-' + date + ' ' + hour + ':' + min;
 
 }
 
@@ -60,14 +60,14 @@ function getDate(flag, value) {
     var nowMonth = now.getMonth();
     var nowYear = now.getFullYear();
 
-    if (flag == 0)
+    if (flag === 0)
         var DayOfWeek = value - nowDayOfWeek;
-    else if (flag == 1)
+    else if (flag === 1)
         var DayOfWeek = value + (6 - nowDayOfWeek);
 
     var weekDate = new Date(nowYear, nowMonth, nowDay + DayOfWeek);
 
-    var newDate = weekDate.getFullYear() + "-" + (weekDate.getMonth() + 1) + "-" + weekDate.getDate();
+    var newDate = weekDate.getFullYear() + '-' + (weekDate.getMonth() + 1) + '-' + weekDate.getDate();
 
     return newDate;
 }
@@ -93,10 +93,10 @@ function getDayDate(monthday, value) {
     var newMonth = weekDate.getMonth() + 1;
     var newDate = weekDate.getDate();
 
-    if (newMonth < 10) newMonth = "0" + newMonth;
-    if (newDate < 10) newDate = "0" + newDate;
+    if (newMonth < 10) newMonth = '0' + newMonth;
+    if (newDate < 10) newDate = '0' + newDate;
 
-    var newDate = weekDate.getFullYear() + "-" + newMonth + "-" + newDate;
+    var newDate = weekDate.getFullYear() + '-' + newMonth + '-' + newDate;
 
     return newDate;
 }
@@ -131,13 +131,13 @@ function periodSplit(period) {
  */
 function dayConvert(day) {
 
-    if (day == "일") return 0;
-    if (day == "월") return 1;
-    if (day == "화") return 2;
-    if (day == "수") return 3;
-    if (day == "목") return 4;
-    if (day == "금") return 5;
-    if (day == "토") return 6;
+    if (day === '일') return 0;
+    if (day === '월') return 1;
+    if (day === '화') return 2;
+    if (day === '수') return 3;
+    if (day === '목') return 4;
+    if (day === '금') return 5;
+    if (day === '토') return 6;
 }
 
 /**
@@ -146,12 +146,12 @@ function dayConvert(day) {
  * @returns {Array} 시간으로 변환된 시작시간과 끝시간이 담긴 배열
  */
 function timeConvert(time) {
-    if (time == "12") return ["09:30", "10:45"];
-    if (time == "34") return ["11:00", "12:15"];
-    if (time == "78") return ["13:00", "14:15"];
-    if (time == "910") return ["14:30", "15:45"];
-    if (time == "1112") return ["16:00", "17:15"];
-    if (time == "1314") return ["17:30", "18:45"];
+    if (time === '12') return ['09:30', '10:45'];
+    if (time === '34') return ['11:00', '12:15'];
+    if (time === '78') return ['13:00', '14:15'];
+    if (time === '910') return ['14:30', '15:45'];
+    if (time === '1112') return ['16:00', '17:15'];
+    if (time === '1314') return ['17:30', '18:45'];
 }
 
 /**
@@ -162,8 +162,8 @@ function timeConvert(time) {
 function periodConvert(period) {
     var convertedData = []
     for (var i = 0; i < period.length; i++) {
-        if (i % 2 == 0) convertedData.push(dayConvert(period[i]));
-        else if (i % 2 != 0) convertedData.push(timeConvert(period[i]));
+        if (i % 2 === 0) convertedData.push(dayConvert(period[i]));
+        else if (i % 2 !== 0) convertedData.push(timeConvert(period[i]));
     }
     return convertedData;
 }
@@ -180,8 +180,8 @@ function getTimeData(convertedData, monthday, day) {
     for (var j = 0; j < 2; j++) {
         var tmpobj = {};
         var date = getDayDate(monthday, convertedData[2 * j] + day);
-        var startDate = date + " " + convertedData[1 + 2 * j][0];
-        var endDate = date + " " + convertedData[1 + 2 * j][1];
+        var startDate = date + ' ' + convertedData[1 + 2 * j][0];
+        var endDate = date + ' ' + convertedData[1 + 2 * j][1];
         tmpobj.startDate = startDate;
         tmpobj.endDate = endDate;
         dateData.push(tmpobj);
@@ -192,15 +192,15 @@ function getTimeData(convertedData, monthday, day) {
 /**
  * 서버에서 주고받는 데이터를 통일해서 생성하기 위한 함수(총 10개의 파라미터)
  * @param {String|Number} id 캘린더의 scheduleID(database 키 값)
- * @param {String} calendarId 캘린더의 setCalendars로 지정된 값(ex. "Major Subject")
+ * @param {String} calendarId 캘린더의 setCalendars로 지정된 값(ex. 'Major Subject')
  * @param {String} title 제목
- * @param {String} category 일정의 종류 ("milestone", "task", "allday", "time" 4가지 속성)
+ * @param {String} category 일정의 종류 ('milestone', 'task', 'allday', 'time' 4가지 속성)
  * @param {String} location 일정 장소
  * @param {String|Date} start 시작 시간
  * @param {String|Date} end 종료 시간
  * @param {String|Boolean} isAllDay 하루 종일인지 설정
- * @param {"busy"|"free"} state 일정의 상태 
- * @param {String|{class:""}} calendarClass 공개/비공개 설정("private", "public", {class: ""})
+ * @param {'busy'|'free'} state 일정의 상태 
+ * @param {String|{class:''}} calendarClass 공개/비공개 설정('private', 'public', {class: ''})
  * @returns {Object} calendar 생성을 위한 Object 데이터 
  */
 function newCalObj(id, calendarId, title, category, location, start, end, isAllDay, state, calendarClass) {
@@ -216,9 +216,9 @@ function newCalObj(id, calendarId, title, category, location, start, end, isAllD
         isAllDay: isAllDay,
         state: state
     }
-    if (typeof calendarClass === "object")
+    if (typeof calendarClass === 'object')
         schedule.raw = calendarClass;
-    else if (typeof calendarClass === "string")
+    else if (typeof calendarClass === 'string')
         schedule.class = calendarClass;
     return schedule;
 }
@@ -235,7 +235,7 @@ function create(calendar, data) {
             data[i].pk,
             data[i].fields.calendarId,
             data[i].fields.title,
-            "time",
+            'time',
             data[i].fields.location,
             data[i].fields.start,
             data[i].fields.end,
@@ -248,7 +248,7 @@ function create(calendar, data) {
     }
 
     // 디버깅용 코드
-    // console.log("일정 불러오기 완료")
+    // console.log('일정 불러오기 완료')
 }
 /**
  * createSchedules API를 통해 화면에 일정 뿌려주기
@@ -263,9 +263,9 @@ function pubCreate(calendar, data) {
         let schedule = newCalObj(data[i].pk,
             data[i].fields.calendarId,
             data[i].fields.title,
-            "time", "미정", data[i].fields.start,
-            data[i].fields.end, false, "busy", {
-                class: "public"
+            'time', '미정', data[i].fields.start,
+            data[i].fields.end, false, 'busy', {
+                class: 'public'
             });
         // console.log(schedule);
         createdData.push(schedule);
@@ -299,7 +299,7 @@ function getCookie(name) {
  * jquery ajax promise 이용 함수
  * @param {String} url 요청을 보낼 url 주소
  * @param {String} datatype 서버에서 받아올 데이터 타입(json, int, number ...)
- * @param {"GET"|"POST"} type 요청을 보내는 방식 only (GET, POST)
+ * @param {'GET'|'POST'} type 요청을 보내는 방식 only (GET, POST)
  * @param {*} data 서버에 보낼 데이터(없다면 1 입력)
  * @returns {Promise} 성공, 실패 상태를 나눠 처리할 Promise 객체 반환
  */
@@ -319,7 +319,7 @@ function ajaxPost(url, datatype, type, data) {
                 if (data) {
                     resolve(data);
                 }
-                reject(new Error("데이터 받아오기 실패!"));
+                reject(new Error('데이터 받아오기 실패!'));
 
             }
         });

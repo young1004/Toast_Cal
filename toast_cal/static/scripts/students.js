@@ -12,15 +12,15 @@ subjectBtn.addEventListener('click', function(event) {
     changeContents('lecture', 'calendar-common', 'studentLectureLoad', 'sidebar');
 
 
-    ajaxPost("/toast_cal/department/", "json", "POST", 1)
+    ajaxPost('/toast_cal/department/', 'json', 'POST', 1)
         .then(function(data) {
             $('#department').empty(); //기존 옵션 값 삭제
-            $("#department").find("option").end().append("<option value='전체'>전체</option>");
+            $('#department').find('option').end().append('<option value="전체">전체</option>');
             $('#subject').empty();
             $('#lecture_type').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var option = $("<option>" + data[count].fields.name + "</option>");
+                var option = $('<option>' + data[count].fields.name + '</option>');
                 $('#department').append(option);
             }
         })
@@ -33,15 +33,15 @@ subjectBtn.addEventListener('click', function(event) {
 subjectLoad.addEventListener('click', function(event) {
     changeContents('studentLectureLoad', 'lecture', 'calendar-common', 'sidebar');
 
-    ajaxPost("/toast_cal/student_lecture_load/", "json", "POST", 1)
+    ajaxPost('/toast_cal/student_lecture_load/', 'json', 'POST', 1)
         .then(function(data) {
             $('#lecture_load_tbody').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var tr = $("<tr scope='row' onclick='clickTrEvent(this)'><td>" + data[count].fields.code + "</td>" +
-                    "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
-                    "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
-                    "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td></tr>");
+                var tr = $('<tr scope="row" onclick="clickTrEvent(this)"><td>' + data[count].fields.code + '</td>' +
+                    '<td>' + data[count].fields.codeClass + '</td>' + '<td>' + data[count].fields.department + '</td>' +
+                    '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                    '<td>' + data[count].fields.professor + '</td>' + '<td>' + data[count].fields.period + '</td></tr>');
                 $('#lecture_load_tbody').append(tr);
             }
         })
@@ -51,16 +51,16 @@ subjectLoad.addEventListener('click', function(event) {
 });
 
 // 저장 버튼
-$("#lecture_save_btn").click(async function() {
-    var tr = $("#lecture_tbody").children();
-    var flag = "";
+$('#lecture_save_btn').click(async function() {
+    var tr = $('#lecture_tbody').children();
+    var flag = '';
     var obj = {};
 
     let scheduleData;
 
     for (var i = 0; i < tr.length; i++) {
 
-        if (tr[i].style.backgroundColor == "rgb(177, 179, 182)") { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
+        if (tr[i].style.backgroundColor === 'rgb(177, 179, 182)') { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
             var td = tr[i].children;
             obj.code = td[0].innerText;
             obj.codeClass = td[1].innerText;
@@ -70,9 +70,9 @@ $("#lecture_save_btn").click(async function() {
             obj.professor = td[5].innerText;
             obj.period = td[6].innerText;
 
-            await ajaxPost("/toast_cal/lecture_save/", "json", "POST", obj)
+            await ajaxPost('/toast_cal/lecture_save/', 'json', 'POST', obj)
                 .then(function(data) {
-                    if (data == "저장 성공") {
+                    if (data === '저장 성공') {
                         var timeData = periodSplit(obj.period);
                         var convData = periodConvert(timeData);
                         var calData = [];
@@ -84,19 +84,19 @@ $("#lecture_save_btn").click(async function() {
                                 var calobj = {};
 
                                 calobj = newCalObj(1, obj.lecture_type,
-                                    obj.name, "time", "미정", dateArr[j].startDate,
+                                    obj.name, 'time', '미정', dateArr[j].startDate,
                                     dateArr[j].endDate, convertBooleanData(false),
-                                    "busy", "public");
+                                    'busy', 'public');
                                 calData.push(calobj);
                             }
                         }
                         scheduleData = calData;
-                        flag = "일정 생성됨";
-                    } else if (data == "수강 인원이 초과된 과목입니다.") {
-                        flag = "수강인원 초과";
+                        flag = '일정 생성됨';
+                    } else if (data === '수강 인원이 초과된 과목입니다.') {
+                        flag = '수강인원 초과';
                         alert(data)
                     } else {
-                        flag = "중복된 데이터";
+                        flag = '중복된 데이터';
                         alert(data)
                     }
                 })
@@ -104,17 +104,17 @@ $("#lecture_save_btn").click(async function() {
                     alert(err);
                 });
 
-            if (flag == "일정 생성됨") {
+            if (flag === '일정 생성됨') {
                 scheduleData = {
                     scheduleData
                 };
-                await ajaxPost("/toast_cal/makeCalendars/", "json", "POST", scheduleData)
+                await ajaxPost('/toast_cal/makeCalendars/', 'json', 'POST', scheduleData)
                     .then(function(data) {})
                     .catch(function(err) {
                         alert(err);
                     });
 
-                ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+                ajaxPost('/toast_cal/ourstores/', 'json', 'POST', '1')
                     .then(function(data) {
                         calendar.clear();
                         create(calendar, data);
@@ -126,17 +126,17 @@ $("#lecture_save_btn").click(async function() {
             }
         }
     }
-    if (flag == "") alert('과목을 선택하세요');
+    if (flag === '') alert('과목을 선택하세요');
 });
 
 // 삭제 버튼
-$("#lecture_delete_btn").click(async function() {
-    var tr = $("#lecture_load_tbody").children();
+$('#lecture_delete_btn').click(async function() {
+    var tr = $('#lecture_load_tbody').children();
     var array = [];
     var husks = {};
 
     for (var i = 0; i < tr.length; i++) {
-        if (tr[i].style.backgroundColor == "rgb(177, 179, 182)") { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
+        if (tr[i].style.backgroundColor === 'rgb(177, 179, 182)') { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
             var obj = {};
             var td = tr[i].children;
             obj.code = td[0].innerText;
@@ -149,17 +149,17 @@ $("#lecture_delete_btn").click(async function() {
             array.push(obj);
         }
     }
-    if (array.length != 0) { //과목 선택을 했을때
+    if (array.length !== 0) { //과목 선택을 했을때
         husks.array = array;
-        ajaxPost("/toast_cal/student_lecture_delete/", "json", "POST", husks)
+        ajaxPost('/toast_cal/student_lecture_delete/', 'json', 'POST', husks)
             .then(function(data) {
                 $('#lecture_load_tbody').empty();
 
                 for (var count = 0; count < data.length; count++) {
-                    var tr = $("<tr scope='row' onclick='clickTrEvent(this)'><td>" + data[count].fields.code + "</td>" +
-                        "<td>" + data[count].fields.codeClass + "</td>" + "<td>" + data[count].fields.department + "</td>" +
-                        "<td>" + data[count].fields.lecture_type + "</td>" + "<td>" + data[count].fields.name + "</td>" +
-                        "<td>" + data[count].fields.professor + "</td>" + "<td>" + data[count].fields.period + "</td></tr>");
+                    var tr = $('<tr scope="row" onclick="clickTrEvent(this)"><td>' + data[count].fields.code + '</td>' +
+                        '<td>' + data[count].fields.codeClass + '</td>' + '<td>' + data[count].fields.department + '</td>' +
+                        '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                        '<td>' + data[count].fields.professor + '</td>' + '<td>' + data[count].fields.period + '</td></tr>');
                     $('#lecture_load_tbody').append(tr);
                 }
             })
@@ -170,7 +170,7 @@ $("#lecture_delete_btn").click(async function() {
         var json = {};
         json.array = array;
         console.log(json);
-        await ajaxPost("/toast_cal/deleteCalendars/", "json", "POST", json)
+        await ajaxPost('/toast_cal/deleteCalendars/', 'json', 'POST', json)
             .then(function(data) {
                 alert(data);
             })
@@ -178,7 +178,7 @@ $("#lecture_delete_btn").click(async function() {
                 alert(err);
             });
 
-        ajaxPost("/toast_cal/ourstores/", 'json', "POST", "1")
+        ajaxPost('/toast_cal/ourstores/', 'json', 'POST', '1')
             .then(function(data) {
                 calendar.clear();
                 create(calendar, data);
@@ -188,6 +188,6 @@ $("#lecture_delete_btn").click(async function() {
                 alert(err);
             });
     } else {
-        alert("선택된 강의가 없습니다.");
+        alert('선택된 강의가 없습니다.');
     }
 });

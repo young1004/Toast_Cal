@@ -1,4 +1,4 @@
-// ajaxPost("/toast_cal/pubCalLoad/", 'json', "POST", "1")
+// ajaxPost('/toast_cal/pubCalLoad/', 'json', 'POST', '1')
 //     .then(function(data) {
 //         pubCreate(pubCalendar, data);
 
