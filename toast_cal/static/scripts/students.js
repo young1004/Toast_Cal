@@ -20,7 +20,7 @@ subjectBtn.addEventListener('click', function(event) {
             $('#lecture_type').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var option = $('<option>' + data[count].fields.name + '</option>');
+                var option = $('<option>' + data[count].pk + '</option>');
                 $('#department').append(option);
             }
         })

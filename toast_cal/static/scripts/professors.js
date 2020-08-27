@@ -11,11 +11,11 @@ calProBtn.addEventListener('click', function(event) {
 });
 
 // 교수 강의 개설 버튼 리스너
-subProBtn.addEventListener('click', function(event) {
+subProBtn.addEventListener('click', async function(event) {
     changeContents('professor1', 'calendar-common', 'professor2', 'sidebar', 'professor3');
 
     //교수의 강의 테이블 출력
-    ajaxPost('/toast_cal/pro_lecture_table/', 'json', 'POST', 1)
+    await ajaxPost('/toast_cal/pro_lecture_table/', 'json', 'POST', 1)
         .then(function(data) {
             $('#pro_lec_load_tbody').empty();
 
@@ -34,13 +34,13 @@ subProBtn.addEventListener('click', function(event) {
         });
 
     //select 박스 학과 불러오기
-    ajaxPost('/toast_cal/department/', 'json', 'POST', 1)
+    await ajaxPost('/toast_cal/department/', 'json', 'POST', 1)
         .then(function(data) {
             $('#lec-depart').empty(); //기존 옵션 값 삭제
             // $('#lec-depart').find('option').end().append('<option value='전체'>전체</option>');
 
             for (var count = 0; count < data.length; count++) {
-                var option = $('<option>' + data[count].fields.name + '</option>');
+                var option = $('<option>' + data[count].pk + '</option>');
                 $('#lec-depart').append(option);
             }
         })

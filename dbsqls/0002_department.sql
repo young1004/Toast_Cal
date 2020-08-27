@@ -1,5 +1,9 @@
 use caldb;
 
+/* Department DB 스키마 (학과 이름 데이터)
+name : 학과이름 (pk) / subject, professor, student 테이블에서 참조
+*/
+
 truncate Department;
 
 INSERT INTO Department(name)
