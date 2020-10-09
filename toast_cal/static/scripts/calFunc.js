@@ -341,3 +341,26 @@ function changeContents(id1, ...args) {
         setDisplay.style.display = 'none';
     }
 }
+
+/**
+ * HTML 표를 조작하여 표의 특정 열을 선택 시 색깔이 바뀌도록 해주는 함수
+ * @param {} tr 클릭시 색상이 바뀌도록 할 표의 tr 요소 
+ * @param {string} id 색상이 바뀔 대상 tbody의 id값 (#id) 
+ */
+function clickTrEvent(tr, id) { //tr tag
+    if (tr.style.backgroundColor === '') {
+        var tbody_tr = $(id).children();
+        for (var i = 0; i < tbody_tr.length; i++) {
+            tbody_tr[i].style.backgroundColor = '';
+        }
+        tr.style.backgroundColor = '#b1b3b6';
+    } else {
+        tr.style.backgroundColor = '';
+    }
+    var tdArr = new Array();
+    var td = $(tr).children();
+
+    td.each(function(i) {
+        tdArr.push(td.eq(i).text());
+    });
+}

@@ -94,7 +94,7 @@ function lecture_lookup() {
                 $('#lecture_tbody').empty(); //table 초기화
 
                 for (var count = 0; count < data.length; count++) {
-                    var tr = $('<tr scope="row" onclick="clickTrEvent(this)"><td>' + data[count].fields.code + '</td>' +
+                    var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#lecture_tbody\')"><td>' + data[count].fields.code + '</td>' +
                         '<td>' + data[count].fields.codeClass + '</td>' + '<td>' + data[count].fields.department + '</td>' +
                         '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
                         '<td>' + data[count].fields.professor + '</td>' + '<td>' + data[count].fields.period + '</td>' +
@@ -106,22 +106,4 @@ function lecture_lookup() {
                 alert(err);
             });
     }
-}
-
-function clickTrEvent(tr) { //tr tag
-    if (tr.style.backgroundColor === '') {
-        var tbody_tr = $('#lecture_tbody').children();
-        for (var i = 0; i < tbody_tr.length; i++) {
-            tbody_tr[i].style.backgroundColor = '';
-        }
-        tr.style.backgroundColor = '#b1b3b6';
-    } else {
-        tr.style.backgroundColor = '';
-    }
-    var tdArr = new Array();
-    var td = $(tr).children();
-
-    td.each(function(i) {
-        tdArr.push(td.eq(i).text());
-    });
 }

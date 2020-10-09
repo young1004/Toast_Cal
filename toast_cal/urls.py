@@ -42,6 +42,8 @@ urlpatterns = [
         crud.professor_lecture_delete,
         name="professor_lecture_delete",
     ),  # 교수 강의 삭제
+    path("pro_vote_open_table/", crud.pro_vote_open_table, name="pro_vote_open_table"),
+    # 교수 투표 개설
     path("manageInfo/", views.manageInfo, name="manageInfo"),
     path("loginInfo/", views.loginInfo, name="loginInfo"),
     path("modifyInfo/", views.modifyInfo, name="modifyInfo"),

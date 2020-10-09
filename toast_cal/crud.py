@@ -236,10 +236,23 @@ def student_lecture_delete(request):
 # 교수 기능
 # ajax로 필터링하여 table 생성할 값 반환
 def voteTable(request):
-    stores_list = Vote.objects.filter(
-        lecture_type=request.POST["lecture_type"],
-        vote_status=request.POST["vote_status"],
-    )
+    if request.POST["lecture_type"] == "전체" and request.POST["vote_status"] != "전체":
+        stores_list = Vote.objects.filter(
+            # lecture_type=request.POST["lecture_type"],
+            vote_status=request.POST["vote_status"],
+        )
+    elif request.POST["lecture_type"] != "전체" and request.POST["vote_status"] == "전체":
+        stores_list = Vote.objects.filter(
+            lecture_type=request.POST["lecture_type"],
+            # vote_status=request.POST["vote_status"],
+        )
+    elif request.POST["lecture_type"] == "전체" and request.POST["vote_status"] == "전체":
+        stores_list = Vote.objects.all()
+    else:
+        stores_list = Vote.objects.filter(
+            lecture_type=request.POST["lecture_type"],
+            vote_status=request.POST["vote_status"],
+        )
 
     return HttpResponse(
         serializers.serialize("json", stores_list), content_type="application/json"
@@ -319,6 +332,20 @@ def professor_lecture_delete(request):
 
         return HttpResponse(
             serializers.serialize("json", date_list), content_type="application/json"
+        )
+
+
+# 교수 투표 개설 테이블 데이터 전송 함수
+def pro_vote_open_table(request):
+    if request.method == "POST":
+        userID = request.session["userID"]
+        professor = Professor.objects.get(userID=userID)
+        pro_subject = Subject.objects.filter(
+            professor=professor.username, department=professor.department
+        )
+
+        return HttpResponse(
+            serializers.serialize("json", pro_subject), content_type="application/json"
         )
 
 

@@ -66,7 +66,7 @@
                         <button type="button" class="btn btn-outline-light" id="subProBtn">강의 개설</button>
                     </li>
                     <li>
-                        <button type="button" class="btn btn-outline-light" id="voteProBtn">투표 현황</button>
+                        <button type="button" class="btn btn-outline-light" id="voteProBtn">투표 관리</button>
                     </li>
                     <li>
                         <button type="button" class="btn btn-outline-light" id="shareProBtn">공유 캘린더</button>
@@ -151,7 +151,7 @@
             </div>
             <button type="button" class="btn btn-outline-dark" id="lecture_save_btn">수강</button>
         </div>
-
+        <!-- 학생 강의 조회 및 삭제 부분 -->
         <div class="contents" id="studentLectureLoad" style="display: none;">
             <h3>강의 조회</h3>
             <div class="lecture-table-wrap">
@@ -287,37 +287,67 @@
         </div>
         <!-- 교수 투표 관련 페이지 -->
         <div class="contents" id="professor2" style="display: none;">
-            <span>강의 분류:</span>
-            <select id="lecture-class" name="lectureClass">
-                <option value="전공 필수">전공 필수</option>
-                <option value="전공 선택">전공 선택</option>
-                <option value="일반 교양">일반 교양</option>
-            </select>
-            <span>투표 상태:</span>
-            <select id="vote-status" name="voteStatus">
-                <option value="투표중">투표중</option>
-                <option value="투표 완료">투표 완료</option>
-            </select>
-            <button type="button" class="btn btn-outline-dark" id="voteTableBtn">선택</button>
-            <div id="table-wrap">
-                <table class="table vote-professor">
-                    <thead class="thead-light">
-                        <tr>
-                            <th scope="col">강의코드</th>
-                            <th scope="col">강의분류</th>
-                            <th scope="col">강의명</th>
-                            <th scope="col">투표상태</th>
-                            <th scope="col"> - </th>
-                        </tr>
-                    </thead>
-                    <tbody id="vote-info">
-                    </tbody>
-                </table>
+            <div class="professor-vote-tab-btn">
+                <button type="button" class="btn btn-outline-dark" id="vote-open-tab-btn">투표 개설 탭</button>
+                <button type="button" class="btn btn-outline-dark" id="vote-status-tab-btn">투표 현황 탭</button>
             </div>
-            <!-- toast UI Chart 부분 -->
-            <div id="vote-detail-donut">
-                <div id="chart-area"></div>
+            <!-- 교수 투표 개설 탭 -->
+            <div class="vote-open" id="professor-vote-open" style="display: none;">
+                <h3>투표 개설</h3>
+                <div class="lecture-table-wrap">
+                    <table class="table table-hover" id="vote-open-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">학수번호</th>
+                                <th scope="col">이수구분</th>
+                                <th scope="col">교과목명</th>
+                                <th scope="col">교수</th>
+                                <th scope="col">시험 시간</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vote-open-tbody">
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-outline-dark" id="vote-open-btn">투표 개설</button>
             </div>
+            <!-- 투표 현황 보기 탭 -->
+            <div class="vote-status-check" id="professor-vote-status" style="display: none;">
+                <span>강의 분류:</span>
+                <select id="lecture-class" name="lectureClass">
+                    <option value="전체">전체</option>
+                    <option value="전공 필수">전공 필수</option>
+                    <option value="전공 선택">전공 선택</option>
+                    <option value="일반 교양">일반 교양</option>
+                </select>
+                <span>투표 상태:</span>
+                <select id="vote-status" name="voteStatus">
+                    <option value="전체">전체</option>
+                    <option value="투표중">투표중</option>
+                    <option value="투표 완료">투표 완료</option>
+                </select>
+                <button type="button" class="btn btn-outline-dark" id="voteTableBtn">선택</button>
+                <div id="table-wrap">
+                    <table class="table vote-professor">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">강의코드</th>
+                                <th scope="col">강의분류</th>
+                                <th scope="col">강의명</th>
+                                <th scope="col">투표상태</th>
+                                <th scope="col"> - </th>
+                            </tr>
+                        </thead>
+                        <tbody id="vote-info">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- toast UI Chart 부분 -->
+                <div id="vote-detail-donut">
+                    <div id="chart-area"></div>
+                </div>
+            </div>
+
         </div>
         <!-- 공유 캘린더 구현 예정 -->
         <div class="contents" id="professor3" style="display: none;">
