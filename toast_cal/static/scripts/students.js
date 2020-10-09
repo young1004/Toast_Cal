@@ -78,7 +78,7 @@ $('#lecture_save_btn').click(async function() {
                         var calData = [];
 
                         for (var i = 0; i < 15; i++) {
-                            var dateArr = getTimeData(convData, '-03-02', i * 7);
+                            var dateArr = getTimeData(convData, '-09-01', i * 7);
 
                             for (var j = 0; j < 2; j++) {
                                 var calobj = {};

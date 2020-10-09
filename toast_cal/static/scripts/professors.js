@@ -309,7 +309,7 @@ lecMakeBtn.addEventListener('click', async function(event) {
                 var calData = [];
                 // console.log(convData);
                 for (var i = 0; i < 15; i++) {
-                    var dateArr = getTimeData(convData, '-03-02', i * 7);
+                    var dateArr = getTimeData(convData, '-09-01', i * 7);
                     console.log('날짜/시간으로 변환한 데이터', dateArr);
 
                     // console.log(dateArr);
