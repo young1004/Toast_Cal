@@ -3,6 +3,7 @@ const pubContainer = document.getElementById('pubCalendar');
 // 옵션 오브젝트
 const pubOptions = {
     defaultView: 'week',
+    isReadOnly: true,
     // useCreationPopup: true,
     useDetailPopup: true
 };

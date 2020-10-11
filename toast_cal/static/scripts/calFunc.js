@@ -252,26 +252,26 @@ function create(calendar, data) {
 }
 /**
  * createSchedules API를 통해 화면에 일정 뿌려주기
- * @param {Object} calendar 스케쥴을 생성할 공유 캘린더 객체
- * @param {Object} data 서버에서 받아온 json 객체(object)
+ * param {Object} calendar 스케쥴을 생성할 공유 캘린더 객체
+ * param {Object} data 서버에서 받아온 json 객체(object)
  */
-function pubCreate(calendar, data) {
-    var i;
-    var createdData = new Array();
+// function pubCreate(calendar, data) {
+//     var i;
+//     var createdData = new Array();
 
-    for (i = 0; i < data.length; i++) {
-        let schedule = newCalObj(data[i].pk,
-            data[i].fields.calendarId,
-            data[i].fields.title,
-            'time', '미정', data[i].fields.start,
-            data[i].fields.end, false, 'busy', {
-                class: 'public'
-            });
-        // console.log(schedule);
-        createdData.push(schedule);
-    }
-    calendar.createSchedules(createdData);
-}
+//     for (i = 0; i < data.length; i++) {
+//         let schedule = newCalObj(data[i].pk,
+//             data[i].fields.calendarId,
+//             data[i].fields.title,
+//             'time', '미정', data[i].fields.start,
+//             data[i].fields.end, false, 'busy', {
+//                 class: 'public'
+//             });
+//         // console.log(schedule);
+//         createdData.push(schedule);
+//     }
+//     calendar.createSchedules(createdData);
+// }
 
 
 /**

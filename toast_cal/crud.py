@@ -491,9 +491,11 @@ def pubCalSave(request):
 
     for i in pubCalData:
         pubStdData = tmpData.filter(start=i["start"], end=i["end"]).distinct()
+        stdStr = ""
         for j in pubStdData:
-            print("수강생 데이터", j.userID)
-        print("--------------------")
+            stdStr += j.userID + ", "
+
+        stdStr = stdStr[:-2]  # 마지막 쉼표 제거
         if i["count"] / subjectCount > 0.7:
             calID = "매우 높음"
         elif i["count"] / subjectCount > 0.5:
@@ -508,6 +510,7 @@ def pubCalSave(request):
             end=i["end"],
             count=i["count"],
             countPer=i["count"] / subjectCount,
+            attendees=stdStr,
         )
 
     return HttpResponse("일정 저장 완료.")

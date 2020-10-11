@@ -170,6 +170,7 @@ class PubCalendar(models.Model):  # pk값이 별도로 지정됨
     end = models.DateTimeField()
     count = models.IntegerField()  # 일정이 겹치는 수
     countPer = models.FloatField()  # 전체 수강생에서 일정이 겹치는 수의 비율
+    attendees = models.TextField(blank=True)  # 해당 시간에 일정이 있는 학생들의 이름
 
     def __str__(self):
         return self.title
