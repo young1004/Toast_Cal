@@ -52,6 +52,21 @@ subProBtn.addEventListener('click', async function(event) {
 // 투표 기능 버튼 리스너
 voteProBtn.addEventListener('click', function(event) {
     changeContents('professor2', 'calendar-common', 'professor1', 'sidebar', 'professor3');
+    ajaxPost('/toast_cal/pro_vote_open_table/', 'json', 'POST', 1)
+        .then(function(data) {
+            $('#vote-open-tbody').empty();
+
+            for (var count = 0; count < data.length; count++) {
+                var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\', false)"><td>' + data[count].fields.code + '</td>' +
+                    '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                    '<td>' + data[count].fields.professor + '</td>' + '<td> 2020-test-1234 </td></tr>');
+                $('#vote-open-tbody').append(tr);
+            }
+        })
+        .catch(function(err) {
+            alert(err);
+        });
+
 });
 
 // 공용 캘린더 버튼 리스너
@@ -240,7 +255,7 @@ voteOpenTabBtn.addEventListener('click', function(event) {
             $('#vote-open-tbody').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\')"><td>' + data[count].fields.code + '</td>' +
+                var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\', false)"><td>' + data[count].fields.code + '</td>' +
                     '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
                     '<td>' + data[count].fields.professor + '</td>' + '<td> 2020-test-1234 </td></tr>');
                 $('#vote-open-tbody').append(tr);
@@ -284,7 +299,7 @@ $('#vote-open-btn').click(async function() {
                 $('#vote-open-tbody').empty();
 
                 for (var count = 0; count < data.length; count++) {
-                    var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\')"><td>' + data[count].fields.code + '</td>' +
+                    var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\', false)"><td>' + data[count].fields.code + '</td>' +
                         '<td>' + data[count].fields.codeClass + '</td>' + '<td>' + data[count].fields.department + '</td>' +
                         '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
                         '<td>' + data[count].fields.professor + '</td>' + '<td>' + data[count].fields.period + '</td></tr>');

@@ -3,7 +3,7 @@ const pubContainer = document.getElementById('pubCalendar');
 // 옵션 오브젝트
 const pubOptions = {
     defaultView: 'week',
-    useCreationPopup: true,
+    // useCreationPopup: true,
     useDetailPopup: true
 };
 
@@ -37,8 +37,14 @@ ajaxPost('/toast_cal/pubCalSetData/', 'json', 'POST', '1').then(function(data) {
 var pubCalSaveBtn = document.getElementById('pubCalSaveBtn');
 
 pubCalSaveBtn.addEventListener('click', function() {
+    var saveCode = document.getElementById('pubcal_select').value
+    var saveStart = document.getElementById('start').value
+    var saveEnd = document.getElementById('end').value
+
     let codeData = {
-        code: document.getElementById('pubcal_select').value
+        code: saveCode,
+        start: saveStart,
+        end: saveEnd,
     }
     // console.log(data)
     ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', codeData)
@@ -53,14 +59,14 @@ pubCalSaveBtn.addEventListener('click', function() {
 var pubCalLoadBtn = document.getElementById('pubCalLoadBtn');
 
 pubCalLoadBtn.addEventListener('click', function() {
-    var code = document.getElementById('pubcal_select').value
-    var start = document.getElementById('start').value
-    var end = document.getElementById('end').value
+    var loadCode = document.getElementById('pubcal_select').value
+    var loadStart = document.getElementById('start').value
+    var loadEnd = document.getElementById('end').value
 
     let pubLoadData = {
-        code: code,
-        start: start,
-        end: end,
+        code: loadCode,
+        start: loadStart,
+        end: loadEnd,
     }
 
     if (start !== '' || end !== '') {

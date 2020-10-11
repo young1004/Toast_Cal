@@ -469,17 +469,31 @@ def pubCalSave(request):
 
     pubCalData = Calendar.objects.filter(userID="NULL")  # 초기화
     for data in stdLecData:  # 강의를 듣는 학생들의 공개 일정을 가져오는 쿼리 생성
-        pubCalData = pubCalData | Calendar.objects.filter(userID=data.student_id)
+        pubCalData = pubCalData | Calendar.objects.filter(
+            userID=data.student_id,
+            start__range=[request.POST["start"], request.POST["end"]],
+        )
+        # print("필터링 데이터 : ", pubCalData[0].userID)
         # print(data.student_id) # 학생의 id값
 
-    pubCalData = pubCalData | Calendar.objects.filter(userID=request.session["userID"])
+    # 교수의 일정도 가져옴
+    pubCalData = pubCalData | Calendar.objects.filter(
+        userID=request.session["userID"],
+        start__range=[request.POST["start"], request.POST["end"]],
+    )
+    tmpData = pubCalData
 
     pubCalData = pubCalData.values("start", "end").annotate(count=Count("start"))
 
+    # 데이터 초기화
     beforeData = PubCalendar.objects.filter(code=lecCode)
     beforeData.delete()
 
     for i in pubCalData:
+        pubStdData = tmpData.filter(start=i["start"], end=i["end"]).distinct()
+        for j in pubStdData:
+            print("수강생 데이터", j.userID)
+        print("--------------------")
         if i["count"] / subjectCount > 0.7:
             calID = "매우 높음"
         elif i["count"] / subjectCount > 0.5:
@@ -500,8 +514,7 @@ def pubCalSave(request):
 
 
 def pubCalLoad(request):
-    lecCode = request.POST["code"]  # request에서 온 강의 코드로 가정
-    print(request.POST["start"])
+    lecCode = request.POST["code"]
 
     pubCalData = PubCalendar.objects.filter(
         code=lecCode, start__range=[request.POST["start"], request.POST["end"]]

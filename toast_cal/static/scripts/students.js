@@ -38,7 +38,7 @@ subjectLoad.addEventListener('click', function(event) {
             $('#lecture_load_tbody').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var tr = $('<tr scope="row" onclick="clickTrEvent(this, \'#lecture_tbody\')"><td>' + data[count].fields.code + '</td>' +
+                var tr = $('<tr scope="row" onclick="clickTrEvent(this, \'#lecture_load_tbody\', false)"><td>' + data[count].fields.code + '</td>' +
                     '<td>' + data[count].fields.codeClass + '</td>' + '<td>' + data[count].fields.department + '</td>' +
                     '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
                     '<td>' + data[count].fields.professor + '</td>' + '<td>' + data[count].fields.period + '</td></tr>');
@@ -156,7 +156,7 @@ $('#lecture_delete_btn').click(async function() {
                 $('#lecture_load_tbody').empty();
 
                 for (var count = 0; count < data.length; count++) {
-                    var tr = $('<tr scope="row" onclick="clickTrEvent(this, \'#lecture_tbody\')"><td>' + data[count].fields.code + '</td>' +
+                    var tr = $('<tr scope="row" onclick="clickTrEvent(this, \'#lecture_load_tbody\', false)"><td>' + data[count].fields.code + '</td>' +
                         '<td>' + data[count].fields.codeClass + '</td>' + '<td>' + data[count].fields.department + '</td>' +
                         '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
                         '<td>' + data[count].fields.professor + '</td>' + '<td>' + data[count].fields.period + '</td></tr>');

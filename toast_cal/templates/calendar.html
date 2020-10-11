@@ -292,11 +292,11 @@
                 <button type="button" class="btn btn-outline-dark" id="vote-status-tab-btn">투표 현황 탭</button>
             </div>
             <!-- 교수 투표 개설 탭 -->
-            <div class="vote-open" id="professor-vote-open" style="display: none;">
+            <div class="vote-open" id="professor-vote-open" style="display: block;">
                 <h3>투표 개설</h3>
-                <div class="lecture-table-wrap">
+                <div class="vote-open-table-wrap">
                     <table class="table table-hover" id="vote-open-table">
-                        <thead>
+                        <thead id="vote-open-table-thead">
                             <tr>
                                 <th scope="col">학수번호</th>
                                 <th scope="col">이수구분</th>
@@ -310,23 +310,39 @@
                     </table>
                 </div>
                 <button type="button" class="btn btn-outline-dark" id="vote-open-btn">투표 개설</button>
+                <div id="vote-open-tab-input">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>투표 만료일: </th>
+                                <td><input type="date" id="vote-open-period"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
             <!-- 투표 현황 보기 탭 -->
             <div class="vote-status-check" id="professor-vote-status" style="display: none;">
-                <span>강의 분류:</span>
-                <select id="lecture-class" name="lectureClass">
-                    <option value="전체">전체</option>
-                    <option value="전공 필수">전공 필수</option>
-                    <option value="전공 선택">전공 선택</option>
-                    <option value="일반 교양">일반 교양</option>
-                </select>
-                <span>투표 상태:</span>
-                <select id="vote-status" name="voteStatus">
-                    <option value="전체">전체</option>
-                    <option value="투표중">투표중</option>
-                    <option value="투표 완료">투표 완료</option>
-                </select>
-                <button type="button" class="btn btn-outline-dark" id="voteTableBtn">선택</button>
+                <div style="height: 50px;">
+                    <span>강의 분류:</span>
+                    <select id="lecture-class" name="lectureClass">
+                        <option value="전체">전체</option>
+                        <option value="전공 필수">전공 필수</option>
+                        <option value="전공 선택">전공 선택</option>
+                        <option value="일반 교양">일반 교양</option>
+                    </select>
+                    <span>투표 상태:</span>
+                    <select id="vote-status" name="voteStatus">
+                        <option value="전체">전체</option>
+                        <option value="투표중">투표중</option>
+                        <option value="투표 완료">투표 완료</option>
+                    </select>
+                    <button type="button" class="btn btn-outline-dark" id="voteTableBtn">선택</button>
+
+
+
+                </div>
                 <div id="table-wrap">
                     <table class="table vote-professor">
                         <thead class="thead-light">
