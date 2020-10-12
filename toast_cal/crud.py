@@ -233,6 +233,29 @@ def student_lecture_delete(request):
         )
 
 
+# vote 테이블의 아무값이나 받은 테스트 데이터
+def voteSelectTest(request):
+    stores_list = Vote.objects.filter(
+        reject_votes=request.POST["reject_votes"],
+    )
+
+    return HttpResponse(
+        serializers.serialize("json", stores_list), content_type="application/json"
+    )
+
+def test(request):
+    student_list = Student_lecture.objects.filter(code=request.POST["code"])
+    stores_list = Student.objects.filter(userID="Null")
+
+    for i in range(student_list.count()):
+        student_lifo = Student.objects.filter(userID=student_list[i].student_id)
+        stores_list = stores_list | student_lifo
+    
+    return HttpResponse(
+        serializers.serialize("json", stores_list), content_type="application/json"
+    )
+
+
 # 학생투표페이지의 강의정보
 # 로직상 맞는 구조지만,과목테이블에서 투표테이블로 맞춰서 출력할것임.
 def getLectureInfo(request):

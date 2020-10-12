@@ -250,29 +250,6 @@ function create(calendar, data) {
     // 디버깅용 코드
     // console.log('일정 불러오기 완료')
 }
-/**
- * createSchedules API를 통해 화면에 일정 뿌려주기
- * param {Object} calendar 스케쥴을 생성할 공유 캘린더 객체
- * param {Object} data 서버에서 받아온 json 객체(object)
- */
-// function pubCreate(calendar, data) {
-//     var i;
-//     var createdData = new Array();
-
-//     for (i = 0; i < data.length; i++) {
-//         let schedule = newCalObj(data[i].pk,
-//             data[i].fields.calendarId,
-//             data[i].fields.title,
-//             'time', '미정', data[i].fields.start,
-//             data[i].fields.end, false, 'busy', {
-//                 class: 'public'
-//             });
-//         // console.log(schedule);
-//         createdData.push(schedule);
-//     }
-//     calendar.createSchedules(createdData);
-// }
-
 
 /**
  * name 값을 이용해 쿠키값을 리턴해주는 함수
@@ -341,6 +318,8 @@ function changeContents(id1, ...args) {
         setDisplay.style.display = 'none';
     }
 }
+
+
 
 /**
  * HTML 표를 조작하여 표의 특정 열을 선택 시 색깔이 바뀌도록 해주는 함수

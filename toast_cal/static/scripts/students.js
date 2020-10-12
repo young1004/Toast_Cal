@@ -57,6 +57,8 @@ voteMenuBtn.addEventListener('click', function(event) {
     changeContents('votemenu', 'lecture', 'calendar-common', 'studentLectureLoad', 'sidebar');
 })
 
+
+
 // 저장 버튼
 $('#lecture_save_btn').click(async function() {
     var tr = $('#lecture_tbody').children();
@@ -198,6 +200,18 @@ $('#lecture_delete_btn').click(async function() {
     } else {
         alert('선택된 강의가 없습니다.');
     }
+});
+
+// 투표기능 탭 관련 변수 및 함수들
+var voteJoinTabBtn = document.getElementById('vote-join-tab-btn');
+var voteStatusStudentBtn = document.getElementById('vote-status-student-btn');
+
+voteJoinTabBtn.addEventListener('click', function(event){
+    changeContents('studentVote', 'lecture-class-student-tab');
+});
+
+voteStatusStudentBtn.addEventListener('click', function (event){
+    changeContents('lecture-class-student-tab', 'studentVote');
 });
 
 //학생 투표 기능 관련 변수 및 함수들
@@ -393,3 +407,132 @@ $(document).on('click', '.voteBtn_student', function() {
 
 
 });
+
+
+// 서버에서 filter를 적용할 투표 페이지 관련 데이터 object
+var voteData = {
+    lecture_type: '일반 교양',
+    vote_status: '투표중'
+}
+
+ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) {
+        $('#vote-info').empty();
+
+        for (var count = 0; count < data.length; count++) {
+            var vote_year = new Date().getFullYear()
+
+            var start = data[count].fields.start
+            var start_month = start.substr(5, 2); //시작 월
+            var start_day = start.substr(8, 2); //시작 일
+
+            var end = data[count].fields.end
+            var end_month = end.substr(5, 2); //끝 월
+            var end_day = end.substr(8, 2); //끝 일
+
+            var vote_start =  vote_year + '-' + start_month + '-' + start_day
+            var vote_end = vote_year + '-' + end_month + '-' + end_day
+            var votePeriod = vote_start + ' ~ ' + vote_end
+
+            var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
+                '<td>' + data[count].fields.lecture_type + '</td>' + 
+                '<td>' + data[count].fields.name + '</td>' +
+                '<td>' + votePeriod + '</td>' + 
+                '<td><button type="button" class="btn btn-outline-dark voteBtn">투표하기</button></td>' + 
+                '</tr>'
+                );
+            $('#vote-info').append(tr);
+        }
+
+    })
+    .catch(function(err) {
+        console.log(err);
+    })
+
+    var voteClass = document.getElementById('lecture-class');
+    var voteStatus = document.getElementById('vote-status');
+    var voteTableBtn = document.getElementById('voteTableBtn');
+
+    //투표부분 선택 버튼
+    voteTableBtn.addEventListener('click', function(event) {
+        voteData.lecture_type = voteClass.value;
+        voteData.vote_status = voteStatus.value;
+    
+        // console.log(voteData);
+        ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) {
+                $('#vote-info').empty();
+    
+                for (var count = 0; count < data.length; count++) {
+                    var vote_year = new Date().getFullYear()
+        
+                    var start = data[count].fields.start
+                    var start_month = start.substr(5, 2); //시작 월
+                    var start_day = start.substr(8, 2); //시작 일
+        
+                    var end = data[count].fields.end
+                    var end_month = end.substr(5, 2); //끝 월
+                    var end_day = end.substr(8, 2); //끝 일
+        
+                    var vote_start =  vote_year + '-' + start_month + '-' + start_day
+                    var vote_end = vote_year + '-' + end_month + '-' + end_day
+                    var votePeriod = vote_start + ' ~ ' + vote_end
+        
+                    var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
+                        '<td>' + data[count].fields.lecture_type + '</td>' + 
+                        '<td>' + data[count].fields.name + '</td>' +
+                        '<td>' + votePeriod + '</td>' + 
+                        '<td><button type="button" class="btn btn-outline-dark voteBtn">투표하기</button></td>');
+                    $('#vote-info').append(tr);
+                }
+    
+            })
+            .catch(function(err) {
+                console.log(err);
+            })
+    });
+
+
+
+    $(document).on('click', '.voteBtn', function() {
+
+        var test_data = {
+            reject_votes: 40,
+        }
+
+        var voteBtn = $(this);
+
+        var tr = voteBtn.parent().parent();
+        var td = tr.children();
+
+        ajaxPost('/toast_cal/voteSelectTest/', 'json', 'POST', test_data).then(function(data) {
+            $('#select_head').empty();
+            $('#select_info').empty();
+
+            var class_name = $('<p>' + td.eq(2).text() + '</p>');
+            $('#select_head').append(class_name);
+
+            for (var count = 0; count < data.length; count++) {
+                var tr = $('<tr scope="row" onclick="clickTrEvent(this)" class="select_line"><td class="select_area">' + 
+                    data[count].fields.start + '</td></tr>');
+                $('#select_info').append(tr);
+            }
+
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
+
+        // --------------------------------------------------
+        var test_data = {
+            code: 'QWE',
+        }
+
+        ajaxPost('/toast_cal/test/', 'json', 'POST', test_data).then(function(data) {
+            console.log(data)
+
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
+        // --------------------------------------------------
+
+    });

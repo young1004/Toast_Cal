@@ -162,6 +162,85 @@ body {
 
 
 /* 학생투표 페이지 */
+
+/* 탭 버튼 관련 css */
+.lecture-vote-tab-btn {
+    float: right;
+}
+
+
+/* 학생 투표 참여 탭 */
+.select-table-wrap {
+    overflow: hidden;
+    display: block;
+    height: 318px;
+    margin-top: 10px;
+    border: lightgray 1px solid;
+}
+
+#select_head {
+    height: 20%;
+    width: 100%;
+    text-align: center;
+    color: #495057;
+    padding-top: 1rem;
+    font-weight: 700;
+    font-size: 1.035em;
+    /* background-color: #e9ecef; */
+    border-bottom: lightgray 1px solid;
+}
+
+.vote_select {
+    display: block;
+    float: left;
+    height: 90%;
+    width: 50%;
+    border-bottom-width: 0.5px;
+}
+
+.default_area {
+    padding: 113px 192px;
+}
+
+.select_area {
+    /* padding: 20px 147px; */
+    width: 447px;
+    height: 63px;
+    text-align: center;
+}
+
+#select_info {
+    overflow: hidden;
+    border: lightgray 1px solid;
+}
+
+.select_line {
+    border-bottom: lightgray 1px solid;
+}
+
+#comment_area {
+    display: block;
+    float: left;
+    height: 60%;
+    width: 50%;
+}
+
+.comment {
+    width: 450px;
+    height: 189px;
+    padding: 20px 30px;
+}
+
+.comment::placeholder {
+    text-align: center;
+    padding-top: 55px;
+}
+
+.btn_set {
+    padding: 18.5px 192px;
+}
+
+/* 학생 투표 현황 보기 탭 */
 #votemenu {
     margin-left: 15%;
 }
