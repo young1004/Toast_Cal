@@ -67,6 +67,7 @@ voteProBtn.addEventListener('click', function(event) {
             alert(err);
         });
 
+    document.getElementById('vote-open-period').value = new Date().toISOString().substring(0, 10);
 });
 
 // 공용 캘린더 버튼 리스너
@@ -86,6 +87,39 @@ shareProBtn.addEventListener('click', async function(event) {
         .catch(function(err) {
             alert(err);
         });
+
+    // 공유 캘린더 날짜 셋팅
+    var dateValue = getThisWeek();
+
+    document.getElementById('start').value = dateValue[0];
+    document.getElementById('end').value = dateValue[6];
+
+
+    // 공유 캘린더 하단 학생 정보 표시
+    var select_val = $("#pubcal_select option:selected").val();
+
+    var test_data = {
+        code: select_val,
+    }
+
+    ajaxPost('/toast_cal/getAllStudent/', 'json', 'POST', test_data).then(function(data) {
+            console.log(data)
+
+            $('#vote-pub-info').empty();
+
+            for (var count = 0; count < data.length; count++) {
+                var tr = $('<tr><td>' + data[count].fields.studentID + '</td>' +
+                    '<td>' + data[count].fields.username + '</td>' +
+                    '<td>' + data[count].fields.department + '</td>' +
+                    '</tr>'
+                );
+
+                $('#vote-pub-info').append(tr);
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
 });
 
 // 강의 개설 버튼
@@ -246,7 +280,7 @@ var voteTableBtn = document.getElementById('voteTableBtn');
 var voteOpenTabBtn = document.getElementById('vote-open-tab-btn');
 var voteStatusTabBtn = document.getElementById('vote-status-tab-btn');
 
-// 투표 개설 탭 버튼 ajax 부분 미완
+// 투표 개설 탭 버튼
 voteOpenTabBtn.addEventListener('click', function(event) {
     changeContents('professor-vote-open', 'professor-vote-status');
 
@@ -342,6 +376,7 @@ var voteData = {
     vote_status: '투표중'
 }
 
+// 교수 투표 현황 테이블 생성 부분
 ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) {
         $('#vote-info').empty();
 
@@ -357,6 +392,7 @@ ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) 
         console.log(err);
     });
 
+// 투표 현황 option 오른쪽의 선택버튼 
 voteTableBtn.addEventListener('click', function(event) {
     voteData.lecture_type = voteClass.value;
     voteData.vote_status = voteStatus.value;
@@ -381,6 +417,7 @@ voteTableBtn.addEventListener('click', function(event) {
 var chart = null;
 var comment_div = null;
 
+// 투표하기 버튼
 $(document).on('click', '.voteBtn', function() {
 
     if (chart !== null) chart.destroy();
@@ -488,4 +525,34 @@ $(document).on('click', '.voteBtn', function() {
         $('#professor-vote-status').append(revote_btn);
         $('#professor-vote-status').append(correct_btn);
     }
+});
+
+// 공유캘린더 과목코드 변경시 즉시 실행되어 테이블에 수강학생 전체 목록 출력
+$(function() {
+    $('#pubcal_select').on('change', function() {
+        var select_val = $("#pubcal_select option:selected").val();
+
+        var test_data = {
+            code: select_val,
+        }
+
+        ajaxPost('/toast_cal/getAllStudent/', 'json', 'POST', test_data).then(function(data) {
+                console.log(data)
+
+                $('#vote-pub-info').empty();
+
+                for (var count = 0; count < data.length; count++) {
+                    var tr = $('<tr><td>' + data[count].fields.studentID + '</td>' +
+                        '<td>' + data[count].fields.username + '</td>' +
+                        '<td>' + data[count].fields.department + '</td>' +
+                        '</tr>'
+                    );
+
+                    $('#vote-pub-info').append(tr);
+                }
+            })
+            .catch(function(err) {
+                console.log(err);
+            })
+    });
 });

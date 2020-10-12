@@ -36,6 +36,32 @@ function date_to_str(data) {
 
 }
 
+/** 이번주 시작날짜부터 끝나는 날짜까지 배열로 반환 (일~토)
+ * @returns {Array} 이번주 시작날짜부터 끝나는 날짜까지 들어있는 배열 데이터
+ */
+function getThisWeek() {
+    var currentDay = new Date();
+    var theYear = currentDay.getFullYear();
+    var theMonth = currentDay.getMonth();
+    var theDate = currentDay.getDate();
+    var theDayOfWeek = currentDay.getDay();
+
+    var thisWeek = [];
+
+    for (var i = 0; i < 7; i++) {
+        var resultDay = new Date(theYear, theMonth, theDate + (i - theDayOfWeek));
+        var yyyy = resultDay.getFullYear();
+        var mm = Number(resultDay.getMonth()) + 1;
+        var dd = resultDay.getDate();
+
+        mm = String(mm).length === 1 ? '0' + mm : mm;
+        dd = String(dd).length === 1 ? '0' + dd : dd;
+
+        thisWeek[i] = yyyy + '-' + mm + '-' + dd;
+    }
+    return thisWeek;
+}
+
 /**
  * 캘린더의 년, 월 정보를 받아 출력하는 함수
  * @param {*} year 캘린더에 표시할 년도 값

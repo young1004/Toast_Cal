@@ -235,22 +235,22 @@ def student_lecture_delete(request):
 
 # vote 테이블의 아무값이나 받은 테스트 데이터
 def voteSelectTest(request):
-    stores_list = Vote.objects.filter(
-        reject_votes=request.POST["reject_votes"],
-    )
+    stores_list = Vote.objects.filter(reject_votes=request.POST["reject_votes"],)
 
     return HttpResponse(
         serializers.serialize("json", stores_list), content_type="application/json"
     )
 
-def test(request):
+
+# 공유 캘린더 과목 코드별 전체 수강생 정보 반환
+def getAllStudent(request):
     student_list = Student_lecture.objects.filter(code=request.POST["code"])
     stores_list = Student.objects.filter(userID="Null")
 
     for i in range(student_list.count()):
         student_lifo = Student.objects.filter(userID=student_list[i].student_id)
         stores_list = stores_list | student_lifo
-    
+
     return HttpResponse(
         serializers.serialize("json", stores_list), content_type="application/json"
     )

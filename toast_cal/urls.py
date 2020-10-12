@@ -32,7 +32,7 @@ urlpatterns = [
     ),  # 학생 강의 삭제
     # vote 테이블의 아무값이나 받은 테스트 데이터
     path("voteSelectTest/", crud.voteSelectTest, name="voteSelectTest/"),
-    path("test/", crud.test, name="test/"),
+    path("getAllStudent/", crud.getAllStudent, name="getAllStudent/"),
     path("getLectureInfo/", crud.getLectureInfo, name="getLectureInfo"),  # 학생 투표 강의 정보
     # 교수 기능들
     path("voteTable/", crud.voteTable, name="voteTable"),
