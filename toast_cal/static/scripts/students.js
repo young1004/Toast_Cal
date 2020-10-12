@@ -1,6 +1,8 @@
 var calStdBtn = document.getElementById('calStdBtn');
 var subjectBtn = document.getElementById('subjectBtn');
 var subjectLoad = document.getElementById('subjectLoad');
+var voteMenuBtn = document.getElementById('voteMenuBtn');
+
 
 calStdBtn.addEventListener('click', function(event) {
     changeContents('calendar-common', 'lecture', 'studentLectureLoad');
@@ -31,7 +33,7 @@ subjectBtn.addEventListener('click', function(event) {
 
 // 과목 조회 바뀌어야 함
 subjectLoad.addEventListener('click', function(event) {
-    changeContents('studentLectureLoad', 'lecture', 'calendar-common', 'sidebar');
+    changeContents('studentLectureLoad', 'lecture', 'calendar-common', 'sidebar', 'votemenu');
 
     ajaxPost('/toast_cal/student_lecture_load/', 'json', 'POST', 1)
         .then(function(data) {
@@ -49,6 +51,11 @@ subjectLoad.addEventListener('click', function(event) {
             alert(err);
         });
 });
+
+// 투표 메뉴 
+voteMenuBtn.addEventListener('click', function(event) {
+    changeContents('votemenu', 'lecture', 'calendar-common', 'studentLectureLoad', 'sidebar');
+})
 
 // 저장 버튼
 $('#lecture_save_btn').click(async function() {
@@ -131,6 +138,7 @@ $('#lecture_save_btn').click(async function() {
 
 // 삭제 버튼
 $('#lecture_delete_btn').click(async function() {
+
     var tr = $('#lecture_load_tbody').children();
     var array = [];
     var husks = {};
@@ -191,3 +199,247 @@ $('#lecture_delete_btn').click(async function() {
         alert('선택된 강의가 없습니다.');
     }
 });
+
+//학생 투표 기능 관련 변수 및 함수들
+var voteClassStu = document.getElementById('lecture-class-student');
+var voteStatusStu = document.getElementById('vote-status-student');
+var voteTableBtnStu = document.getElementById('voteTableBtn-student');
+
+// 서버에서 filter를 적용할 투표 페이지 관련 데이터 object : 현재 하드 코딩
+var voteData_Stu = {
+    lecture_type: '일반 교양',
+    vote_status: '투표중'
+}
+
+
+// 학생 투표기능 선택 버튼
+voteTableBtnStu.addEventListener('click', function(event) {
+    voteData_Stu.lecture_type = voteClassStu.value;
+    voteData_Stu.vote_status = voteStatusStu.value;
+
+    // console.log(voteData);
+    ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData_Stu).then(function(data) {
+            $('#vote-info-student').empty();
+
+            for (var count = 0; count < data.length; count++) {
+                var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
+                    '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                    '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn_student">상세</button></td>');
+                $('#vote-info-student').append(tr);
+            }
+
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
+});
+
+// 투표목록 가져오기
+ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData_Stu).then(function(data) {
+        $('#vote-info-student').empty();
+
+        for (var count = 0; count < data.length; count++) {
+            var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
+                '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
+                '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn_student">상세</button></td>');
+            $('#vote-info-student').append(tr);
+        }
+
+    })
+    .catch(function(err) {
+        console.log(err);
+    })
+
+
+// 학생 투표 ※ 변수 겹치면 우선 탐색
+var chart = null;
+
+$(document).on('click', '.voteBtn_student', function() {
+
+    // 도넛 차트 생성
+    if (chart !== null) chart.destroy();
+    var voteBtn_student = $(this);
+
+    var tr = voteBtn_student.parent().parent();
+    var td = tr.children();
+
+    var chartData = {
+        code: td.eq(0).text()
+    }
+
+    ajaxPost('/toast_cal/voteChart/', 'json', 'POST', chartData).then(function(data) {
+            // console.log(data.length);
+            // console.log(data);
+            if (data.length > 0) {
+                //toast UI Chart 세팅
+                var doughnut = document.getElementById('chart-area-student');
+                var doughnutData = {
+                    categories: ['투표 현황'],
+                    series: [{
+                            name: '찬성',
+                            data: data[0].fields.agree_votes
+                        },
+                        {
+                            name: '반대',
+                            data: data[0].fields.reject_votes
+                        },
+                        {
+                            name: '투표안함',
+                            data: data[0].fields.all_students - data[0].fields.agree_votes - data[0].fields.reject_votes
+                        }
+                    ]
+                };
+
+                var theme = {
+                    series: {
+                        colors: [
+                            '#87CE00', '#FF4848', '#BDBDBD'
+                        ],
+                        label: {
+                            color: '#000000',
+                            fontFamily: 'sans-serif'
+                        }
+                    }
+                };
+
+                tui.chart.registerTheme('myTheme', theme);
+
+
+                var doughnutOption = {
+                    chart: {
+                        width: 400,
+                        height: 250,
+                        title: data[0].fields.name + '(' + data[0].fields.code + ') 시험 투표',
+                        format: function(value, chartType, areaType, valuetype, legendName) {
+                            if (areaType === 'makingSeriesLabel') {
+                                value = value;
+                            }
+
+                            return value;
+                        }
+                    },
+                    series: {
+                        radiusRange: ['60%', '100%'],
+                        showLabel: true,
+                        showLegend: true,
+                        allowSelect: true,
+                        startAngle: true,
+                        endAngle: false,
+                        labelAlign: 'center'
+                    },
+                    legend: {
+                        align: 'right'
+                    },
+                    theme: 'myTheme'
+                };
+
+
+                chart = tui.chart.pieChart(doughnut, doughnutData, doughnutOption);
+            }
+
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+
+    // 선택한 투표의 강의 정보
+    $('#lec-info-student').empty();
+
+    var voteBtn_student = $(this);
+
+    var tr = voteBtn_student.parent().parent();
+    var td = tr.children();
+
+    var lec_info = {
+        code: td.eq(0).text()
+    }
+
+    ajaxPost('/toast_cal/getLectureInfo/', 'json', 'POST', lec_info)
+        .then(function(data) {
+            console.log(data);
+            for (i = 0; i < data.length; i++) {
+                var testText = $(
+                    '<div id = "lec-info-wrap">' +
+                    '<div class = "lec-info-area">' +
+                    '<table>' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th>' + '강의정보' + '</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody class = sub_info >' +
+                    '<tr>' +
+                    '<th>' + '강의명' + '</th>' +
+                    '<td>' + data[i].fields.name + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<th>' + '강의코드' + '</th>' +
+                    '<td>' + data[i].fields.code + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<th>' + '강의분류' + '</th>' +
+                    '<td>' + data[i].fields.lecture_type + '</td>' +
+                    '</tr>' +
+                    '</tbody>' +
+                    '</table>' +
+                    '</div>' +
+                    '</div>'
+                )
+                $('#lec-info-student').append(testText)
+            }
+        })
+
+
+
+
+});
+
+// // 도넛차트 옆으로 올 강의 정보
+// $(document).on('click', '.voteBtn_student', function() {
+//     $('#lec-info-student').empty();
+
+//     var voteBtn_student = $(this);
+
+//     var tr = voteBtn_student.parent().parent();
+//     var td = tr.children();
+
+//     var lec_info = {
+//         code: td.eq(0).text()
+//     }
+
+//     ajaxPost('/toast_cal/getLectureInfo/', 'json', 'POST', lec_info)
+//         .then(function(data) {
+//             console.log(data);
+//             for (i = 0; i < data.length; i++) {
+//                 var testText = $(
+//                     '<div id = "lec-info-wrap">' +
+//                     '<div class = "lec-info-area">' +
+//                     '<table>' +
+//                     '<thead>' +
+//                     '<tr>' +
+//                     '<th>' + '강의정보' + '</th>' +
+//                     '</tr>' +
+//                     '</thead>' +
+//                     '<tbody class = sub_info >' +
+//                     '<tr>' +
+//                     '<th>' + '강의명' + '</th>' +
+//                     '<td>' + data[i].fields.name + '</td>' +
+//                     '</tr>' +
+//                     '<tr>' +
+//                     '<th>' + '강의코드' + '</th>' +
+//                     '<td>' + data[i].fields.code + '</td>' +
+//                     '</tr>' +
+//                     '<tr>' +
+//                     '<th>' + '강의분류' + '</th>' +
+//                     '<td>' + data[i].fields.lecture_type + '</td>' +
+//                     '</tr>' +
+//                     '</tbody>' +
+//                     '</table>' +
+//                     '</div>' +
+//                     '</div>'
+//                 )
+//                 $('#lec-info-student').append(testText)
+//             }
+//         })
+
+// });

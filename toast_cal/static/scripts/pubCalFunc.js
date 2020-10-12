@@ -7,7 +7,7 @@ function pubCreate(calendar, data) {
     var i;
     var createdData = new Array();
     console.log(data);
-
+    
     for (i = 0; i < data.length; i++) {
         let schedule = {
             id: data[i].pk,

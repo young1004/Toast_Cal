@@ -56,7 +56,13 @@
                     <li>
                         <button type="button" class="btn btn-outline-light" id="subjectBtn">과목</button>
                     </li>
-                    <li><button type="button" class="btn btn-outline-light" id="subjectLoad">과목 조회</button></li>
+                    <li>
+                        <button type="button" class="btn btn-outline-light" id="subjectLoad">과목 조회</button>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-outline-light" id="voteMenuBtn">투표 기능</button>
+                    </li>
+
                     <!-- 테스트 -->
                     {% elif request.session.userType == "professor" %}
                     <li>
@@ -172,6 +178,43 @@
                 </table>
             </div>
             <button type="button" class="btn btn-outline-dark" id="lecture_delete_btn">삭제</button>
+        </div>
+        <!-- 학생 투표 기능 -->
+        <div class="contents" id="votemenu" style="display: none;">
+            <span>강의 분류:</span>
+            <select id="lecture-class-student" name="lectureClass">
+                <option value="전공 필수">전공 필수</option>
+                <option value="전공 선택">전공 선택</option>
+                <option value="일반 교양">일반 교양</option>
+            </select>
+            <span>투표 상태:</span>
+            <select id="vote-status-student" name="voteStatus">
+                <option value="투표중">투표중</option>
+                <option value="투표 완료">투표 완료</option>
+            </select>
+            <button type="button" class="btn btn-outline-dark" id="voteTableBtn-student">선택</button>
+            <div id="table-wrap">
+                <table class="table vote-student">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">강의코드</th>
+                            <th scope="col">강의분류</th>
+                            <th scope="col">강의명</th>
+                            <th scope="col">투표상태</th>
+                            <th scope="col"> - </th>
+                        </tr>
+                    </thead>
+                    <tbody id="vote-info-student">
+                    </tbody>
+                </table>
+            </div>
+            <!-- toast UI Chart 부분 -->
+            <div id="vote-detail-donut-student">
+                <div id="chart-area-student">
+                </div>
+            </div>
+            <div id="lec-info-student">
+            </div>
         </div>
 
         {% elif request.session.userType == "professor" %}
@@ -380,6 +423,20 @@
             </div>
             <div id="pubCalendar">
             </div>
+
+            <div id="table-wrap-pubcal">
+                <table class="table vote-professor">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">학번</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">학과</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vote-info">
+                    </tbody>
+                </table>
+            </div>
         </div>
         {% endif %}
         {% endif %}
@@ -460,7 +517,6 @@
     {% elif request.session.userType == "professor" %}
     <script src="{% static 'scripts/pubCalFunc.js' %}"></script>
     <script src="{% static 'scripts/pubCalSet.js' %}"></script>
-    <!-- <script src="{% static 'scripts/pubCal.js' %}"></script> -->
     <script src="{% static 'scripts/professors.js' %}"></script>
     {% endif %}
 

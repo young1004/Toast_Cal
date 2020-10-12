@@ -161,6 +161,109 @@ body {
 
 
 
+/* 학생투표 페이지 */
+#votemenu {
+    margin-left: 15%;
+}
+
+#table-wrap {
+    overflow: auto;
+    border: 1px solid #CDCDCD;
+    height: 350px;
+}
+
+.vote-student {
+    text-align: center;
+}
+
+#vote-status {
+    margin-bottom: 10px;
+}
+
+#vote-detail-donut {
+    padding-top: 3em;
+    display: inline-block;
+    width: 400px;
+    margin: 0;
+}
+
+#chart-area {
+    width: 400px;
+    font-size: 5px;
+    margin: 0;
+    color: white;
+}
+
+#voteTableBtn {
+    font-size: 12px;
+}
+
+tspan {
+    font-size: 15px;
+}
+
+svg {
+    border: 1px solid black;
+}
+
+#vote-detail-donut-student {
+    padding-top: 3em;
+    display: inline-block;
+    width: 400px;
+    margin: 0;
+}
+
+#lec-info-student {
+    padding-left: 2em;
+    height: 250px;
+    width: 400px;
+    margin: 0;
+    position: relative;
+    left: 500px;
+    bottom: 250px;
+}
+
+#lec-info-wrap {
+    border-style: solid;
+    border-width: 0.5px;
+    background-color: white;
+}
+
+#lec-info-area {
+    width: 600px;
+    height: 250px;
+}
+
+.lec-info-area table {
+    margin-left: 10px;
+    height: 140px;
+}
+
+.lec-info-area table thead {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+thead tr th {
+    font-size: 20px
+}
+
+.sub_info {
+    height: auto;
+    padding-bottom: 10px;
+}
+
+.sub_info tr th {
+    font-size: 17px;
+}
+
+.sub_info tr {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+
 /* 교수 페이지 전체적으로 적용되는 css */
 #professor1, #professor2, #professor3 {
     margin-left: 15%;
@@ -317,6 +420,31 @@ svg {
 #pubcal_select, #start, #end {
     border: 1px solid #cdcdcd;
     border-radius: 3px;
+}
+
+
+
+/* 교수용 공유 캘린더 학생 목록 출력부분 */
+#pubCalStudentList {
+    margin-top: 2em;
+    height: auto;
+    background-color: white;
+    border-style: solid;
+    border-width: 0.5px;
+    border-radius: 0.5em;
+    max-width: 900px;
+}
+
+#pubCalStudentList-area table {
+    margin: 0;
+}
+
+#table-wrap-pubcal {
+    overflow: auto;
+    border: 1px solid #CDCDCD;
+    height: 350px;
+    margin-top: 15px;
+    background-color: white;
 }
 
 

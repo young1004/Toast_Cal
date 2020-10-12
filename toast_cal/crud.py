@@ -233,6 +233,20 @@ def student_lecture_delete(request):
         )
 
 
+# 학생투표페이지의 강의정보
+# 로직상 맞는 구조지만,과목테이블에서 투표테이블로 맞춰서 출력할것임.
+def getLectureInfo(request):
+    lecCode = request.POST["code"]
+    print(request.POST["code"])
+
+    subject_data = Vote.objects.filter(code=lecCode)
+    print(subject_data)
+
+    return HttpResponse(
+        serializers.serialize("json", subject_data), content_type="application/json"
+    )
+
+
 # 교수 기능
 # ajax로 필터링하여 table 생성할 값 반환
 def voteTable(request):

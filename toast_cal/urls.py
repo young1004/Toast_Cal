@@ -30,6 +30,7 @@ urlpatterns = [
         crud.student_lecture_delete,
         name="student_lecture_delete",
     ),  # 학생 강의 삭제
+    path("getLectureInfo/", crud.getLectureInfo, name="getLectureInfo"),  # 학생 투표 강의 정보
     # 교수 기능들
     path("voteTable/", crud.voteTable, name="voteTable"),
     path("voteChart/", crud.voteChart, name="voteChart"),
