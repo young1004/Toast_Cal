@@ -5,13 +5,13 @@ var voteMenuBtn = document.getElementById('voteMenuBtn');
 
 
 calStdBtn.addEventListener('click', function(event) {
-    changeContents('calendar-common', 'lecture', 'studentLectureLoad');
+    changeContents('calendar-common', 'lecture', 'studentLectureLoad', 'votemenu');
     changeContents('sidebar');
 });
 
 // 강의 수강
 subjectBtn.addEventListener('click', function(event) {
-    changeContents('lecture', 'calendar-common', 'studentLectureLoad', 'sidebar');
+    changeContents('lecture', 'calendar-common', 'studentLectureLoad', 'sidebar', 'votemenu');
 
 
     ajaxPost('/toast_cal/department/', 'json', 'POST', 1)
@@ -393,53 +393,3 @@ $(document).on('click', '.voteBtn_student', function() {
 
 
 });
-
-// // 도넛차트 옆으로 올 강의 정보
-// $(document).on('click', '.voteBtn_student', function() {
-//     $('#lec-info-student').empty();
-
-//     var voteBtn_student = $(this);
-
-//     var tr = voteBtn_student.parent().parent();
-//     var td = tr.children();
-
-//     var lec_info = {
-//         code: td.eq(0).text()
-//     }
-
-//     ajaxPost('/toast_cal/getLectureInfo/', 'json', 'POST', lec_info)
-//         .then(function(data) {
-//             console.log(data);
-//             for (i = 0; i < data.length; i++) {
-//                 var testText = $(
-//                     '<div id = "lec-info-wrap">' +
-//                     '<div class = "lec-info-area">' +
-//                     '<table>' +
-//                     '<thead>' +
-//                     '<tr>' +
-//                     '<th>' + '강의정보' + '</th>' +
-//                     '</tr>' +
-//                     '</thead>' +
-//                     '<tbody class = sub_info >' +
-//                     '<tr>' +
-//                     '<th>' + '강의명' + '</th>' +
-//                     '<td>' + data[i].fields.name + '</td>' +
-//                     '</tr>' +
-//                     '<tr>' +
-//                     '<th>' + '강의코드' + '</th>' +
-//                     '<td>' + data[i].fields.code + '</td>' +
-//                     '</tr>' +
-//                     '<tr>' +
-//                     '<th>' + '강의분류' + '</th>' +
-//                     '<td>' + data[i].fields.lecture_type + '</td>' +
-//                     '</tr>' +
-//                     '</tbody>' +
-//                     '</table>' +
-//                     '</div>' +
-//                     '</div>'
-//                 )
-//                 $('#lec-info-student').append(testText)
-//             }
-//         })
-
-// });
