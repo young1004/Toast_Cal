@@ -512,15 +512,18 @@ def pubCalSave(request):
     beforeData = PubCalendar.objects.filter(code=lecCode)
     beforeData.delete()
 
+    # 해당 일정에 일정이 있는 학생 이름 저장
     for i in pubCalData:
-        pubStdData = tmpData.filter(start=i["start"], end=i["end"]).distinct()
+        pubUserData = tmpData.filter(start=i["start"], end=i["end"]).distinct()
         userStr = ""
-        for j in pubStdData:
+        for j in pubUserData:
             stdNameData = Student.objects.filter(userID=j.userID)
             for k in stdNameData:
                 userStr += k.username + ", "
-
-        userStr += request.session["userName"] + ", "
+        for a in pubUserData:
+            professorNameData = Professor.objects.filter(userID=a.userID).distinct()
+            for k in professorNameData:
+                userStr += k.username + ", "
 
         userStr = userStr[:-2]  # 마지막 쉼표 제거
         if i["count"] / subjectCount > 0.7:
