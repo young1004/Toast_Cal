@@ -242,20 +242,6 @@ def voteSelectTest(request):
     )
 
 
-# 공유 캘린더 과목 코드별 전체 수강생 정보 반환
-def getAllStudent(request):
-    student_list = Student_lecture.objects.filter(code=request.POST["code"])
-    stores_list = Student.objects.filter(userID="Null")
-
-    for i in range(student_list.count()):
-        student_lifo = Student.objects.filter(userID=student_list[i].student_id)
-        stores_list = stores_list | student_lifo
-
-    return HttpResponse(
-        serializers.serialize("json", stores_list), content_type="application/json"
-    )
-
-
 # 학생투표페이지의 강의정보
 # 로직상 맞는 구조지만,과목테이블에서 투표테이블로 맞춰서 출력할것임.
 def getLectureInfo(request):
@@ -473,8 +459,8 @@ def deleteCalendars(request):
             return HttpResponse("db와 일정 데이터 삭제 성공")
 
 
-# 공용 캘린더 부분 기능들
-# 공용 캘린더용 calId 보내주는 부분
+# 공유 캘린더 부분 기능들
+# 공유 캘린더용 calId 보내주는 부분
 def pubCalSetData(request):
     pubCalSetData = PubCalID.objects.all()
 
@@ -528,11 +514,15 @@ def pubCalSave(request):
 
     for i in pubCalData:
         pubStdData = tmpData.filter(start=i["start"], end=i["end"]).distinct()
-        stdStr = ""
+        userStr = ""
         for j in pubStdData:
-            stdStr += j.userID + ", "
+            stdNameData = Student.objects.filter(userID=j.userID)
+            for k in stdNameData:
+                userStr += k.username + ", "
 
-        stdStr = stdStr[:-2]  # 마지막 쉼표 제거
+        userStr += request.session["userName"] + ", "
+
+        userStr = userStr[:-2]  # 마지막 쉼표 제거
         if i["count"] / subjectCount > 0.7:
             calID = "매우 높음"
         elif i["count"] / subjectCount > 0.5:
@@ -547,12 +537,13 @@ def pubCalSave(request):
             end=i["end"],
             count=i["count"],
             countPer=i["count"] / subjectCount,
-            attendees=stdStr,
+            attendees=userStr,
         )
 
     return HttpResponse("일정 저장 완료.")
 
 
+# 공유 캘린더 불러오기 버튼
 def pubCalLoad(request):
     lecCode = request.POST["code"]
 
@@ -562,4 +553,18 @@ def pubCalLoad(request):
 
     return HttpResponse(
         serializers.serialize("json", pubCalData), content_type="application/json"
+    )
+
+
+# 공유 캘린더 과목 코드별 전체 수강생 정보 반환
+def getAllStudent(request):
+    student_list = Student_lecture.objects.filter(code=request.POST["code"])
+    stores_list = Student.objects.filter(userID="Null")
+
+    for i in range(student_list.count()):
+        student_lifo = Student.objects.filter(userID=student_list[i].student_id)
+        stores_list = stores_list | student_lifo
+
+    return HttpResponse(
+        serializers.serialize("json", stores_list), content_type="application/json"
     )
