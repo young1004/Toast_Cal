@@ -341,20 +341,21 @@ var voteData = {
     lecture_type: '일반 교양',
     vote_status: '투표중'
 }
+
 ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) {
         $('#vote-info').empty();
 
         for (var count = 0; count < data.length; count++) {
             var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
                 '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
-                '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn">상세</button></td>');
+                '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn">상세</button> <button type="button" class="btn btn-outline-dark voteDelete">삭제</button></td>');
             $('#vote-info').append(tr);
         }
 
     })
     .catch(function(err) {
         console.log(err);
-    })
+    });
 
 voteTableBtn.addEventListener('click', function(event) {
     voteData.lecture_type = voteClass.value;
@@ -367,10 +368,9 @@ voteTableBtn.addEventListener('click', function(event) {
             for (var count = 0; count < data.length; count++) {
                 var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
                     '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
-                    '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn">상세</button></td>');
+                    '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn">상세</button> <button type="button" class="btn btn-outline-dark voteDelete">삭제</button></td>');
                 $('#vote-info').append(tr);
             }
-
         })
         .catch(function(err) {
             console.log(err);
@@ -379,6 +379,7 @@ voteTableBtn.addEventListener('click', function(event) {
 
 // chart 표시하기 위한 데이터
 var chart = null;
+var comment_div = null;
 
 $(document).on('click', '.voteBtn', function() {
 
@@ -460,6 +461,7 @@ $(document).on('click', '.voteBtn', function() {
 
 
                 chart = tui.chart.pieChart(doughnut, doughnutData, doughnutOption);
+
             }
 
         })
@@ -467,4 +469,23 @@ $(document).on('click', '.voteBtn', function() {
             console.log(err);
         });
 
+    if (comment_div !== null) {
+        $('#comment').destroy();
+        $('#revoteBtn').destroy();
+        $('#correctBtn').destroy();
+    } else {
+        comment_div = 1;
+        let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
+        $('#professor-vote-status').append(comment);
+
+        for (var count = 0; count < 10; count++) {
+            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:popup() target=">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
+            $('#comment_tbody').append(comment_tr);
+        }
+
+        var revote_btn = $('<button type="button" class="btn btn-outline-dark revoteBtn" id="revoteBtn">투표 재개설</button>');
+        var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn">투표 수정</button>');
+        $('#professor-vote-status').append(revote_btn);
+        $('#professor-vote-status').append(correct_btn);
+    }
 });

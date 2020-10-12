@@ -321,50 +321,6 @@ thead tr th {
     border-width: 0.5px;
 }
 
-/* 교수 투표 현황 관련*/
-#table-wrap {
-    overflow: auto;
-    border: 1px solid #CDCDCD;
-    height: 350px;
-}
-
-.vote-professor {
-    text-align: center;
-}
-
-#vote-status {
-    margin-bottom: 10px;
-}
-
-#vote-detail-donut {
-    padding-top: 3em;
-    display: inline-block;
-    width: 400px;
-    margin: 0;
-}
-
-#chart-area {
-    width: 400px;
-    font-size: 5px;
-    margin: 0;
-    color: white;
-}
-
-#voteTableBtn {
-    font-size: 12px;
-}
-
-tspan {
-    font-size: 15px;
-}
-
-svg {
-    border: 1px solid black;
-}
-
-
-
-/* 교수 강의 개설 페이지 css */
 #make-table {
     overflow: auto;
     border: 1px solid #CDCDCD;
@@ -406,6 +362,87 @@ svg {
     margin-top: 1em;
     position: relative;
     left: 50%;
+}
+
+/* 교수 투표 현황 관련*/
+#table-wrap {
+    overflow: auto;
+    border: 1px solid #CDCDCD;
+    height: 350px;
+}
+
+.vote-professor {
+    text-align: center;
+}
+
+#vote-status {
+    margin-bottom: 10px;
+}
+
+#vote-detail-donut {
+    padding-top: 3em;
+    display: inline-block;
+    width: 400px;
+    margin: 0;
+}
+
+#chart-area {
+    width: 400px;
+    font-size: 5px;
+    margin: 0;
+    color: white;
+}
+
+#voteTableBtn {
+    font-size: 12px;
+}
+
+tspan {
+    font-size: 15px;
+}
+
+svg {
+    border: 1px solid black;
+}
+
+/* 교수의 댓글 보기 부분 */
+#comment {
+    border: 1px solid black;
+    width: 450px;
+    height: 250px;
+    background: white;
+    float: right;
+    margin: 48px 0px 0px 47px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#comment_table {
+    text-align: center;
+    width: 100%;
+}
+
+#comment th {
+    color: #6c757d;
+}
+
+#comment td {
+    border-top: 1px solid #0000002b;
+    border-right: 1px solid #0000007d;
+    white-space: nowrap;
+    padding: 5px;
+}
+
+/* 투표 재개설, 수정 버튼 */
+.revoteBtn, .correctBtn {
+    margin: 10px;
+}
+
+/* 댓글을 ...으로 생략 표시 */
+.comment_td {
+    max-width: 250px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 
