@@ -61,6 +61,7 @@ urlpatterns = [
     path("makeCalendars/", crud.makeCalendars, name="makeCalendars"),
     path("signout/", views.signout, name="signout"),
     path("pubCalSave/", crud.pubCalSave, name="pubCalSave"),
+    path("check_user_subject/", crud.check_user_subject, name="check_user_subject"), 
     # 공용 캘린더 부분들
     path("pubCalSetData/", crud.pubCalSetData, name="pubCalSetData"),
     path("pro_lecture/", crud.pro_lecture, name="pro_lecture"),

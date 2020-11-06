@@ -399,26 +399,16 @@ def professor_lecture_delete(request):
 
 
 # 교수 투표 개설 테이블 데이터 전송 함수
-# def pro_vote_open_table(request):
-#     if request.method == "POST":
-#         userID = request.session["userID"]
-#         professor = Professor.objects.get(userID=userID)
-#         pro_subject = Subject.objects.filter(
-#             professor=professor.username, department=professor.department
-#         )
-
-#         return HttpResponse(
-#             serializers.serialize("json", pro_subject), content_type="application/json"
-#         )
-
-# 교수 투표 개설 테이블 데이터 전송 함수
 def pro_vote_open_table(request):
     if request.method == "POST":
-        avail_time = Ava_Time.objects.filter(classCode=request.POST["classCode"]).order_by('-status')
+        avail_time = Ava_Time.objects.filter(
+            classCode=request.POST["classCode"]
+        ).order_by("-status")
 
         return HttpResponse(
             serializers.serialize("json", avail_time), content_type="application/json"
         )
+
 
 def subject_info(request):
     if request.method == "POST":
@@ -717,7 +707,7 @@ def voteTimeLoad(request):
                             day_time_start.strftime("%Y-%m-%d %H:%M:%S")
                         )
                         ava_time_list.append(day_time_end.strftime("%Y-%m-%d %H:%M:%S"))
-                        status_list.append(1 - pub[check_index].countPer)
+                        status_list.append(round(1.0 - pub[check_index].countPer, 2))
                 elif not pub:  # 아무도 일정이 없는 시간대
                     ava_time_list.append(day_time_start.strftime("%Y-%m-%d %H:%M:%S"))
                     ava_time_list.append(day_time_end.strftime("%Y-%m-%d %H:%M:%S"))
@@ -741,18 +731,21 @@ def voteTimeLoad(request):
 # ava_Time 테이블에 저장하고, 저장한 값을 보내줌
 def voteTimeSave(request):
     print(request.POST)
+    ava_time = Ava_Time.objects.all()
 
-    for i in range(int(len(request.POST) / 3)):
-        new_instance = Ava_Time.objects.create(
-            classCode=request.POST["newDate[" + str(i) + "][code]"],
-            status=request.POST["newDate[" + str(i) + "][status]"],
-            avaTime=request.POST["newDate[" + str(i) + "][date]"],
-        )
+    if request.method == "POST":
+        if ava_time.exists():
+            ava_time.delete()
+        for i in range(int(len(request.POST) / 3)):
+            new_instance = Ava_Time.objects.create(
+                classCode=request.POST["newDate[" + str(i) + "][code]"],
+                status=request.POST["newDate[" + str(i) + "][status]"],
+                avaTime=request.POST["newDate[" + str(i) + "][date]"],
+            )
 
-        new_instance.save()
+            new_instance.save()
 
-    return HttpResponse("저장 성공")
-
+        return HttpResponse("저장 성공")
 
 # 해당 과목코드에 맞는 투표정보 반환
 def getVoteInfo(request):
@@ -810,10 +803,10 @@ def create_Vote(request):
 
         test = Vote.objects.all()
 
-
     return HttpResponse(
         serializers.serialize("json", test), content_type="application/json"
     )
+
 
 def delete_Vote(request):
     if request.method == "POST":
@@ -828,6 +821,7 @@ def delete_Vote(request):
         serializers.serialize("json", test), content_type="application/json"
     )
 
+
 def check_Vote(request):
     if request.method == "POST":
         test = Vote.objects.all()
@@ -835,3 +829,17 @@ def check_Vote(request):
     return HttpResponse(
         serializers.serialize("json", test), content_type="application/json"
     )
+
+
+# 강의가 있는지 확인
+def check_user_subject(request):
+    if request.session['userType'] == "student":   # 학생 강의 확인
+        if Student_lecture.objects.filter():
+            return HttpResponse("강의 있음")
+        else:
+            return HttpResponse("강의 없음")
+    else:                                       # 교수 강의 확인
+        if Subject.objects.filter():
+            return HttpResponse("강의 있음")
+        else:
+            return HttpResponse("강의 없음")
