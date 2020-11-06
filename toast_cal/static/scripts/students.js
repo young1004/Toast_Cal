@@ -235,7 +235,7 @@ voteTableBtn.addEventListener('click', async function(event) {
     // console.log(voteData.lecture_type);
 
     await ajaxPost('/toast_cal/stdVoteJoinTable/', 'json', 'POST', voteData)
-                .then(function(data) {
+        .then(function(data) {
             $('#vote-info').empty();
 
             for (let cnt = 0; cnt < data.length; cnt++) {
@@ -369,12 +369,12 @@ $(document).on('click', '#takeVote', function() {
             }
         }
 
-        for(let i = tr.length; i < 4; i++){
+        for (let i = tr.length; i < 4; i++) {
             let obj = {};
-                obj.id = voteJoinId;
-                // obj.code = voteJoinCode;
-                obj.time = "False";
-                array[i] = obj;
+            obj.id = voteJoinId;
+            // obj.code = voteJoinCode;
+            obj.time = "False";
+            array[i] = obj;
         }
 
         array.push({
