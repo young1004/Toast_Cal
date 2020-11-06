@@ -64,6 +64,30 @@ pubCalLoadBtn.addEventListener('click', async function() {
     var loadStart = document.getElementById('pubStart').value
     var loadEnd = document.getElementById('pubEnd').value
 
+    let dateString = loadStart;
+    let thisWeekFirst = getThisWeek()[0]
+
+    let dateArray = dateString.split("-");
+    let thisWeekFirstArray = thisWeekFirst.split("-");
+
+    let dateObj = new Date(dateArray[0], Number(dateArray[1]) - 1, dateArray[2]);
+    let thisWeekFirstObj = new Date(thisWeekFirstArray[0], Number(thisWeekFirstArray[1]) - 1, thisWeekFirstArray[2]);
+
+    let betweenDay = (dateObj.getTime() - thisWeekFirstObj.getTime()) / 1000 / 60 / 60 / 24;
+
+    console.log(betweenDay);
+
+    if ((betweenDay / 7) < 1) {} else if ((betweenDay / 7) < 2) {
+        pubCalendar.next();
+    } else if ((betweenDay / 7) < 3) {
+        pubCalendar.next();
+        pubCalendar.next();
+    } else if ((betweenDay / 7) < 4) {
+        pubCalendar.next();
+        pubCalendar.next();
+        pubCalendar.next();
+    }
+
     let pubLoadData = {
         code: loadCode,
         start: loadStart,
@@ -106,9 +130,12 @@ pub_todayBtn.addEventListener('click', function(event) {
     getYearMonth(pub_year, pub_month, pubCalendar);
 });
 
-
 // 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
-$(document).on('click', '#voteTimeLoad', async function() {
+$(document).on('click', '#portal_to_making_vote', async function () {
+    changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
+    changeContents('tab_box');
+    changeContents('professor-vote-open', 'professor-vote-status');
+
     var voteCode = document.getElementById('pubcal_select').value;
     var voteStart = document.getElementById('pubStart').value;
     var voteEnd = document.getElementById('pubEnd').value;
@@ -128,44 +155,102 @@ $(document).on('click', '#voteTimeLoad', async function() {
     let flag = true;
 
     await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
-        .then(function(data) {
+        .then(function (data) {
             if (data !== "공용 일정이 없습니다") {
-                // console.log(data);
-                // console.log(data['date'].length)
-                // console.log(data['date'][0])
-
-                // let newDate = getVoteDate(data['date']);
                 let newDate = getVoteDate(data);
-
-                // console.log(newDate)
-
-                console.log('new date 객체', newDate);
 
                 date_status_json = {
                     newDate
                 }
 
-                voteProBtn.click(); // 투표 관리 버튼으로 넘어가기 위해서
             } else { // 공용캘린더 DB에 데이터가 없을 때
                 flag = false;
                 alert(data);
             }
         })
-        .catch(function(err) {
+        .catch(function (err) {
             alert(err);
         });
 
+    await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
+        .then(function (data) {
+            $('#class_select').empty(); //기존 옵션 값 삭제
 
-    console.log('date 객체 구조', date_status_json);
+            for (var count = 0; count < data.length; count++) {
+                var option = $('<option>' + data[count].fields.code + '</option>');
+                $('#class_select').append(option);
+            }
+            $("#class_select").val(voteCode);
+        })
+        .catch(function (err) {
+            alert(err);
+        });
+
     // console.log("종합 데이터", date_status_json);
     if (flag === true) {
-        await ajaxPost('/toast_cal/voteTimeSave/', 'json', 'POST', date_status_json)
-            .then(function(data) {
-                console.log(data);
-            })
-            .catch(function(err) {
-                alert(err);
-            });
+        printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
     }
-
 });
+
+// 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
+// $(document).on('click', '#voteTimeLoad', async function() {
+//     var voteCode = document.getElementById('pubcal_select').value;
+//     var voteStart = document.getElementById('pubStart').value;
+//     var voteEnd = document.getElementById('pubEnd').value;
+
+//     let voteTimeLoad = {
+//         code: voteCode,
+//         start: voteStart,
+//         end: voteEnd,
+//     }
+
+//     let date_status_json = {
+//         code: "",
+//         date: "",
+//         status: "",
+//     }
+
+//     let flag = true;
+
+//     await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
+//         .then(function(data) {
+//             if (data !== "공용 일정이 없습니다") {
+//                 // console.log(data);
+//                 // console.log(data['date'].length)
+//                 // console.log(data['date'][0])
+
+//                 // let newDate = getVoteDate(data['date']);
+//                 let newDate = getVoteDate(data);
+
+//                 // console.log(newDate)
+
+//                 console.log('new date 객체', newDate);
+
+//                 date_status_json = {
+//                     newDate
+//                 }
+
+//                 voteProBtn.click(); // 투표 관리 버튼으로 넘어가기 위해서
+//             } else { // 공용캘린더 DB에 데이터가 없을 때
+//                 flag = false;
+//                 alert(data);
+//             }
+//         })
+//         .catch(function(err) {
+//             alert(err);
+//         });
+
+
+//     console.log('date 객체 구조', date_status_json);
+//     // console.log("종합 데이터", date_status_json);
+//     if (flag === true) {
+//         await ajaxPost('/toast_cal/voteTimeSave/', 'json', 'POST', date_status_json)
+//             .then(function(data) {
+//                 console.log(data);
+//             })
+//             .catch(function(err) {
+//                 alert(err);
+//             });
+//     }
+
+// });

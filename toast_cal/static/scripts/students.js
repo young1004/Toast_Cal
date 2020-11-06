@@ -52,11 +52,27 @@ subjectLoad.addEventListener('click', function(event) {
         });
 });
 
+
 // 투표 메뉴 
 voteMenuBtn.addEventListener('click', async function(event) {
+    var check_subject;
 
-    changeContents('votemenu', 'lecture', 'calendar-common', 'studentLectureLoad', 'sidebar');
-    $('#vote-join-tab-btn').trigger('click');
+    await ajaxPost('/toast_cal/check_user_subject/', 'json', 'POST', 1)
+        .then(function(data) {
+            check_subject = data;
+            console.log(data)
+        })
+        .catch(function(err) {
+            alert(err);
+        });
+
+    if (check_subject === "강의 있음") {
+        changeContents('votemenu', 'lecture', 'calendar-common', 'studentLectureLoad', 'sidebar');
+        $('#vote-join-tab-btn').trigger('click');
+    } else {
+        alert("교수님의 강의가 없습니다. 강의를 개설해주세요.")
+    }
+
 })
 
 //강의 수강 저장 버튼

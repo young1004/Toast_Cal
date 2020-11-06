@@ -780,7 +780,11 @@ def voteTimeSave(request):
 
             new_instance.save()
 
-        return HttpResponse("저장 성공")
+        order_table = ava_time.order_by("-status")
+
+        return HttpResponse(
+            serializers.serialize("json", order_table), content_type="application/json"
+        )
 
 
 # 해당 과목코드에 맞는 투표정보 반환
@@ -877,17 +881,16 @@ def check_Vote(request):
 
 # 강의가 있는지 확인
 def check_user_subject(request):
-    if request.session["userType"] == "student":  # 학생 강의 확인
-        if Student_lecture.objects.filter():
+    if request.session['userType'] == "student":   # 학생 강의 확인
+        if Student_lecture.objects.filter(student_id=request.session["userID"]):
             return HttpResponse("강의 있음")
         else:
             return HttpResponse("강의 없음")
-    else:  # 교수 강의 확인
-        if Subject.objects.filter():
+    else:                                           # 교수 강의 확인
+        if Subject.objects.filter(professor=request.session['userName']):
             return HttpResponse("강의 있음")
         else:
             return HttpResponse("강의 없음")
-
 
 def pro_vote_update_table(request):
     if request.method == "POST":
