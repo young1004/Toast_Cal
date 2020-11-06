@@ -179,35 +179,34 @@ class PubCalendar(models.Model):  # pk값이 별도로 지정됨
         db_table = "PubCalendar"
 
 
-#공유캘린더에서 임시로 여유일정 저장해둘 테이블
+# 공유캘린더에서 임시로 여유일정 저장해둘 테이블
 class Ava_Time(models.Model):
-    classCode = models.CharField(max_length=30) #강의 코드
-    status = models.FloatField() #일정의 사용빈도
-    avaTime = models.CharField(max_length=30) #시간
+    classCode = models.CharField(max_length=30)  # 강의 코드
+    status = models.FloatField()  # 일정의 사용빈도
+    avaTime = models.CharField(max_length=30)  # 시간
 
     class Meta:
         db_table = "Ava_Time"
 
 
-#투표 테이블
+# 투표 테이블
 class Test_Vote(models.Model):
-    voteCode = models.CharField(max_length=30, primary_key=True) #투표 코드
-    classCode = models.CharField(max_length=30) #강의 코드
-    lecType = models.CharField(max_length=30) #이수구분
-    proName = models.CharField(max_length=30) #교수명
-    className = models.CharField(max_length=30) #강의명
-    voteStatus = models.CharField(max_length=30) #투표상태
-    start = models.DateTimeField() #시작 시간
-    end = models.DateTimeField() #끝 시간
-    choice1 = models.IntegerField(default=0) #선택지1
-    choice2 = models.IntegerField(default=0) #선택지2
-    choice3 = models.IntegerField(default=0) #선택지3
-    choice4 = models.IntegerField(default=0) #선택지4
-    choice1_Title = models.CharField(max_length=30, default=None) #선택지1 내용
-    choice2_Title = models.CharField(max_length=30, default=None) #선택지2 내용
-    choice3_Title = models.CharField(max_length=30, default=None) #선택지3 내용
-    choice4_Title = models.CharField(max_length=30, default=None) #선택지4 내용
-    totalCount = models.IntegerField() #전체 인원수
+    classCode = models.CharField(max_length=30)  # 강의 코드
+    lecType = models.CharField(max_length=30)  # 이수구분
+    proName = models.CharField(max_length=30)  # 교수명
+    className = models.CharField(max_length=30)  # 강의명
+    voteStatus = models.CharField(max_length=30)  # 투표상태
+    start = models.DateTimeField()  # 시작 시간
+    end = models.DateTimeField()  # 끝 시간
+    choice1 = models.IntegerField(default=0)  # 선택지1
+    choice2 = models.IntegerField(default=0)  # 선택지2
+    choice3 = models.IntegerField(default=0)  # 선택지3
+    choice4 = models.IntegerField(default=0)  # 선택지4
+    choice1_Title = models.CharField(max_length=30, default=None)  # 선택지1 내용
+    choice2_Title = models.CharField(max_length=30, default=None)  # 선택지2 내용
+    choice3_Title = models.CharField(max_length=30, default=None)  # 선택지3 내용
+    choice4_Title = models.CharField(max_length=30, default=None)  # 선택지4 내용
+    totalCount = models.IntegerField()  # 전체 인원수
 
     class Meta:
         db_table = "Test_Vote"
