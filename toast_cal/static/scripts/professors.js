@@ -274,12 +274,21 @@ shareProBtn.addEventListener('click', async function(event) {
             // 시간출력
             // 시작 출력
             var startHour = vote_date_start.substr(11, 2);
-            var startMin = vote_date_start.substr(13, 2);
+            var startMin = vote_date_start.substr(14, 2);
             // 끝 출력
             var endHour = vote_date_end.substr(11, 2);
-            var endMin = vote_date_end.substr(13, 2);
+            var endMin = vote_date_end.substr(14, 2);
 
+            // 투표제목 출력을 위함.
+            var choice_title1 = data[count].fields.choice1_Title;
+            var choice_title2 = data[count].fields.choice2_Title;
+            var choice_title3 = data[count].fields.choice3_Title;
+            var choice_title4 = data[count].fields.choice4_Title;
 
+            var choice1 = choice_title1.substr(10);
+            var choice2 = choice_title2.substr(10);
+            var choice3 = choice_title3.substr(10);
+            var choice4 = choice_title4.substr(10);
             // 투표수 카운팅
             // 2가지 선택을 받았을때
             if (data[count].fields.choice3 == null && data[count].fields.choice4 == null) {
@@ -321,9 +330,9 @@ shareProBtn.addEventListener('click', async function(event) {
                     '</div>' +
                     '<div class = "vote_choice_data">' +
                     '<div id = "basic_vote_list">' +
-                    '<span class = "vote_choice">' + data[count].fields.choice1_Title + ': </span>' +
+                    '<span class = "vote_choice">' + choice1 + ': </span>' +
                     '<span class = "vote_choice_count">' + data[count].fields.choice1 + '표 / ' +
-                    '<span class = "vote_choice">' + data[count].fields.choice2_Title + ': </span>' +
+                    '<span class = "vote_choice">' + choice2 + ': </span>' +
                     '<span class = "vote_choice_count">' + data[count].fields.choice2 + '표 ' + '<br>' +
                     '</div>' +
                     '<span class = "total_count_vote">전체 ' + data[count].fields.totalCount + '명 중 ' +
@@ -336,16 +345,23 @@ shareProBtn.addEventListener('click', async function(event) {
                 );
             $('#pubcal_vote_info').append(vote_data);
 
-            // 투표선택지가 4개일경우 
-            if (data[count].fields.choice3 !== null && data[count].fields.choice4 !== null) {
-                var vote_total =
+            // 투표선택지가 다중일경우
+            if (data[count].fields.choice4_Title === "False") {
+                var choice3_info =
                     $(
-                        '<span class = "vote_choice">' + data[count].fields.choice3_Title + ': </span>' +
-                        '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표 / ' + '</span>' +
-                        '<span class = "vote_choice">' + data[count].fields.choice4_Title + ': </span>' +
-                        '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표 ' + '</span>'
+                        '<span class = "vote_choice">' + choice3 + ': </span>' +
+                        '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  ' + '</span>'
                     );
-                $('#basic_vote_list').append(vote_total);
+                $('#basic_vote_list').append(choice3_info);
+            }
+            if (data[count].fields.choice4_Title !== "False" && data[count].fields.choice3_Title !== "False") {
+                var choice4_info =
+                    $('<span class = "vote_choice">' + choice3 + ': </span>' +
+                        '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  / ' + '</span>' +
+                        '<span class = "vote_choice">' + choice4 + ': </span>' +
+                        '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표  ' + '</span>'
+                    );
+                $('#basic_vote_list').append(choice4_info);
             }
         }
     })
@@ -421,6 +437,17 @@ $(function() {
                     var endHour = vote_date_end.substr(11, 2);
                     var endMin = vote_date_end.substr(14, 2);
 
+                    // 투표제목 출력을 위함.
+                    var choice_title1 = data[count].fields.choice1_Title;
+                    var choice_title2 = data[count].fields.choice2_Title;
+                    var choice_title3 = data[count].fields.choice3_Title;
+                    var choice_title4 = data[count].fields.choice4_Title;
+
+                    var choice1 = choice_title1.substr(10);
+                    var choice2 = choice_title2.substr(10);
+                    var choice3 = choice_title3.substr(10);
+                    var choice4 = choice_title4.substr(10);
+
                     // 투표수 카운팅
                     // 2가지 선택을 받았을때
                     if (data[count].fields.choice3 == null && data[count].fields.choice4 == null) {
@@ -462,9 +489,9 @@ $(function() {
                             '</div>' +
                             '<div class = "vote_choice_data">' +
                             '<div id = "basic_vote_list">' +
-                            '<span class = "vote_choice">' + data[count].fields.choice1_Title + ': </span>' +
+                            '<span class = "vote_choice">' + choice1 + ': </span>' +
                             '<span class = "vote_choice_count">' + data[count].fields.choice1 + '표 / ' +
-                            '<span class = "vote_choice">' + data[count].fields.choice2_Title + ': </span>' +
+                            '<span class = "vote_choice">' + choice2 + ': </span>' +
                             '<span class = "vote_choice_count">' + data[count].fields.choice2 + '표 ' + '<br>' +
                             '</div>' +
                             '<span class = "total_count_vote">전체 ' + data[count].fields.totalCount + '명 중 ' +
@@ -477,16 +504,23 @@ $(function() {
                         );
                     $('#pubcal_vote_info').append(vote_data);
 
-                    // 투표선택지가 4개일경우 
-                    if (data[count].fields.choice3_Title !== null && data[count].fields.choice4_Title !== null) {
-                        var vote_total =
+                    // 투표선택지가 다중일경우
+                    if (data[count].fields.choice4_Title === "False") {
+                        var choice3_info =
                             $(
-                                '<span class = "vote_choice">' + data[count].fields.choice3_Title + ': </span>' +
-                                '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표 / ' + '</span>' +
-                                '<span class = "vote_choice">' + data[count].fields.choice4_Title + ': </span>' +
-                                '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표 ' + '</span>'
+                                '<span class = "vote_choice">' + choice3 + ': </span>' +
+                                '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  ' + '</span>'
                             );
-                        $('#basic_vote_list').append(vote_total);
+                        $('#basic_vote_list').append(choice3_info);
+                    }
+                    if (data[count].fields.choice4_Title !== "False" && data[count].fields.choice3_Title !== "False") {
+                        var choice4_info =
+                            $('<span class = "vote_choice">' + choice3 + ': </span>' +
+                                '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  / ' + '</span>' +
+                                '<span class = "vote_choice">' + choice4 + ': </span>' +
+                                '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표  ' + '</span>'
+                            );
+                        $('#basic_vote_list').append(choice4_info);
                     }
                 }
             })
@@ -523,12 +557,177 @@ $(document).on("click", "#portal_to_correct_vote", function() {
     changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
     changeContents('tab_box');
     changeContents('professor-vote-status', 'professor-vote-open', 'professor-vote-update');
+
+    var option_select = $("#pubcal_select option:selected").val();
+
+    var option_select_value = {
+        code: option_select,
+    }
+
+    if (chart !== null)
+        $('#chart-area').empty();
+
+    ajaxPost('/toast_cal/voteChart/', 'json', 'POST', option_select_value).then(function(data) {
+            if (data.length > 0) {
+                //toast UI Chart 세팅
+                var doughnut = document.getElementById('chart-area');
+
+                var doughnutData = {
+                    categories: ['투표 현황'],
+                    series: [{
+                            name: data[0].fields.choice1_Title,
+                            data: data[0].fields.choice1
+                        },
+                        {
+                            name: data[0].fields.choice2_Title,
+                            data: data[0].fields.choice2
+                        },
+                        {
+                            name: data[0].fields.choice3_Title,
+                            data: data[0].fields.choice3
+                        },
+                        {
+                            name: data[0].fields.choice4_Title,
+                            data: data[0].fields.choice4
+                        },
+                        {
+                            name: '투표안함',
+                            data: data[0].fields.totalCount - data[0].fields.choice1 - data[0].fields.choice2 -
+                                data[0].fields.choice3 - data[0].fields.choice4
+                        }
+                    ]
+                };
+
+                var theme = {
+                    series: {
+                        colors: [
+                            '#FF0000', '#FFE400', '#1DDB16', '#0100FF', '#BDBDBD'
+                        ],
+                        label: {
+                            color: '#000000',
+                            fontFamily: 'sans-serif'
+                        }
+                    }
+                };
+
+                tui.chart.registerTheme('myTheme', theme);
+
+
+                var doughnutOption = {
+                    chart: {
+                        width: 400,
+                        height: 250,
+                        title: data[0].fields.className + '(' + data[0].fields.classCode + ') 시험 투표',
+                        format: function(value, chartType, areaType, valuetype, legendName) {
+                            if (areaType === 'makingSeriesLabel') {
+                                value = value;
+                            }
+
+                            return value;
+                        }
+                    },
+                    series: {
+                        radiusRange: ['60%', '100%'],
+                        showLabel: true,
+                        showLegend: true,
+                        allowSelect: true,
+                        startAngle: true,
+                        endAngle: false,
+                        labelAlign: 'center'
+                    },
+                    legend: {
+                        align: 'right'
+                    },
+                    theme: 'myTheme'
+                };
+
+
+                chart = tui.chart.pieChart(doughnut, doughnutData, doughnutOption);
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+
+    if (comment_div !== null) {
+        comment_div = null;
+        $('#comment').remove();
+        $('#revoteBtn').remove();
+        $('#correntBtn').remove();
+
+        comment_div = 1;
+        let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
+        $('#professor-vote-status').append(comment);
+
+        for (var count = 0; count < 10; count++) {
+            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:popup() target=">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
+            $('#comment_tbody').append(comment_tr);
+        }
+
+        var revote_btn = $('<button type="button" class="btn btn-outline-dark revoteBtn" id="revoteBtn">투표 재개설</button>');
+        var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correntBtn">투표 수정</button>');
+        $('#professor-vote-status').append(revote_btn);
+        $('#professor-vote-status').append(correct_btn);
+    } else {
+        comment_div = 1;
+        let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
+        $('#professor-vote-status').append(comment);
+
+        for (var count = 0; count < 10; count++) {
+            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:popup() target=">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
+            $('#comment_tbody').append(comment_tr);
+        }
+
+        var revote_btn = $('<button type="button" class="btn btn-outline-dark revoteBtn" id="revoteBtn">투표 재개설</button>');
+        var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correntBtn">투표 수정</button>');
+        $('#professor-vote-status').append(revote_btn);
+        $('#professor-vote-status').append(correct_btn);
+    }
+
 });
 
 // 투표정보에 대한 투표삭제 버튼
 $(document).on("click", "#delete_vote", function() {
     if (confirm("해당 투표를 삭제 하시겠습니까?") == true) {
-        // 여기에 삭제로직을 추가할것임.
+
+        // 추가된 코드
+        // 강의코드 받아오기.
+        var select_val = $("#pubcal_select option:selected").val();
+
+        var val_data = {
+            code: select_val,
+        }
+
+        // vote테이블에서 삭제후 vote테이블 검색
+        ajaxPost('/toast_cal/delete_vote_from_info/', 'json', 'POST', val_data).then(function(data) {
+            $('#pubcal_vote_info').empty();
+
+            // 개설된 강의가 존재하면 투표정보에 대한 타이틀을 띄워줌
+            var pubcal_vote_info_title =
+                $('<ul class = "vote_info_title_area">' +
+                    '<li class = "vote_info_title">' +
+                    '<span>' +
+                    select_val + '에 대한 투표정보' +
+                    '</span>' +
+                    '</li>' +
+                    '</ul>');
+            $('#pubcal_vote_info').append(pubcal_vote_info_title);
+
+            // 투표 테이블에 강의코드와 맞는 투표항목이 없을경우 투표개설하도록 띄워줌
+            if (data.length == 0) {
+                var vote_data_null =
+                    $('<div class = "vote_info_tab_null">' +
+                        '<div class = "vote_info_area">' +
+                        '<span class = "vote_infomation">' +
+                        '해당 과목에 대한 투표내역이 없습니다.' +
+                        '</span>' + '</br>' +
+                        '<input type = "button" id = "portal_to_making_vote" value = "투표개설하기">' +
+                        '</div>' +
+                        '</div>'
+                    );
+                $('#pubcal_vote_info').append(vote_data_null);
+            }
+        })
         alert("해당 투표가 삭제되었습니다.");
     } else {
         return;
@@ -1341,4 +1540,48 @@ $('#vote-update-btn').click(function() {
     } else if (array.length <= 1) {
         alert('2개 이상 선택해야 합니다.');
     }
+});
+
+// 투표상태 갱신을 위함.
+window.addEventListener('load', function() {
+    let today_data_vote = new Date();
+
+    let get_year_vote = today_data_vote.getFullYear();
+    let get_month_vote = today_data_vote.getMonth() + 1;
+    let get_day_vote = today_data_vote.getDate();
+    let get_hour_vote = today_data_vote.getHours();
+    let get_min_vote = today_data_vote.getMinutes();
+    let get_sec_vote = today_data_vote.getSeconds();
+    let get_mil_vote = today_data_vote.getMilliseconds();
+
+    if (get_month_vote < 10) get_month_vote = '0' + get_month_vote;
+    if (get_day_vote < 10) get_day_vote = '0' + get_day_vote;
+
+    let today_data_vote_status =
+        get_year_vote + '-' + get_month_vote + '-' + get_day_vote + ' ' +
+        get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+
+    // 교수이름가져오기
+    let prop_name = document.getElementsByClassName("username_set")[0].innerHTML;
+    // console.log(prop_name);
+
+    let prop_name_substr = prop_name.substr(99, 3);
+    // console.log(prop_name_substr);
+
+    test_data = {
+        today: today_data_vote_status,
+        proName: prop_name_substr,
+    }
+
+
+    // console.log(today_data_vote_status);
+
+    // 투표테이블 정보를 가져옴
+    ajaxPost('/toast_cal/renewal_vote_status/', 'json', 'POST', test_data)
+        .then(function(data) {
+            // console.log(data);
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
 });
