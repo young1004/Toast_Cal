@@ -30,6 +30,15 @@ urlpatterns = [
         crud.student_lecture_delete,
         name="student_lecture_delete",
     ),  # 학생 강의 삭제
+    path(
+        "stdVoteJoinTable/", crud.stdVoteJoinTable, name="stdVoteJoinTable"
+    ),  # 학생 투표 참여 데이터 불러오기
+    path(
+        "stdVoteSelectData/", crud.stdVoteSelectData, name="stdVoteSelectData"
+    ),  # 학생 투표 참여 페이지 상세내용 불러오기
+    path(
+        "takeVoteSave/", crud.takeVoteSave, name="takeVoteSave"
+    ),  # 학생 투표 시간 선택 시 데이터베이스에 저장
     # vote 테이블의 아무값이나 받은 테스트 데이터
     path("voteSelectTest/", crud.voteSelectTest, name="voteSelectTest/"),
     path("getAllStudent/", crud.getAllStudent, name="getAllStudent/"),
@@ -61,12 +70,12 @@ urlpatterns = [
     path("makeCalendars/", crud.makeCalendars, name="makeCalendars"),
     path("signout/", views.signout, name="signout"),
     path("pubCalSave/", crud.pubCalSave, name="pubCalSave"),
-    path("check_user_subject/", crud.check_user_subject, name="check_user_subject"), 
+    path("check_user_subject/", crud.check_user_subject, name="check_user_subject"),
     # 공용 캘린더 부분들
     path("pubCalSetData/", crud.pubCalSetData, name="pubCalSetData"),
     path("pro_lecture/", crud.pro_lecture, name="pro_lecture"),
     path("pubCalSave/", crud.pubCalSave, name="pubCalSave"),
     path("pubCalLoad/", crud.pubCalLoad, name="pubCalLoad"),
     path("voteTimeLoad/", crud.voteTimeLoad, name="voteTimeLoad"),  # 투표 가능 시간대 불러오기
-    path("voteTimeSave/", crud.voteTimeSave, name="voteTimeSave"), # 투표 가능 시간대 저장
+    path("voteTimeSave/", crud.voteTimeSave, name="voteTimeSave"),  # 투표 가능 시간대 저장
 ]

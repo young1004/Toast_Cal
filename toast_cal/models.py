@@ -146,6 +146,16 @@ class Vote(models.Model):
         db_table = "Vote"
 
 
+# 투표 테이블 하위 테이블
+class VoteInfo(models.Model):
+    voteId = models.IntegerField()  # 투표 테이블의 Id 참조할 레이블
+    studentID = models.CharField(max_length=30)  # 참여자 id
+    comment = models.TextField(blank=True, null=True)  # 참여자의 댓글
+
+    class Meta:
+        db_table = "VoteInfo"
+
+
 # 공용 캘린더 분류에 대한 데이터가 저장될 데이터베이스 모델
 class PubCalID(models.Model):
     id = models.CharField(max_length=30, primary_key=True)

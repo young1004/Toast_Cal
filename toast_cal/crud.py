@@ -235,6 +235,74 @@ def student_lecture_delete(request):
         )
 
 
+# 학생 강의 투표 테이블 데이터 불러오기
+def stdVoteJoinTable(request):
+
+    finalData = Vote.objects.filter(classCode="NULL")  # 초기화
+
+    if request.POST["lecture_type"] == "전체":
+        lec_list = Student_lecture.objects.filter(student_id=request.session["userID"],)
+        for data in lec_list:
+            finalData = finalData | Vote.objects.filter(
+                classCode=data.code, voteStatus="투표 중"
+            )
+    else:
+        lec_list = Student_lecture.objects.filter(
+            student_id=request.session["userID"],
+            lecture_type=request.POST["lecture_type"],
+        )
+        for data in lec_list:
+            finalData = finalData | Vote.objects.filter(
+                classCode=data.code, voteStatus="투표 중"
+            )
+
+    return HttpResponse(
+        serializers.serialize("json", finalData), content_type="application/json"
+    )
+
+
+# 투표 하위 테이블에 투표정보 저장 (+ 투표 테이블 업데이트)
+def takeVoteSave(request):
+    # request.POST
+    voteData = Vote.objects.filter(id=request.POST["array[0][id]"])
+    # print(checkData)
+
+    checkData = VoteInfo.objects.filter(
+        voteId=request.POST["array[0][id]"], studentID=request.session["userID"]
+    )
+
+    if checkData:
+        if checkData[0].studentID == request.session["userID"]:
+            return HttpResponse("이미 투표하셨습니다!")
+
+    if voteData[0].choice1_Title == request.POST["array[0][time]"]:
+        voteData.update(choice1=voteData[0].choice1 + 1)
+    if voteData[0].choice2_Title == request.POST["array[1][time]"]:
+        voteData.update(choice2=voteData[0].choice2 + 1)
+    if voteData[0].choice3_Title == request.POST["array[2][time]"]:
+        voteData.update(choice3=voteData[0].choice3 + 1)
+    if voteData[0].choice4_Title == request.POST["array[3][time]"]:
+        voteData.update(choice4=voteData[0].choice4 + 1)
+
+    voteInfoData = VoteInfo.objects.create(
+        voteId=request.POST["array[0][id]"],
+        studentID=request.session["userID"],
+        comment=request.POST["array[4][comment]"],
+    )
+
+    return HttpResponse("투표 완료!")
+
+
+# 학생 강의 투표 테이블에서 투표하기 선택시 아래에 보여지는 데이터 불러오기
+def stdVoteSelectData(request):
+    # print(request.POST)
+    voteSelectData = Vote.objects.filter(classCode=request.POST["code"])
+
+    return HttpResponse(
+        serializers.serialize("json", voteSelectData), content_type="application/json"
+    )
+
+
 # vote 테이블의 아무값이나 받은 테스트 데이터
 def voteSelectTest(request):
     stores_list = Vote.objects.filter(reject_votes=request.POST["reject_votes"],)
@@ -257,31 +325,6 @@ def getLectureInfo(request):
         serializers.serialize("json", subject_data), content_type="application/json"
     )
 
-
-# 교수 기능
-# ajax로 필터링하여 table 생성할 값 반환
-# def voteTable(request):
-#     if request.POST["lecture_type"] == "전체" and request.POST["vote_status"] != "전체":
-#         stores_list = Vote.objects.filter(
-#             # lecture_type=request.POST["lecture_type"],
-#             vote_status=request.POST["vote_status"],
-#         )
-#     elif request.POST["lecture_type"] != "전체" and request.POST["vote_status"] == "전체":
-#         stores_list = Vote.objects.filter(
-#             lecture_type=request.POST["lecture_type"],
-#             # vote_status=request.POST["vote_status"],
-#         )
-#     elif request.POST["lecture_type"] == "전체" and request.POST["vote_status"] == "전체":
-#         stores_list = Vote.objects.all()
-#     else:
-#         stores_list = Vote.objects.filter(
-#             lecture_type=request.POST["lecture_type"],
-#             vote_status=request.POST["vote_status"],
-#         )
-
-#     return HttpResponse(
-#         serializers.serialize("json", stores_list), content_type="application/json"
-#     )
 
 # 교수 기능
 # ajax로 필터링하여 table 생성할 값 반환
@@ -313,14 +356,6 @@ def voteTable(request):
         serializers.serialize("json", stores_list), content_type="application/json"
     )
 
-
-# ajax로 필터링하여 chart를 만들기 위한 값 반환
-# def voteChart(request):
-#     stores_list = Vote.objects.filter(code=request.POST["code"])
-
-#     return HttpResponse(
-#         serializers.serialize("json", stores_list), content_type="application/json"
-#     )
 
 # ajax로 필터링하여 chart를 만들기 위한 값 반환
 def voteChart(request):
@@ -747,6 +782,7 @@ def voteTimeSave(request):
 
         return HttpResponse("저장 성공")
 
+
 # 해당 과목코드에 맞는 투표정보 반환
 def getVoteInfo(request):
     voteInfo = Vote.objects.filter(classCode=request.POST["code"])
@@ -833,12 +869,12 @@ def check_Vote(request):
 
 # 강의가 있는지 확인
 def check_user_subject(request):
-    if request.session['userType'] == "student":   # 학생 강의 확인
+    if request.session["userType"] == "student":  # 학생 강의 확인
         if Student_lecture.objects.filter():
             return HttpResponse("강의 있음")
         else:
             return HttpResponse("강의 없음")
-    else:                                       # 교수 강의 확인
+    else:  # 교수 강의 확인
         if Subject.objects.filter():
             return HttpResponse("강의 있음")
         else:

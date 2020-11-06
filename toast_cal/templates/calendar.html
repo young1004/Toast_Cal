@@ -195,12 +195,6 @@
                         <option value="전공 선택">전공 선택</option>
                         <option value="일반 교양">일반 교양</option>
                     </select>
-                    <span>투표 상태:</span>
-                    <select id="vote-status" name="voteStatus">
-                        <option value="전체">전체</option>
-                        <option value="투표중">투표중</option>
-                        <option value="투표 완료">투표 완료</option>
-                    </select>
                     <button type="button" class="btn btn-outline-dark" id="voteTableBtn">선택</button>
 
                 </div>
@@ -208,10 +202,10 @@
                     <table class="table vote-professor">
                         <thead class="thead-light">
                             <tr>
+                                <th scope="col">이수구분</th>
                                 <th scope="col">강의코드</th>
-                                <th scope="col">강의분류</th>
-                                <th scope="col">강의명</th>
-                                <th scope="col">투표기간</th>
+                                <th scope="col">교과목명</th>
+                                <th scope="col">상태</th>
                                 <th scope="col"> - </th>
                             </tr>
                         </thead>
@@ -231,10 +225,10 @@
                         </tbody>
                     </table>
                     <div id="comment_area">
-                        <textarea class="comment" placeholder="이의신청 해주세요."></textarea>
+                        <textarea class="comment" id="stdVoteComment" placeholder="이의신청 해주세요."></textarea>
                     </div>
                     <div id="button_area">
-                        <button class="btn btn-outline-dark btn_set" id="">투표하기</button>
+                        <button class="btn btn-outline-dark btn_set" id="takeVote">투표하기</button>
                     </div>
                 </div>
             </div>

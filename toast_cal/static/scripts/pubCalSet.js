@@ -37,10 +37,10 @@ ajaxPost('/toast_cal/pubCalSetData/', 'json', 'POST', '1').then(function(data) {
 
 var pubCalSaveBtn = document.getElementById('pubCalSaveBtn');
 
-pubCalSaveBtn.addEventListener('click', function() {
+pubCalSaveBtn.addEventListener('click', async function() {
     var saveCode = document.getElementById('pubcal_select').value
-    var saveStart = document.getElementById('start').value
-    var saveEnd = document.getElementById('end').value
+    var saveStart = document.getElementById('pubStart').value
+    var saveEnd = document.getElementById('pubEnd').value
 
     let codeData = {
         code: saveCode,
@@ -48,7 +48,7 @@ pubCalSaveBtn.addEventListener('click', function() {
         end: saveEnd,
     }
     // console.log(data)
-    ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', codeData)
+    await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', codeData)
         .then(function(data) {
             console.log(data);
         })
@@ -59,10 +59,10 @@ pubCalSaveBtn.addEventListener('click', function() {
 
 var pubCalLoadBtn = document.getElementById('pubCalLoadBtn');
 
-pubCalLoadBtn.addEventListener('click', function() {
+pubCalLoadBtn.addEventListener('click', async function() {
     var loadCode = document.getElementById('pubcal_select').value
-    var loadStart = document.getElementById('start').value
-    var loadEnd = document.getElementById('end').value
+    var loadStart = document.getElementById('pubStart').value
+    var loadEnd = document.getElementById('pubEnd').value
 
     let pubLoadData = {
         code: loadCode,
@@ -70,8 +70,8 @@ pubCalLoadBtn.addEventListener('click', function() {
         end: loadEnd,
     }
 
-    if (start !== '' || end !== '') {
-        ajaxPost('/toast_cal/pubCalLoad/', 'json', 'POST', pubLoadData)
+    if (loadStart !== '' || loadEnd !== '') {
+        await ajaxPost('/toast_cal/pubCalLoad/', 'json', 'POST', pubLoadData)
             .then(function(data) {
                 // console.log(data);
                 pubCalendar.clear();
@@ -110,8 +110,8 @@ pub_todayBtn.addEventListener('click', function(event) {
 // 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
 $(document).on('click', '#voteTimeLoad', async function() {
     var voteCode = document.getElementById('pubcal_select').value;
-    var voteStart = document.getElementById('start').value;
-    var voteEnd = document.getElementById('end').value;
+    var voteStart = document.getElementById('pubStart').value;
+    var voteEnd = document.getElementById('pubEnd').value;
 
     let voteTimeLoad = {
         code: voteCode,
