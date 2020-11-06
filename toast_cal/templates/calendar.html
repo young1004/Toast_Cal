@@ -475,6 +475,9 @@
         <div class="contents" id="professor3" style="display: none;">
             <!-- <div></div> 공용 캘린더 생성할 부분 -->
             <div id="pubCalNavi">
+                <button type="button" id="pub_prevBtn">
+                    &lt;&lt; </button>
+                <button type="button" id="pub_today">오늘</button>
                 <span>과목: </span>
                 <select name="" id="pubcal_select"></select>
                 <span>시작: </span>
@@ -483,6 +486,8 @@
                 <input type="date" id="end" value="2020-09-18">
                 <button id="pubCalSaveBtn" class="btn btn-outline-dark">일정 새로고침</button>
                 <button id="pubCalLoadBtn" class="btn btn-outline-dark">불러오기</button>
+                <button type="button" id="pub_nextBtn"> &gt;&gt;</button>
+                <button id="voteTimeLoad" class="btn btn-outline-dark">투표가능날짜확인</button>
             </div>
             <div id="pubCalendar">
             </div>
@@ -572,6 +577,8 @@
     <script src="{% static 'scripts/calSet.js' %}"></script>
     <script src="{% static 'scripts/calMain.js' %}"></script>
     <script src="{% static 'scripts/rightNav.js' %}"></script>
+    <script src="{% static 'scripts/debug.js' %}"></script>
+
 
 
     {% if request.session.userType == "student" %}
@@ -580,6 +587,7 @@
     {% elif request.session.userType == "professor" %}
     <script src="{% static 'scripts/pubCalFunc.js' %}"></script>
     <script src="{% static 'scripts/pubCalSet.js' %}"></script>
+    <script src="{% static 'scripts/proFunc.js' %}"></script>
     <script src="{% static 'scripts/professors.js' %}"></script>
     {% endif %}
 

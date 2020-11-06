@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.core import serializers
 from .models import *
 from django.db.models.aggregates import Count
+from json import dumps
+import datetime
 
 
 # 서버에서 ajax로 일정 보내주는 함수
@@ -490,11 +492,17 @@ def pubCalSave(request):
     subjectCount = Subject.objects.filter(code=lecCode)[0].stdCount + 1  # +1은 교수 카운트
     # print("subject 수강 인원 : ", subjectCount)
 
+    end_date = datetime.datetime.strptime(
+        request.POST["end"], "%Y-%m-%d"
+    ).date()  # end데이터 date type으로 변환.
+    end_date = end_date + datetime.timedelta(
+        days=1
+    )  # end데이터 +1(끝 날짜의 일정을 불러오지못하여 +1을 해주어 끝 날짜의 일정을 불러오기 위해)
+
     pubCalData = Calendar.objects.filter(userID="NULL")  # 초기화
     for data in stdLecData:  # 강의를 듣는 학생들의 공개 일정을 가져오는 쿼리 생성
         pubCalData = pubCalData | Calendar.objects.filter(
-            userID=data.student_id,
-            start__range=[request.POST["start"], request.POST["end"]],
+            userID=data.student_id, start__range=[request.POST["start"], end_date],
         )
         # print("필터링 데이터 : ", pubCalData[0].userID)
         # print(data.student_id) # 학생의 id값
@@ -502,7 +510,7 @@ def pubCalSave(request):
     # 교수의 일정도 가져옴
     pubCalData = pubCalData | Calendar.objects.filter(
         userID=request.session["userID"],
-        start__range=[request.POST["start"], request.POST["end"]],
+        start__range=[request.POST["start"], end_date],
     )
     tmpData = pubCalData
 
@@ -550,8 +558,11 @@ def pubCalSave(request):
 def pubCalLoad(request):
     lecCode = request.POST["code"]
 
+    end_date = datetime.datetime.strptime(request.POST["end"], "%Y-%m-%d").date()
+    end_date = end_date + datetime.timedelta(days=1)
+
     pubCalData = PubCalendar.objects.filter(
-        code=lecCode, start__range=[request.POST["start"], request.POST["end"]]
+        code=lecCode, start__range=[request.POST["start"], end_date]
     )
 
     return HttpResponse(
@@ -571,3 +582,118 @@ def getAllStudent(request):
     return HttpResponse(
         serializers.serialize("json", stores_list), content_type="application/json"
     )
+
+
+# 투표가능 시간대 출력
+def voteTimeLoad(request):
+    lecCode = request.POST["code"]
+    start = request.POST["start"]
+    end = request.POST["end"]
+
+    start_date = datetime.datetime.strptime(request.POST["start"], "%Y-%m-%d").date()
+    end_date = datetime.datetime.strptime(request.POST["end"], "%Y-%m-%d").date()
+    end_date = end_date + datetime.timedelta(days=1)
+
+    date_count = (end_date - start_date).days  # 날짜 수 (int형)
+
+    pub_data = PubCalendar.objects.filter(
+        code=lecCode, start__range=[start_date, end_date]
+    )
+
+    time = [
+        "09:30:00",
+        "10:45:00",
+        "11:00:00",
+        "12:15:00",
+        "13:00:00",
+        "14:15:00",
+        "14:30:00",
+        "15:45:00",
+        "16:00:00",
+        "17:15:00",
+        "17:30:00",
+        "18:45:00",
+        "19:00:00",
+        "20:15:00",
+    ]
+    for x in range(len(time)):
+        time[x] = datetime.datetime.strptime(time[x], "%H:%M:%S").time()
+
+    ava_time_list = []  # 빈 시간대들이 들어갈 리스트
+    status_list = []  # 사용빈도가 들어갈 리스트
+
+    if pub_data.exists():
+        day = start_date
+        for i in range(date_count):  # ex) 2020-11-01 ~ 2020-11-10
+            # print(day)
+            for j in range(int(len(time) / 2)):  # 하루의 교시 시간대들
+                day_time_start = datetime.datetime.combine(
+                    day, time[j * 2]
+                )  # 받은 날짜와 고정된 시간을 datetime으로 결합
+                day_time_end = datetime.datetime.combine(day, time[j * 2 + 1])
+                # print(day_time_start)
+                # print(day_time_end)
+
+                pub = PubCalendar.objects.filter(
+                    start__range=[day_time_start, day_time_end]
+                )
+
+                if pub:  # pubCalendar에 일정이 있다면
+                    check = ""
+                    check_index = 0
+                    countPer = 0.0
+                    for t in range(len(pub)):
+                        if (
+                            pub[t].calendarId == "매우 높음"
+                        ):  # calendarId가 매우 높음으면 빨간색이므로 제외
+                            check = ""
+                            break
+                        else:
+                            check = "check"
+                            if t == 0:
+                                countPer = pub[t].countPer
+                                check_index = t
+                            else:
+                                if countPer < pub[t].countPer:
+                                    countPer = pub[t].countPer
+                                    check_index = t
+                    if check == "check":  # 빨간색을 제외한 회색과 노란색이 해당, 두 배열에 시간대와 사용빈도를 넣어줌
+                        ava_time_list.append(
+                            day_time_start.strftime("%Y-%m-%d %H:%M:%S")
+                        )
+                        ava_time_list.append(day_time_end.strftime("%Y-%m-%d %H:%M:%S"))
+                        status_list.append(1 - pub[check_index].countPer)
+                elif not pub:  # 아무도 일정이 없는 시간대
+                    ava_time_list.append(day_time_start.strftime("%Y-%m-%d %H:%M:%S"))
+                    ava_time_list.append(day_time_end.strftime("%Y-%m-%d %H:%M:%S"))
+                    status_list.append(1.0)
+            day = day + datetime.timedelta(days=1)
+
+        # print(ava_time_list)
+        # print(status_list)
+
+        send_dict = {"code": lecCode, "date": ava_time_list, "status": status_list}
+
+        # print(send_dict)
+
+        return HttpResponse(
+            dumps(send_dict), content_type="application/json"
+        )  # 파이썬 내장 json.dumps()로 json포맷 데이터 만듬
+    else:
+        return HttpResponse("공용 일정이 없습니다")
+
+
+# ava_Time 테이블에 저장하고, 저장한 값을 보내줌
+def voteTimeSave(request):
+    print(request.POST)
+
+    for i in range(int(len(request.POST) / 3)):
+        new_instance = Ava_Time.objects.create(
+            classCode=request.POST["newDate[" + str(i) + "][code]"],
+            status=request.POST["newDate[" + str(i) + "][status]"],
+            avaTime=request.POST["newDate[" + str(i) + "][date]"],
+        )
+
+        new_instance.save()
+
+    return HttpResponse("저장 성공")

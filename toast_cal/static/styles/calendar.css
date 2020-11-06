@@ -508,6 +508,36 @@ svg {
     padding: 5px;
 }
 
+/* 댓글 확대 보기 */
+#show_text {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1011;
+}
+
+#show_text>div {
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+    padding: 16px;
+    border: 16px solid lightslategrey;
+    background-color: white;
+    overflow: auto;
+}
+
+#close_comment {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    float: right;
+}
+
 /* 투표 재개설, 수정 버튼 */
 .revoteBtn, .correctBtn {
     margin: 10px;
@@ -522,7 +552,7 @@ svg {
 
 
 
-/* 공유 캘린더 관련 css */
+/* pubCalendar 관련 css */
 
 /* 억지로 잡은 css (추후 버그 수정시 우선 체크) */
 .tui-full-calendar-month>div {
@@ -536,7 +566,7 @@ svg {
 
 
 
-/* 교수용 공유 캘린더 학생 목록 출력부분 */
+/* 교수용 pubCalendar 학생 목록 출력부분 */
 #pubCalStudentList {
     margin-top: 2em;
     height: auto;
@@ -557,6 +587,22 @@ svg {
     height: 350px;
     margin-top: 15px;
     background-color: white;
+}
+
+/* pubCalendar 이전, 오늘, 다음 이동버튼*/
+#pubCalNavi>#pub_prevBtn, #pub_today, #pub_nextBtn {
+    width: 3em;
+    background-color: white;
+    border: 1px solid #cdcdcd;
+    border-radius: 3px;
+}
+
+#pub_prevBtn, #pub_today {
+    float: left;
+}
+
+#pub_today {
+    margin-right: 10px;
 }
 
 

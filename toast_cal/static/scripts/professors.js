@@ -516,7 +516,7 @@ $(document).on('click', '.voteBtn', function() {
         $('#professor-vote-status').append(comment);
 
         for (var count = 0; count < 10; count++) {
-            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:popup() target=">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
+            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:void(0);" onclick="show_comment(\'투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.\')">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
             $('#comment_tbody').append(comment_tr);
         }
 

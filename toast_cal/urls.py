@@ -61,4 +61,6 @@ urlpatterns = [
     path("pro_lecture/", crud.pro_lecture, name="pro_lecture"),
     path("pubCalSave/", crud.pubCalSave, name="pubCalSave"),
     path("pubCalLoad/", crud.pubCalLoad, name="pubCalLoad"),
+    path("voteTimeLoad/", crud.voteTimeLoad, name="voteTimeLoad"),  # 투표 가능 시간대 불러오기
+    path("voteTimeSave/", crud.voteTimeSave, name="voteTimeSave"), # 투표 가능 시간대 저장
 ]
