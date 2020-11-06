@@ -124,23 +124,49 @@ class Department(models.Model):
 
 
 # 투표 테이블
-class Vote(models.Model):
-    professor_id = models.CharField(max_length=30)  # 교수ID
-    code = models.CharField(max_length=30)  # 강의 코드
-    name = models.CharField(max_length=30)  # 강의명
-    lecture_type = models.CharField(max_length=30)  # 이수구분
-    vote_status = models.CharField(max_length=30)  # 투표 상태
-    start = models.DateTimeField()  # 시험 시작 시간
-    end = models.DateTimeField()  # 시험 끝나는 시간
-    agree_votes = models.IntegerField()  # 찬성 표 수
-    reject_votes = models.IntegerField()  # 반대 표 수
-    all_students = models.IntegerField()  # 전체 학생수
+# class Vote(models.Model):
+#     professor_id = models.CharField(max_length=30)  # 교수ID
+#     code = models.CharField(max_length=30)  # 강의 코드
+#     name = models.CharField(max_length=30)  # 강의명
+#     lecture_type = models.CharField(max_length=30)  # 이수구분
+#     vote_status = models.CharField(max_length=30)  # 투표 상태
+#     start = models.DateTimeField()  # 시험 시작 시간
+#     end = models.DateTimeField()  # 시험 끝나는 시간
+#     agree_votes = models.IntegerField()  # 찬성 표 수
+#     reject_votes = models.IntegerField()  # 반대 표 수
+#     all_students = models.IntegerField()  # 전체 학생수
 
-    def __str__(self):
-        return self.professor_id
+#     def __str__(self):
+#         return self.professor_id
+
+#     class Meta:
+#         db_table = "Vote"
+
+
+
+# 투표 테이블
+class Vote(models.Model):
+    classCode = models.CharField(max_length=30)  # 강의 코드
+    lecType = models.CharField(max_length=30)  # 이수구분
+    proName = models.CharField(max_length=30)  # 교수명
+    className = models.CharField(max_length=30)  # 강의명
+    voteStatus = models.CharField(max_length=30)  # 투표상태
+    start = models.DateTimeField()  # 시작 시간
+    end = models.DateTimeField()  # 끝 시간
+    choice1 = models.IntegerField(default=0)  # 선택지1
+    choice2 = models.IntegerField(default=0)  # 선택지2
+    choice3 = models.IntegerField(default=0)  # 선택지3
+    choice4 = models.IntegerField(default=0)  # 선택지4
+    choice1_Title = models.CharField(max_length=30, default="False")  # 선택지1 내용
+    choice2_Title = models.CharField(max_length=30, default="False")  # 선택지2 내용
+    choice3_Title = models.CharField(max_length=30, default="False")  # 선택지3 내용
+    choice4_Title = models.CharField(max_length=30, default="False")  # 선택지4 내용
+    totalCount = models.IntegerField()  # 전체 인원수
 
     class Meta:
         db_table = "Vote"
+
+
 
 
 # 공용 캘린더 분류에 대한 데이터가 저장될 데이터베이스 모델
@@ -187,27 +213,4 @@ class Ava_Time(models.Model):
 
     class Meta:
         db_table = "Ava_Time"
-
-
-# 투표 테이블
-class Test_Vote(models.Model):
-    classCode = models.CharField(max_length=30)  # 강의 코드
-    lecType = models.CharField(max_length=30)  # 이수구분
-    proName = models.CharField(max_length=30)  # 교수명
-    className = models.CharField(max_length=30)  # 강의명
-    voteStatus = models.CharField(max_length=30)  # 투표상태
-    start = models.DateTimeField()  # 시작 시간
-    end = models.DateTimeField()  # 끝 시간
-    choice1 = models.IntegerField(default=0)  # 선택지1
-    choice2 = models.IntegerField(default=0)  # 선택지2
-    choice3 = models.IntegerField(default=0)  # 선택지3
-    choice4 = models.IntegerField(default=0)  # 선택지4
-    choice1_Title = models.CharField(max_length=30, default="False")  # 선택지1 내용
-    choice2_Title = models.CharField(max_length=30, default="False")  # 선택지2 내용
-    choice3_Title = models.CharField(max_length=30, default="False")  # 선택지3 내용
-    choice4_Title = models.CharField(max_length=30, default="False")  # 선택지4 내용
-    totalCount = models.IntegerField()  # 전체 인원수
-
-    class Meta:
-        db_table = "Test_Vote"
 
