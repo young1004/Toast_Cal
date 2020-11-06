@@ -352,7 +352,7 @@ svg {
 /* 교수 투표페이지 관련 css */
 
 /* 교수 투표 개설 관련 */
-.vote-open-table-wrap {
+.vote-open-table-wrap, .vote-update-table-wrap {
     overflow: auto;
     height: 350px;
 }
@@ -361,15 +361,15 @@ svg {
     float: right;
 }
 
-#vote-open-table {
+#vote-open-table, #vote-update-table {
     border: 1px solid #cdcdcd;
 }
 
-#vote-open-table-thead {
+#vote-open-table-thead, #vote-update-table-thead {
     background-color: #e9ecef;
 }
 
-#vote-open-btn {
+#vote-open-btn, #vote-update-btn {
     float: right;
 }
 

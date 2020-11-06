@@ -245,7 +245,7 @@
                     <span>투표 상태:</span>
                     <select id="vote-status-student" name="voteStatus">
                         <option value="전체">전체</option>
-                        <option value="투표중">투표중</option>
+                        <option value="투표중">투표중</option> <!-- 문제시 볼곳-->
                         <option value="투표 완료">투표 완료</option>
                     </select>
                     <button type="button" class="btn btn-outline-dark" id="voteTableBtn-student">선택</button>
@@ -444,7 +444,7 @@
                     <span>투표 상태:</span>
                     <select id="vote-status" name="voteStatus">
                         <option value="전체">전체</option>
-                        <option value="투표중">투표중</option>
+                        <option value="투표 중">투표 중</option>
                         <option value="투표 완료">투표 완료</option>
                     </select>
                     <button type="button" class="btn btn-outline-dark" id="voteTableBtn">선택</button>
@@ -471,6 +471,44 @@
                 <div id="vote-detail-donut">
                     <div id="chart-area"></div>
                 </div>
+            </div>
+
+            <!-- 투표 수정 -->
+            <div class="vote-update" id="professor-vote-update" style="display: none;">
+                <!-- <div class="vote-update" id="professor-vote-open" style="display: block;"> -->
+                <div style="height: 50px;">
+                    <h3>투표 수정</h3>
+                </div>
+                <div class="vote-update-table-wrap">
+                    <!-- <div class="vote-open-table-wrap"> -->
+                    <table class="table table-hover" id="vote-update-table">
+                        <!-- <table class="table table-hover" id="vote-open-table"> -->
+                        <thead id="vote-update-table-thead">
+                            <!-- <thead id="vote-open-table-thead"> -->
+                            <tr>
+                                <th scope="col">이수구분</th>
+                                <th scope="col">교과목명</th>
+                                <th scope="col">상태</th>
+                                <th scope="col">시간</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vote-update-tbody">
+                            <!-- <tbody id="vote-open-tbody"> -->
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-outline-dark" id="vote-update-btn">투표 수정</button>
+                <!-- <button type="button" class="btn btn-outline-dark" id="vote-open-btn">투표 수정</button> -->
+                <div id="vote-update-tab-input">
+                    <!-- <div id="vote-open-tab-input"> -->
+                    <div id="vote-update-period">
+                        <!-- <span>투표 기간 : </span>
+                            <input type="date" id="vote-update-Start">
+                            <span> ~ </span>
+                            <input type="date" id="vote-update-End"> -->
+                    </div>
+                </div>
+
             </div>
 
         </div>

@@ -792,6 +792,15 @@ def getVoteInfo(request):
     )
 
 
+# 해당 과목코드에 맞는 투표정보 반환
+def getVoteInfo(request):
+    voteInfo = Vote.objects.filter(classCode=request.POST["code"])
+
+    return HttpResponse(
+        serializers.serialize("json", voteInfo), content_type="application/json"
+    )
+
+
 def create_Vote(request):
     if request.method == "POST":
         lecType = request.POST.get("select_Array[0][lecType]", False)
@@ -802,7 +811,7 @@ def create_Vote(request):
         ava_Time3 = request.POST.get("select_Array[2][ava_Time]", False)
         ava_Time4 = request.POST.get("select_Array[3][ava_Time]", False)
 
-        # subject = Subject.objects.get(name=className)
+        subject = Subject.objects.get(name=className, professor=request.session["userName"])
 
         new_Vote = Vote.objects.create(
             classCode=request.POST["classCode"],
@@ -811,11 +820,9 @@ def create_Vote(request):
             proName=request.session["userName"],
             className=className,
             voteStatus="투표 중",
-            # start=request.POST["start"],
-            # end=request.POST["end"],
-            start="2020-11-01 00:00:00.000000",
-            end="2020-11-30 00:00:00.000000",
-            totalCount=5,
+            start=request.POST["start"],
+            end=request.POST["end"],
+            totalCount=subject.stdCount,
             choice1_Title=ava_Time1,
             choice2_Title=ava_Time2,
             choice3_Title=ava_Time3,
@@ -838,6 +845,7 @@ def create_Vote(request):
         # query.save()
 
         test = Vote.objects.all()
+
 
     return HttpResponse(
         serializers.serialize("json", test), content_type="application/json"
@@ -879,3 +887,56 @@ def check_user_subject(request):
             return HttpResponse("강의 있음")
         else:
             return HttpResponse("강의 없음")
+
+
+def pro_vote_update_table(request):
+    if request.method == "POST":
+        stores_list = Ava_Time.objects.filter(classCode=request.POST["classCode"])
+
+    return HttpResponse(
+        serializers.serialize("json", stores_list), content_type="application/json"
+    )
+
+def pro_vote_info(request):
+    if request.method == "POST":
+        stores_list = Vote.objects.filter(classCode=request.POST["classCode"])
+
+    return HttpResponse(
+        serializers.serialize("json", stores_list), content_type="application/json"
+    )
+
+def update_Vote(request):
+    if request.method == "POST":
+        lecType = request.POST["lecType"]
+        className = request.POST["className"]
+
+        ava_Time1 = request.POST.get("select_Array[0][ava_Time]", False)
+        ava_Time2 = request.POST.get("select_Array[1][ava_Time]", False)
+        ava_Time3 = request.POST.get("select_Array[2][ava_Time]", False)
+        ava_Time4 = request.POST.get("select_Array[3][ava_Time]", False)
+
+        deleteVote = Vote.objects.filter(proName=request.session["userName"], className=request.POST["className"])
+        deleteVote.delete()
+
+        subject = Subject.objects.get(name=className, professor=request.session["userName"])
+
+        new_Vote = Vote.objects.create(
+            classCode=subject.code,
+            lecType=lecType,
+            proName=request.session["userName"],
+            className=className,
+            voteStatus="투표 중",
+            start=request.POST["start"],
+            end=request.POST["end"],
+            totalCount=subject.stdCount,
+            choice1_Title=ava_Time1,
+            choice2_Title=ava_Time2,
+            choice3_Title=ava_Time3,
+            choice4_Title=ava_Time4,
+        )
+
+        test = Vote.objects.all()
+
+    return HttpResponse(
+        serializers.serialize("json", test), content_type="application/json"
+    )

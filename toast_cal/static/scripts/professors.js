@@ -54,14 +54,14 @@ subProBtn.addEventListener('click', async function(event) {
 // 투표 기능 버튼 리스너
 voteProBtn.addEventListener('click', async function(event) {
 
-    var check_subject;
-    await ajaxPost('/toast_cal/check_user_subject/', 'json', 'POST', 1)
-        .then(function(data) {
-            check_code = data;
-        })
-        .catch(function(err) {
-            alert(err);
-        });
+    // var check_subject;
+    // await ajaxPost('/toast_cal/check_user_subject/', 'json', 'POST', 1)
+    //     .then(function(data) {
+    //         check_code = data;
+    //     })
+    //     .catch(function(err) {
+    //         alert(err);
+    //     });
 
     // if (check_subject === "강의 있음") {
 
@@ -70,9 +70,26 @@ voteProBtn.addEventListener('click', async function(event) {
 
     // 공유 캘린더 날짜 셋팅
     var dateValue = getThisWeek();
+    var todayValue = new Date()
+
+    ty = todayValue.getFullYear();
+    tm = todayValue.getMonth() + 1;
+    td = todayValue.getDate();
+
+    td_end = td + 14;
+
+    if (td < 10) {
+        td = "0" + td;
+    }
+
+    tv_start = ty + "-" + tm + "-" + td;
+    tv_end = ty + "-" + tm + "-" + td_end;
 
     document.getElementById('start').value = dateValue[0];
     document.getElementById('end').value = dateValue[6];
+
+    document.getElementById('voteStart').value = tv_start;
+    document.getElementById('voteEnd').value = tv_end;
 
     await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
         .then(function(data) {
@@ -483,7 +500,7 @@ $(function() {
 $(document).on("click", "#portal_to_making_vote", function() {
     changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
     changeContents('tab_box');
-    changeContents('professor-vote-open', 'professor-vote-status');
+    changeContents('professor-vote-open', 'professor-vote-status', 'professor-vote-update');
 
     ajaxPost('/toast_cal/pro_vote_open_table/', 'json', 'POST', 1).then(function(data) {
             $('#vote-open-tbody').empty();
@@ -505,7 +522,7 @@ $(document).on("click", "#portal_to_making_vote", function() {
 $(document).on("click", "#portal_to_correct_vote", function() {
     changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
     changeContents('tab_box');
-    changeContents('professor-vote-status', 'professor-vote-open');
+    changeContents('professor-vote-status', 'professor-vote-open', 'professor-vote-update');
 });
 
 // 투표정보에 대한 투표삭제 버튼
@@ -679,7 +696,7 @@ var voteStatusTabBtn = document.getElementById('vote-status-tab-btn');
 
 // 투표 개설 탭 버튼
 voteOpenTabBtn.addEventListener('click', function(event) {
-    changeContents('professor-vote-open', 'professor-vote-status' /*, 'pubcal_vote_info'*/ );
+    changeContents('professor-vote-open', 'professor-vote-status', 'professor-vote-update');
 
     var select_val = $("#class_select option:selected").val();
 
@@ -733,7 +750,7 @@ voteOpenTabBtn.addEventListener('click', function(event) {
 
 // 투표 현황 탭 버튼
 voteStatusTabBtn.addEventListener('click', function(event) {
-    changeContents('professor-vote-status', 'professor-vote-open' /*, 'pubcal_vote_info'*/ );
+    changeContents('professor-vote-status', 'professor-vote-open', 'professor-vote-update');
 
     var voteData = {
         lecture_type: '전공 필수',
@@ -789,15 +806,14 @@ $('#vote-open-btn').click(async function() {
                 alert(className + " 강의의 투표가 존재합니다.");
                 check = 0;
             } else if (check == 0) {
-                if (array.length > 0 && array.length <= 4 && check == 0) { //과목 선택을 했을때
+                if (array.length >= 2 && array.length <= 4 && check == 0) { //과목 선택을 했을때
 
                     husks = {
                         select_Array: array,
                         classCode: $("#class_select option:selected").val(),
-                        start: document.getElementById('voteStart').innerText,
-                        end: document.getElementById('voteEnd').innerText,
+                        start: $('#voteStart').val(),
+                        end: $('#voteEnd').val(),
                     }
-                    // husks.array = array
 
                     ajaxPost('/toast_cal/create_Vote/', 'json', 'POST', husks)
                         .then(function(data) {
@@ -809,8 +825,8 @@ $('#vote-open-btn').click(async function() {
                         });
                 } else if (array.length >= 5) {
                     alert('4개까지 선택 가능합니다.');
-                } else if (array.length == 0) {
-                    alert('선택된 강의가 없습니다.');
+                } else if (array.length <= 1) {
+                    alert('2개 이상 선택해야 합니다.');
                 }
             }
         })
@@ -818,7 +834,6 @@ $('#vote-open-btn').click(async function() {
             alert(err);
         });
 });
-
 
 // 서버에서 filter를 적용할 투표 페이지 관련 데이터 object
 var voteData = {
@@ -868,7 +883,7 @@ voteTableBtn.addEventListener('click', function(event) {
 var chart = null;
 var comment_div = null;
 
-// 투표하기 버튼
+// 투표 상세보기 버튼
 $(document).on('click', '.voteBtn', function() {
 
     if (chart !== null)
@@ -892,7 +907,62 @@ $(document).on('click', '.voteBtn', function() {
 
                 var doughnutData = {
                     categories: ['투표 현황'],
-                    series: [{
+                    series: []
+                };
+
+                var theme = {
+                    series: {
+                        colors: [],
+                        label: {
+                            color: '#000000',
+                            fontFamily: 'sans-serif'
+                        }
+                    }
+                };
+
+                if (data[0].fields.choice2_Title != "False") {
+                    doughnutData.series = [{
+                            name: data[0].fields.choice1_Title,
+                            data: data[0].fields.choice1
+                        },
+                        {
+                            name: data[0].fields.choice2_Title,
+                            data: data[0].fields.choice2
+                        },
+                        {
+                            name: '투표안함',
+                            data: data[0].fields.totalCount - data[0].fields.choice1 - data[0].fields.choice2
+                        }
+                    ]
+
+                    theme.series.colors = ['#F15F5F', '#E5D85C', '#BDBDBD']
+                }
+
+                if (data[0].fields.choice3_Title != "False") {
+                    doughnutData.series = [{
+                            name: data[0].fields.choice1_Title,
+                            data: data[0].fields.choice1
+                        },
+                        {
+                            name: data[0].fields.choice2_Title,
+                            data: data[0].fields.choice2
+                        },
+                        {
+                            name: data[0].fields.choice3_Title,
+                            data: data[0].fields.choice3
+                        },
+                        {
+                            name: '투표안함',
+                            data: data[0].fields.totalCount - data[0].fields.choice1 - data[0].fields.choice2 -
+                                data[0].fields.choice3
+                        }
+                    ]
+
+                    theme.series.colors = ['#F15F5F', '#E5D85C', '#86E57F', '#BDBDBD']
+                }
+
+                if (data[0].fields.choice4_Title != "False") {
+                    doughnutData.series = [{
                             name: data[0].fields.choice1_Title,
                             data: data[0].fields.choice1
                         },
@@ -914,19 +984,9 @@ $(document).on('click', '.voteBtn', function() {
                                 data[0].fields.choice3 - data[0].fields.choice4
                         }
                     ]
-                };
 
-                var theme = {
-                    series: {
-                        colors: [
-                            '#FF0000', '#FFE400', '#1DDB16', '#0100FF', '#BDBDBD'
-                        ],
-                        label: {
-                            color: '#000000',
-                            fontFamily: 'sans-serif'
-                        }
-                    }
-                };
+                    theme.series.colors = ['#F15F5F', '#E5D85C', '#86E57F', '#6799FF', '#BDBDBD']
+                }
 
                 tui.chart.registerTheme('myTheme', theme);
 
@@ -973,38 +1033,43 @@ $(document).on('click', '.voteBtn', function() {
         comment_div = null;
         $('#comment').remove();
         $('#revoteBtn').remove();
-        $('#correntBtn').remove();
+        $('#correctBtn').remove();
+        $('.classCode').remove();
 
         comment_div = 1;
         let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
         $('#professor-vote-status').append(comment);
 
         for (var count = 0; count < 10; count++) {
-            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:void(0);" onclick="show_comment(\'투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.\')">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
+            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:popup() target=">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
             $('#comment_tbody').append(comment_tr);
         }
 
         var revote_btn = $('<button type="button" class="btn btn-outline-dark revoteBtn" id="revoteBtn">투표 재개설</button>');
-        var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correntBtn">투표 수정</button>');
+        var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correctBtn">투표 수정</button>');
+        var code = $('<a class="classCode" style="display: none;">' + td.eq(0).text() + '<a>');
         $('#professor-vote-status').append(revote_btn);
         $('#professor-vote-status').append(correct_btn);
+        $('#professor-vote-status').append(code);
     } else {
         comment_div = 1;
-
         let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
         $('#professor-vote-status').append(comment);
 
         for (var count = 0; count < 10; count++) {
-            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:void(0);" onclick="show_comment(\'투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.\')">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
+            var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:popup() target=">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
             $('#comment_tbody').append(comment_tr);
         }
 
         var revote_btn = $('<button type="button" class="btn btn-outline-dark revoteBtn" id="revoteBtn">투표 재개설</button>');
-        var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correntBtn">투표 수정</button>');
+        var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correctBtn">투표 수정</button>');
+        var code = $('<a class="classCode" style="display: none;">' + td.eq(0).text() + '<a>');
         $('#professor-vote-status').append(revote_btn);
         $('#professor-vote-status').append(correct_btn);
+        $('#professor-vote-status').append(code);
     }
 });
+
 
 // 공유캘린더 과목코드 변경시 즉시 실행되어 테이블에 수강학생 전체 목록 출력
 $(function() {
@@ -1110,7 +1175,8 @@ $(document).on('click', '.voteDelete', function() {
             if (comment_div !== null) {
                 $('#comment').remove();
                 $('#revoteBtn').remove();
-                $('#correntBtn').remove();
+                $('#correctBtn').remove();
+                $('.classCode').remove();
             }
 
             voteData.lecture_type = voteClass.value;
@@ -1134,4 +1200,145 @@ $(document).on('click', '.voteDelete', function() {
         .catch(function(err) {
             console.log(err);
         })
+});
+
+$(document).on('click', '.correctBtn', async function() {
+    changeContents('professor-vote-update', 'professor-vote-open', 'professor-vote-status');
+
+    var title1, title2, title3, title4 = "";
+
+    class_data = {
+        classCode: $('.classCode').text(),
+    }
+
+    if (chart !== null)
+        $('#chart-area').empty();
+
+    if (comment_div !== null) {
+        $('#comment').remove();
+        $('#revoteBtn').remove();
+        $('#correctBtn').remove();
+        $('.classCode').remove();
+    }
+
+
+    await ajaxPost('/toast_cal/pro_vote_info/', 'json', 'POST', class_data)
+        .then(function(data) {
+            var vote_update_start = data[0].fields.start;
+            var vote_update_end = data[0].fields.end;
+
+            // 날짜출력
+            var update_start = vote_update_start.substr(0, 10);
+            var update_end = vote_update_end.substr(0, 10);
+
+            //console.log(update_start + " ~ " +update_end)
+
+            $('#vote-update-period').empty();
+
+            var vote_period = $('<span>투표 기간 : </span>' +
+                '<input type="date" id="vote-update-Start" value="' + update_start + '">' +
+                '<span> ~ </span>' +
+                '<input type="date" id="vote-update-End" value="' + update_end + '">');
+
+            $('#vote-update-period').append(vote_period)
+
+            title1 = data[0].fields.choice1_Title;
+            title2 = data[0].fields.choice2_Title;
+            title3 = data[0].fields.choice3_Title;
+            title4 = data[0].fields.choice4_Title;
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+
+    await ajaxPost('/toast_cal/subject_info/', 'json', 'POST', class_data)
+        .then(function(data) {
+            for (var count = 0; count < data.length; count++) {
+                className = data[count].fields.name;
+                lecType = data[count].fields.lecture_type;
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+
+    ajaxPost('/toast_cal/pro_vote_update_table/', 'json', 'POST', class_data)
+        .then(function(data) {
+            $('#vote-update-tbody').empty();
+
+            for (var count = 0; count < data.length; count++) {
+                var status = data[count].fields.status;
+                var timeStatus = "";
+
+                if (status < 0.3) {
+                    timeStatus = "선택불가";
+                } else if (status < 0.5) {
+                    timeStatus = "혼잡";
+                } else {
+                    timeStatus = "원활";
+                }
+
+                var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-update-tbody\', false)"><td>' + lecType + '</td>' +
+                    '<td>' + className + '</td>' +
+                    '<td>' + timeStatus + '</td>' +
+                    '<td>' + data[count].fields.avaTime + '</td></tr>');
+
+                $('#vote-update-tbody').append(tr);
+
+                tr = $('#vote-update-tbody').children();
+
+                if (data[count].fields.avaTime == title1 || data[count].fields.avaTime == title2 ||
+                    data[count].fields.avaTime == title3 || data[count].fields.avaTime == title4) {
+                    tr[count].style.backgroundColor = '#b1b3b6';
+                }
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+});
+
+$('#vote-update-btn').click(function() {
+    var tr = $('#vote-update-tbody').children();
+    var td = tr.children();
+    var array = [];
+
+    for (var i = 0; i < tr.length; i++) {
+        if (tr[i].style.backgroundColor === 'rgb(177, 179, 182)') { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
+            var obj = {};
+            var td = tr[i].children;
+            obj.lecType = td[0].innerText;
+            obj.className = td[1].innerText;
+            obj.status = td[2].innerText;
+            obj.ava_Time = td[3].innerText;
+            array.push(obj);
+        }
+    }
+
+    if (array.length >= 2 && array.length <= 4) {
+        if (confirm("투표를 수정하면 이전의 데이터가 삭제됩니다.\n정말 삭제하시겠습니까?") == true) {
+            class_data = {
+                select_Array: array,
+                lecType: td[0].innerText,
+                className: td[1].innerText,
+                start: $('#vote-update-Start').val(),
+                end: $('#vote-update-End').val(),
+            }
+
+            ajaxPost('/toast_cal/update_Vote/', 'json', 'POST', class_data)
+                .then(function(data) {
+                    alert("투표가 수정되었습니다.");
+                    $('#vote-status-tab-btn').trigger('click');
+                })
+                .catch(function(err) {
+                    console.log(err);
+                });
+        } else {
+            return;
+        }
+    } else if (array.length >= 5) {
+        alert('4개까지 선택 가능합니다.');
+    } else if (array.length <= 1) {
+        alert('2개 이상 선택해야 합니다.');
+    }
 });
