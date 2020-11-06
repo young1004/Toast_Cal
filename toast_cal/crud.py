@@ -697,3 +697,12 @@ def voteTimeSave(request):
         new_instance.save()
 
     return HttpResponse("저장 성공")
+
+
+#해당 과목코드에 맞는 투표정보 반환
+def getVoteInfo(request):
+    voteInfo = Test_Vote.objects.filter(classCode = request.POST["code"])
+
+    return HttpResponse(
+        serializers.serialize("json", voteInfo), content_type="application/json"
+    )

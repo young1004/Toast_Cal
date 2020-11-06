@@ -480,6 +480,109 @@ svg {
     border: 1px solid black;
 }
 
+/* 과목코드에 대한  투표정보탭 레이아웃*/
+#pubcal_vote_info {
+    display: none;
+    border: 0.5px solid #cdcdcd;
+    float: left;
+    border-radius: 5px;
+    background: #fff;
+    padding: 0.1em 0.1em;
+    height: 503px;
+    width: 350px;
+    margin-left: 3em;
+    text-align: center;
+}
+
+/* 과목코드 제목출력 부분 */
+.vote_info_title_area {
+    padding-top: 0.5em;
+    padding-bottom: 0.8em;
+    border-bottom: 1px;
+    border-style: solid;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-left-width: 0px;
+    border-bottom-color: lightgray;
+    margin-bottom: 0em;
+    list-style: none;
+    padding-left: 0px;
+    background-color: whitesmoke;
+}
+
+/* 생성된 투표가없을때 나타나는 버튼 css */
+#portal_to_making_vote {
+    /* 모양 및 색상잡기 */
+    width: 120px;
+    height: 50px;
+    border: none;
+    font-weight: bold;
+    background-color: lightslategray;
+    border-radius: 7px;
+    font-size: 16px;
+    color: white;
+    outline: none;
+    /* 위치 잡기 */
+    margin-top: 12px;
+}
+
+/* 생성된 투표가 없을때의 텍스트 설명 */
+.vote_info_tab_null {
+    margin-top: 120px;
+}
+
+/* 생성된 투표에 대한 정보 제목 css */
+.class_name_title_data, .vote_date_title_data, .vote_status_title_data, .vote_choice_title_data {
+    border-bottom-width: 0.5px;
+    border-bottom-style: dotted;
+    border-bottom-color: gray;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+/* 생성된 투표에 대한 정보 css */
+.class_name_data, .vote_date_data, .vote_status_data, .vote_choice_data {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: black;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+/* 투표정보에 대한 투표수정하러가는 버튼 css */
+#portal_to_correct_vote {
+    /* 모양 및 색상잡기 */
+    width: 120px;
+    height: 50px;
+    border: none;
+    font-weight: bold;
+    background-color: lightslategray;
+    border-radius: 7px;
+    font-size: 16px;
+    color: white;
+    outline: none;
+    /* 위치 잡기 */
+    margin-top: 14px;
+    margin-right: 5px;
+}
+
+/* 투표정보에 대한 투표삭제 버튼 css */
+#delete_vote {
+    /* 모양 및 색상잡기 */
+    width: 120px;
+    height: 50px;
+    border: none;
+    font-weight: bold;
+    background-color: lightslategray;
+    border-radius: 7px;
+    font-size: 16px;
+    color: white;
+    outline: none;
+    /* 위치 잡기 */
+    margin-top: 14px;
+    margin-left: 5px;
+}
+
 /* 교수의 댓글 보기 부분 */
 #comment {
     border: 1px solid black;
