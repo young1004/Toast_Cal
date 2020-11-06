@@ -202,10 +202,10 @@ class Test_Vote(models.Model):
     choice2 = models.IntegerField(default=0)  # 선택지2
     choice3 = models.IntegerField(default=0)  # 선택지3
     choice4 = models.IntegerField(default=0)  # 선택지4
-    choice1_Title = models.CharField(max_length=30, default=None)  # 선택지1 내용
-    choice2_Title = models.CharField(max_length=30, default=None)  # 선택지2 내용
-    choice3_Title = models.CharField(max_length=30, default=None)  # 선택지3 내용
-    choice4_Title = models.CharField(max_length=30, default=None)  # 선택지4 내용
+    choice1_Title = models.CharField(max_length=30, default="False")  # 선택지1 내용
+    choice2_Title = models.CharField(max_length=30, default="False")  # 선택지2 내용
+    choice3_Title = models.CharField(max_length=30, default="False")  # 선택지3 내용
+    choice4_Title = models.CharField(max_length=30, default="False")  # 선택지4 내용
     totalCount = models.IntegerField()  # 전체 인원수
 
     class Meta:

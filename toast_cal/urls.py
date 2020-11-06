@@ -48,6 +48,10 @@ urlpatterns = [
     ),  # 교수 강의 삭제
     path("pro_vote_open_table/", crud.pro_vote_open_table, name="pro_vote_open_table"),
     # 교수 투표 관련
+    path("subject_info/", crud.subject_info, name="subject_info"),
+    path("create_Vote/", crud.create_Vote, name="create_Vote"),
+    path("delete_Vote/", crud.delete_Vote, name="delete_Vote"),
+    path("check_Vote/", crud.check_Vote, name="check_Vote"),
     path("manageInfo/", views.manageInfo, name="manageInfo"),
     path("loginInfo/", views.loginInfo, name="loginInfo"),
     path("modifyInfo/", views.modifyInfo, name="modifyInfo"),
