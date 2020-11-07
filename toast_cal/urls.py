@@ -39,6 +39,7 @@ urlpatterns = [
     path(
         "takeVoteSave/", crud.takeVoteSave, name="takeVoteSave"
     ),  # 학생 투표 시간 선택 시 데이터베이스에 저장
+    path("student_voteTable/", crud.student_voteTable, name="student_voteTable"),
     # vote 테이블의 아무값이나 받은 테스트 데이터
     path("voteSelectTest/", crud.voteSelectTest, name="voteSelectTest/"),
     path("getAllStudent/", crud.getAllStudent, name="getAllStudent/"),
@@ -55,7 +56,6 @@ urlpatterns = [
         crud.professor_lecture_delete,
         name="professor_lecture_delete",
     ),  # 교수 강의 삭제
-    # path("pro_vote_open_table/", crud.pro_vote_open_table, name="pro_vote_open_table"),
     path(
         "pro_vote_update_table/",
         crud.pro_vote_update_table,

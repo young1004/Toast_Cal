@@ -233,7 +233,28 @@ voteJoinTabBtn.addEventListener('click', function(event) {
 voteStatusStudentBtn.addEventListener('click', function(event) {
     changeContents('lecture-class-student-tab', 'studentVote');
 
-    $('#voteTableBtn-student').trigger('click');
+    var voteLecType = document.getElementById('lecture-class-student');
+    var voteStatus = document.getElementById('vote-status-student');
+
+    var voteData = {
+        lecture_type: voteLecType.value,
+        vote_status: voteStatus.value,
+    }
+    // console.log(voteData.lecture_type + ", " + voteData.vote_status)
+
+    ajaxPost('/toast_cal/student_voteTable/', 'json', 'POST', voteData).then(function(data) {
+            $('#vote-info-student').empty();
+
+            for (var count = 0; count < data.length; count++) {
+                var tr = $('<tr><td>' + data[count].fields.classCode + '</td>' +
+                    '<td>' + data[count].fields.lecType + '</td>' + '<td>' + data[count].fields.className + '</td>' +
+                    '<td>' + data[count].fields.voteStatus + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteDetail">상세</button></td>');
+                $('#vote-info-student').append(tr);
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
 });
 
 // 투표 참여 관련 변수
@@ -279,33 +300,29 @@ var voteTableBtnStu = document.getElementById('voteTableBtn-student');
 // 학생 투표 현황 선택 버튼
 voteTableBtnStu.addEventListener('click', function(event) {
 
-    // 서버에서 filter를 적용할 투표 페이지 관련 데이터 object : 현재 하드 코딩
-    let voteData_Stu = {
-        lecture_type: '전공 필수',
-        vote_status: '투표중'
+    var voteLecType = document.getElementById('lecture-class-student');
+    var voteStatus = document.getElementById('vote-status-student');
+
+    var voteData = {
+        lecture_type: voteLecType.value,
+        vote_status: voteStatus.value,
     }
 
-    // voteData_Stu.lecture_type = voteClassStu.value;
-    // voteData_Stu.vote_status = voteStatusStu.value;
-
-    // console.log(voteData);
-    ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData_Stu).then(function(data) {
+    ajaxPost('/toast_cal/student_voteTable/', 'json', 'POST', voteData).then(function(data) {
             $('#vote-info-student').empty();
 
             for (var count = 0; count < data.length; count++) {
-                var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
-                    '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
-                    '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn_student">상세</button></td>');
+                var tr = $('<tr><td>' + data[count].fields.classCode + '</td>' +
+                    '<td>' + data[count].fields.lecType + '</td>' + '<td>' + data[count].fields.className + '</td>' +
+                    '<td>' + data[count].fields.voteStatus + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteDetail">상세</button></td>');
                 $('#vote-info-student').append(tr);
             }
-
         })
         .catch(function(err) {
             console.log(err);
-        })
+        });
 });
 
-// let voteJoinCode; // 참여할 투표에 대한 코드값을 저장할 변수
 let voteJoinId; // 참여할 투표의 기본 키 값을 저장할 변수
 
 // 투표 리스트 투표 참여버튼 누를 시 동작하는 로직
@@ -415,22 +432,23 @@ $(document).on('click', '#takeVote', function() {
     }
 });
 
-// 투표 상세?버튼
-$(document).on('click', '.voteBtn_student', function() {
-
-    // 학생 투표 현황 상세 차트 ※ 변수 겹치면 우선 탐색
+// 투표 상세보기 버튼
+$(document).on('click', '.voteDetail', function() {
     var chart = null;
 
-    // 도넛 차트 생성
-    if (chart !== null) chart.destroy();
-    var voteBtn_student = $(this);
+    if (chart !== null)
+        $('#chart-area-student').empty();
 
-    var tr = voteBtn_student.parent().parent();
+    var voteBtn = $(this);
+
+    var tr = voteBtn.parent().parent();
     var td = tr.children();
 
     var chartData = {
         code: td.eq(0).text()
     }
+
+    console.log("classCode : " + chartData.code)
 
     ajaxPost('/toast_cal/voteChart/', 'json', 'POST', chartData).then(function(data) {
             // console.log(data.length);
@@ -438,34 +456,89 @@ $(document).on('click', '.voteBtn_student', function() {
             if (data.length > 0) {
                 //toast UI Chart 세팅
                 var doughnut = document.getElementById('chart-area-student');
+
                 var doughnutData = {
                     categories: ['투표 현황'],
-                    series: [{
-                            name: '찬성',
-                            data: data[0].fields.agree_votes
-                        },
-                        {
-                            name: '반대',
-                            data: data[0].fields.reject_votes
-                        },
-                        {
-                            name: '투표안함',
-                            data: data[0].fields.all_students - data[0].fields.agree_votes - data[0].fields.reject_votes
-                        }
-                    ]
+                    series: []
                 };
 
                 var theme = {
                     series: {
-                        colors: [
-                            '#87CE00', '#FF4848', '#BDBDBD'
-                        ],
+                        colors: [],
                         label: {
                             color: '#000000',
                             fontFamily: 'sans-serif'
                         }
                     }
                 };
+
+                if (data[0].fields.choice2_Title != "False") {
+                    doughnutData.series = [{
+                            name: data[0].fields.choice1_Title,
+                            data: data[0].fields.choice1
+                        },
+                        {
+                            name: data[0].fields.choice2_Title,
+                            data: data[0].fields.choice2
+                        },
+                        {
+                            name: '투표안함',
+                            data: data[0].fields.totalCount - data[0].fields.choice1 - data[0].fields.choice2
+                        }
+                    ]
+
+                    theme.series.colors = ['#F15F5F', '#E5D85C', '#BDBDBD']
+                }
+
+                if (data[0].fields.choice3_Title != "False") {
+                    doughnutData.series = [{
+                            name: data[0].fields.choice1_Title,
+                            data: data[0].fields.choice1
+                        },
+                        {
+                            name: data[0].fields.choice2_Title,
+                            data: data[0].fields.choice2
+                        },
+                        {
+                            name: data[0].fields.choice3_Title,
+                            data: data[0].fields.choice3
+                        },
+                        {
+                            name: '투표안함',
+                            data: data[0].fields.totalCount - data[0].fields.choice1 - data[0].fields.choice2 -
+                                data[0].fields.choice3
+                        }
+                    ]
+
+                    theme.series.colors = ['#F15F5F', '#E5D85C', '#86E57F', '#BDBDBD']
+                }
+
+                if (data[0].fields.choice4_Title != "False") {
+                    doughnutData.series = [{
+                            name: data[0].fields.choice1_Title,
+                            data: data[0].fields.choice1
+                        },
+                        {
+                            name: data[0].fields.choice2_Title,
+                            data: data[0].fields.choice2
+                        },
+                        {
+                            name: data[0].fields.choice3_Title,
+                            data: data[0].fields.choice3
+                        },
+                        {
+                            name: data[0].fields.choice4_Title,
+                            data: data[0].fields.choice4
+                        },
+                        {
+                            name: '투표안함',
+                            data: data[0].fields.totalCount - data[0].fields.choice1 - data[0].fields.choice2 -
+                                data[0].fields.choice3 - data[0].fields.choice4
+                        }
+                    ]
+
+                    theme.series.colors = ['#F15F5F', '#E5D85C', '#86E57F', '#6799FF', '#BDBDBD']
+                }
 
                 tui.chart.registerTheme('myTheme', theme);
 
@@ -474,7 +547,7 @@ $(document).on('click', '.voteBtn_student', function() {
                     chart: {
                         width: 400,
                         height: 250,
-                        title: data[0].fields.name + '(' + data[0].fields.code + ') 시험 투표',
+                        title: data[0].fields.className + '(' + data[0].fields.classCode + ') 시험 투표',
                         format: function(value, chartType, areaType, valuetype, legendName) {
                             if (areaType === 'makingSeriesLabel') {
                                 value = value;
@@ -500,6 +573,7 @@ $(document).on('click', '.voteBtn_student', function() {
 
 
                 chart = tui.chart.pieChart(doughnut, doughnutData, doughnutOption);
+
             }
 
         })
@@ -510,18 +584,9 @@ $(document).on('click', '.voteBtn_student', function() {
     // 선택한 투표의 강의 정보
     $('#lec-info-student').empty();
 
-    var voteBtn_student = $(this);
-
-    var tr = voteBtn_student.parent().parent();
-    var td = tr.children();
-
-    var lec_info = {
-        code: td.eq(0).text()
-    }
-
-    ajaxPost('/toast_cal/getLectureInfo/', 'json', 'POST', lec_info)
+    ajaxPost('/toast_cal/getLectureInfo/', 'json', 'POST', chartData)
         .then(function(data) {
-            console.log(data);
+            // console.log(data);
             for (i = 0; i < data.length; i++) {
                 var testText = $(
                     '<div id = "lec-info-wrap">' +

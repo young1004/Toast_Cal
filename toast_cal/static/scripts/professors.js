@@ -905,8 +905,8 @@ voteStatusTabBtn.addEventListener('click', function(event) {
     changeContents('professor-vote-status', 'professor-vote-open', 'professor-vote-update');
 
     var voteData = {
-        lecture_type: '전공 필수',
-        vote_status: '투표 중'
+        lecture_type: voteClass.value,
+        vote_status: voteStatus.value
     }
 
     ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) {
@@ -959,12 +959,35 @@ $('#vote-open-btn').click(async function() {
                 check = 0;
             } else if (check == 0) {
                 if (array.length >= 2 && array.length <= 4 && check == 0) { //과목 선택을 했을때
+                    let today_data_vote = new Date();
+
+                    let get_year_vote = today_data_vote.getFullYear();
+                    let get_month_vote = today_data_vote.getMonth() + 1;
+                    let get_day_vote = today_data_vote.getDate();
+                    let get_hour_vote = today_data_vote.getHours();
+                    let get_min_vote = today_data_vote.getMinutes();
+                    let get_sec_vote = today_data_vote.getSeconds();
+                    let get_mil_vote = today_data_vote.getMilliseconds();
+
+                    if (get_month_vote < 10) get_month_vote = '0' + get_month_vote;
+                    if (get_day_vote < 10) get_day_vote = '0' + get_day_vote;
+
+                    let today_data_vote_status =
+                        get_year_vote + '-' + get_month_vote + '-' + get_day_vote + ' ' +
+                        get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+
+                    let start_data_vote_status = $('#voteStart').val() + ' ' +
+                        get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+
+                    let end_data_vote_status = $('#voteEnd').val() + ' ' +
+                        get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
 
                     husks = {
                         select_Array: array,
                         classCode: classCode,
-                        start: $('#voteStart').val(),
-                        end: $('#voteEnd').val(),
+                        today: today_data_vote_status,
+                        start: start_data_vote_status,
+                        end: end_data_vote_status,
                     }
 
                     ajaxPost('/toast_cal/create_Vote/', 'json', 'POST', husks)
@@ -1338,10 +1361,12 @@ $(document).on('click', '.correctBtn', async function() {
 
     await ajaxPost('/toast_cal/subject_info/', 'json', 'POST', class_data)
         .then(function(data) {
-            for (var count = 0; count < data.length; count++) {
-                className = data[count].fields.name;
-                lecType = data[count].fields.lecture_type;
-            }
+            className = data[0].fields.name;
+            lecType = data[0].fields.lecture_type;
+            // for (var count = 0; count < data.length; count++) {
+            //     className = data[count].fields.name;
+            //     lecType = data[count].fields.lecture_type;
+            // }
         })
         .catch(function(err) {
             console.log(err);
@@ -1402,12 +1427,37 @@ $('#vote-update-btn').click(function() {
 
     if (array.length >= 2 && array.length <= 4) {
         if (confirm("투표를 수정하면 이전의 데이터가 삭제됩니다.\n정말 삭제하시겠습니까?") == true) {
+
+            let today_data_vote = new Date();
+
+            let get_year_vote = today_data_vote.getFullYear();
+            let get_month_vote = today_data_vote.getMonth() + 1;
+            let get_day_vote = today_data_vote.getDate();
+            let get_hour_vote = today_data_vote.getHours();
+            let get_min_vote = today_data_vote.getMinutes();
+            let get_sec_vote = today_data_vote.getSeconds();
+            let get_mil_vote = today_data_vote.getMilliseconds();
+            
+            if (get_month_vote < 10) get_month_vote = '0' + get_month_vote;
+            if (get_day_vote < 10) get_day_vote = '0' + get_day_vote;
+            
+            let today_data_vote_status =
+                get_year_vote + '-' + get_month_vote + '-' + get_day_vote + ' ' +
+                get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+
+            let start_data_vote_status = $('#vote-update-Start').val() + ' ' +
+                get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+
+            let end_data_vote_status = $('#vote-update-End').val() + ' ' +
+                get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+
             class_data = {
                 select_Array: array,
                 lecType: td[0].innerText,
                 className: td[1].innerText,
-                start: $('#vote-update-Start').val(),
-                end: $('#vote-update-End').val(),
+                start : start_data_vote_status,
+                end : end_data_vote_status,
+                today: today_data_vote_status,
             }
 
             ajaxPost('/toast_cal/update_Vote/', 'json', 'POST', class_data)
@@ -1447,20 +1497,9 @@ window.addEventListener('load', function() {
         get_year_vote + '-' + get_month_vote + '-' + get_day_vote + ' ' +
         get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
 
-    // 교수이름가져오기
-    let prop_name = document.getElementsByClassName("username_set")[0].innerHTML;
-    // console.log(prop_name);
-
-    let prop_name_substr = prop_name.substr(99, 3);
-    // console.log(prop_name_substr);
-
     test_data = {
         today: today_data_vote_status,
-        proName: prop_name_substr,
     }
-
-
-    // console.log(today_data_vote_status);
 
     // 투표테이블 정보를 가져옴
     ajaxPost('/toast_cal/renewal_vote_status/', 'json', 'POST', test_data)
