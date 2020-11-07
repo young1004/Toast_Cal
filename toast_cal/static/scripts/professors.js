@@ -1230,37 +1230,6 @@ $(document).on('click', '.voteBtn', function() {
 });
 
 
-// 공유캘린더 과목코드 변경시 즉시 실행되어 테이블에 수강학생 전체 목록 출력
-// $(function() {
-$('#pubcal_select').on('change', function() {
-    var select_val = $("#pubcal_select option:selected").val();
-
-    var test_data = {
-        code: select_val,
-    }
-
-    ajaxPost('/toast_cal/getAllStudent/', 'json', 'POST', test_data).then(function(data) {
-            // console.log(data)
-
-            $('#vote-pub-info').empty();
-
-            for (var count = 0; count < data.length; count++) {
-                var tr = $('<tr><td>' + data[count].fields.studentID + '</td>' +
-                    '<td>' + data[count].fields.username + '</td>' +
-                    '<td>' + data[count].fields.department + '</td>' +
-                    '</tr>'
-                );
-
-                $('#vote-pub-info').append(tr);
-            }
-        })
-        .catch(function(err) {
-            console.log(err);
-        })
-});
-
-// });
-
 $(document).on('click', '.voteDelete', function() {
     var deleteBtn = $(this);
 

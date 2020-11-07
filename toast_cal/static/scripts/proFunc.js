@@ -72,8 +72,9 @@ async function printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json
 function getSubCode(str){
     let code;
 
-    code = str.split(' ')[1];
-    code = code.substring(1, code.length - 1);
+    let idx = str.indexOf('(');
+
+    code = str.substring(idx + 1, str.length - 1);
 
     return code;
 }
