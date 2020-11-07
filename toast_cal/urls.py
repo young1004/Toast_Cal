@@ -55,7 +55,7 @@ urlpatterns = [
         crud.professor_lecture_delete,
         name="professor_lecture_delete",
     ),  # 교수 강의 삭제
-    path("pro_vote_open_table/", crud.pro_vote_open_table, name="pro_vote_open_table"),
+    # path("pro_vote_open_table/", crud.pro_vote_open_table, name="pro_vote_open_table"),
     path(
         "pro_vote_update_table/",
         crud.pro_vote_update_table,

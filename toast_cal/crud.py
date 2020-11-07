@@ -434,15 +434,15 @@ def professor_lecture_delete(request):
 
 
 # 교수 투표 개설 테이블 데이터 전송 함수
-def pro_vote_open_table(request):
-    if request.method == "POST":
-        avail_time = Ava_Time.objects.filter(
-            classCode=request.POST["classCode"]
-        ).order_by("-status")
+# def pro_vote_open_table(request):
+#     if request.method == "POST":
+#         avail_time = Ava_Time.objects.filter(
+#             classCode=request.POST["classCode"]
+#         ).order_by("-status")
 
-        return HttpResponse(
-            serializers.serialize("json", avail_time), content_type="application/json"
-        )
+#         return HttpResponse(
+#             serializers.serialize("json", avail_time), content_type="application/json"
+#         )
 
 
 def subject_info(request):
