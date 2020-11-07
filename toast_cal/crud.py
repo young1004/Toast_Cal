@@ -992,18 +992,18 @@ def update_Vote(request):
 
 
 # 오른쪽 투표정보탭에 있는 투표 삭제버튼 기능
-def delete_vote_from_info(request):
-    if request.method == "POST":
-        classCode = request.POST["code"]
+# def delete_vote_from_info(request):
+#     if request.method == "POST":
+#         classCode = request.POST["code"]
 
-        delete_vote = Vote.objects.get(classCode=classCode)
-        delete_vote.delete()
+#         delete_vote = Vote.objects.get(classCode=classCode)
+#         delete_vote.delete()
 
-        voteInfo = Vote.objects.filter(classCode=request.POST["code"])
+#         voteInfo = Vote.objects.filter(classCode=request.POST["code"])
 
-    return HttpResponse(
-        serializers.serialize("json", voteInfo), content_type="application/json"
-    )
+#     return HttpResponse(
+#         serializers.serialize("json", voteInfo), content_type="application/json"
+#     )
 
 
 # 투표정보를 모두 불러 와서 시간비교하여 투표상태 바꾸기 위함.

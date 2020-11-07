@@ -87,11 +87,6 @@ urlpatterns = [
     path("voteTimeSave/", crud.voteTimeSave, name="voteTimeSave"),  # 투표 가능 시간대 저장
     # [2020-11-07 06:21] 새 기능
     path(
-        "delete_vote_from_info/",
-        crud.delete_vote_from_info,
-        name="delete_vote_from_info",
-    ),  # 교수 투표 삭제
-    path(
         "renewal_vote_status/", crud.renewal_vote_status, name="renewal_vote_status"
     ),  # 투표 상태 갱신
 ]
