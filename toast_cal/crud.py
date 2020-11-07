@@ -275,13 +275,13 @@ def takeVoteSave(request):
         if checkData[0].studentID == request.session["userID"]:
             return HttpResponse("이미 투표하셨습니다!")
 
-    if voteData[0].choice1_Title == request.POST["array[0][time]"]:
+    if request.POST["array[0][time]"] != "False":
         voteData.update(choice1=voteData[0].choice1 + 1)
-    if voteData[0].choice2_Title == request.POST["array[1][time]"]:
+    if request.POST["array[1][time]"] != "False":
         voteData.update(choice2=voteData[0].choice2 + 1)
-    if voteData[0].choice3_Title == request.POST["array[2][time]"]:
+    if request.POST["array[2][time]"] != "False":
         voteData.update(choice3=voteData[0].choice3 + 1)
-    if voteData[0].choice4_Title == request.POST["array[3][time]"]:
+    if request.POST["array[3][time]"] != "False":
         voteData.update(choice4=voteData[0].choice4 + 1)
 
     voteInfoData = VoteInfo.objects.create(
