@@ -766,7 +766,7 @@ def voteTimeLoad(request):
 # ava_Time 테이블에 저장하고, 저장한 값을 보내줌
 def voteTimeSave(request):
     print(request.POST)
-    ava_time = Ava_Time.objects.all()
+    ava_time = Ava_Time.objects.filter(classCode=request.POST["newDate[0][code]"])
 
     if request.method == "POST":
         if ava_time.exists():

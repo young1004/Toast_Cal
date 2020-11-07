@@ -54,6 +54,8 @@ subProBtn.addEventListener('click', async function(event) {
 // 투표 기능 버튼 리스너
 voteProBtn.addEventListener('click', async function(event) {
 
+    $('#vote-open-tbody').empty();
+
     var check_subject;
     await ajaxPost('/toast_cal/check_user_subject/', 'json', 'POST', 1)
         .then(function(data) {
@@ -91,6 +93,7 @@ voteProBtn.addEventListener('click', async function(event) {
         document.getElementById('voteStart').value = tv_start;
         document.getElementById('voteEnd').value = tv_end;
 
+        // select options 셋팅
         await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
             .then(function(data) {
                 $('#class_select').empty(); //기존 옵션 값 삭제
@@ -102,58 +105,6 @@ voteProBtn.addEventListener('click', async function(event) {
             })
             .catch(function(err) {
                 alert(err);
-            });
-
-        var select_val = $("#class_select option:selected").val();
-
-        var select_data = {
-            classCode: select_val,
-        }
-
-        var className = "";
-        var lecType = "";
-
-        ajaxPost('/toast_cal/subject_info/', 'json', 'POST', select_data)
-            .then(function(data) {
-                //console.log(data);
-
-                for (var count = 0; count < data.length; count++) {
-                    className = data[count].fields.name;
-                    lecType = data[count].fields.lecture_type;
-                }
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
-
-        ajaxPost('/toast_cal/pro_vote_open_table/', 'json', 'POST', select_data)
-            .then(function(data) {
-                //console.log(data)
-
-                $('#vote-open-tbody').empty();
-
-                for (var count = 0; count < data.length; count++) {
-                    var status = data[count].fields.status;
-                    var timeStatus = "";
-
-                    if (status < 0.3) {
-                        timeStatus = "선택불가";
-                    } else if (status < 0.5) {
-                        timeStatus = "혼잡";
-                    } else {
-                        timeStatus = "원활";
-                    }
-
-                    var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\', false)"><td>' + lecType + '</td>' +
-                        '<td>' + className + '</td>' +
-                        '<td>' + timeStatus + '</td>' +
-                        '<td>' + data[count].fields.avaTime + '</td></tr>');
-
-                    $('#vote-open-tbody').append(tr);
-                }
-            })
-            .catch(function(err) {
-                console.log(err);
             });
 
     } else {
@@ -185,7 +136,7 @@ $(document).on("click", "#vote-ava-time", async function() {
 
     await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', voteTimeLoad)
         .then(function(data) {
-            console.log(data);
+            // console.log(data);
         })
         .catch(function(err) {
             alert(err);
@@ -214,6 +165,7 @@ $(document).on("click", "#vote-ava-time", async function() {
 
 // 공용 캘린더 버튼 리스너
 shareProBtn.addEventListener('click', async function(event) {
+
     var check_subject;
     await ajaxPost('/toast_cal/check_user_subject/', 'json', 'POST', 1)
         .then(function(data) {
@@ -224,7 +176,7 @@ shareProBtn.addEventListener('click', async function(event) {
         });
 
     if (check_subject === "강의 있음") {
-        $('#pubCalLoadBtn').trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
+        $('#pubCalLoad').trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
         changeContents('professor3', 'professor2', 'calendar-common', 'sidebar', 'professor1', 'tab_box');
         changeContents('pubcal_vote_info');
 
@@ -256,8 +208,10 @@ shareProBtn.addEventListener('click', async function(event) {
             code: select_val,
         }
 
+
+        // 해당 강의 수강 중인 학생 목록 출력하는 부분
         await ajaxPost('/toast_cal/getAllStudent/', 'json', 'POST', test_data).then(function(data) {
-                console.log(data)
+                // console.log(data)
 
                 $('#vote-pub-info').empty();
 
@@ -277,7 +231,7 @@ shareProBtn.addEventListener('click', async function(event) {
 
         // 공유캘린더 우측 right_nav위치에 나타낼 해당 과목에 대한 투표정보
         ajaxPost('/toast_cal/getVoteInfo/', 'json', 'POST', test_data).then(function(data) {
-            console.log(data)
+            // console.log(data)
 
             $('#pubcal_vote_info').empty();
 
@@ -423,182 +377,160 @@ shareProBtn.addEventListener('click', async function(event) {
 
 });
 
-
 // 공유캘린더 과목코드 변경시 즉시 right_nav위치의 투표정보를 바꿔주는 함수
-$(function() {
-    $('#pubcal_select').on('change', function() {
-        var select_val = $("#pubcal_select option:selected").val();
+$('#pubcal_select').on('change', function() {
+    pubCalendar.clear();
 
-        var test_data = {
-            code: select_val,
-        }
+    var select_val = $("#pubcal_select option:selected").val();
 
-        ajaxPost('/toast_cal/getVoteInfo/', 'json', 'POST', test_data).then(function(data) {
-                console.log(data)
+    var test_data = {
+        code: select_val,
+    }
 
-                $('#pubcal_vote_info').empty();
+    ajaxPost('/toast_cal/getVoteInfo/', 'json', 'POST', test_data).then(function(data) {
+            console.log(data)
 
-                // 개설된 강의가 존재하면 투표정보에 대한 타이틀을 띄워줌
-                var pubcal_vote_info_title =
-                    $('<ul class = "vote_info_title_area">' +
-                        '<li class = "vote_info_title">' +
-                        '<span>' +
-                        select_val + '에 대한 투표정보' +
-                        '</span>' +
-                        '</li>' +
-                        '</ul>');
-                $('#pubcal_vote_info').append(pubcal_vote_info_title);
+            $('#pubcal_vote_info').empty();
 
-                // 투표 테이블에 강의코드와 맞는 투표항목이 없을경우 투표개설하도록 띄워줌
-                if (data.length == 0) {
-                    var vote_data_null =
-                        $('<div class = "vote_info_tab_null">' +
-                            '<div class = "vote_info_area">' +
-                            '<span class = "vote_infomation">' +
-                            '해당 과목에 대한 투표내역이 없습니다.' +
-                            '</span>' + '<br>' +
-                            '<input type = "button" id = "portal_to_making_vote" value = "투표개설하기">' +
-                            '</div>' +
-                            '</div>'
-                        );
-                    $('#pubcal_vote_info').append(vote_data_null);
+            // 개설된 강의가 존재하면 투표정보에 대한 타이틀을 띄워줌
+            var pubcal_vote_info_title =
+                $('<ul class = "vote_info_title_area">' +
+                    '<li class = "vote_info_title">' +
+                    '<span>' +
+                    select_val + '에 대한 투표정보' +
+                    '</span>' +
+                    '</li>' +
+                    '</ul>');
+            $('#pubcal_vote_info').append(pubcal_vote_info_title);
+
+            // 투표 테이블에 강의코드와 맞는 투표항목이 없을경우 투표개설하도록 띄워줌
+            if (data.length == 0) {
+                var vote_data_null =
+                    $('<div class = "vote_info_tab_null">' +
+                        '<div class = "vote_info_area">' +
+                        '<span class = "vote_infomation">' +
+                        '해당 과목에 대한 투표내역이 없습니다.' +
+                        '</span>' + '<br>' +
+                        '<input type = "button" id = "portal_to_making_vote" value = "투표개설하기">' +
+                        '</div>' +
+                        '</div>'
+                    );
+                $('#pubcal_vote_info').append(vote_data_null);
+            }
+
+
+            // 투표테이블에 해당강의코드에 맞는 투표항목들을 반복생성
+            for (var count = 0; count < data.length; count++) {
+
+                // 날짜 데이터
+                var vote_date_start = data[count].fields.start;
+                var vote_date_end = data[count].fields.end;
+
+                // 날짜출력
+                var startMonth = vote_date_start.substr(5, 2); //시작 월
+                var startDay = vote_date_start.substr(8, 2); //시작 일
+                var endMonth = vote_date_end.substr(5, 2); // 끝 월
+                var endDay = vote_date_end.substr(8, 2); // 끝 일
+
+                // 시간출력
+                // 시작 출력
+                var startHour = vote_date_start.substr(11, 2);
+                var startMin = vote_date_start.substr(14, 2);
+                // 끝 출력
+                var endHour = vote_date_end.substr(11, 2);
+                var endMin = vote_date_end.substr(14, 2);
+
+                // 투표제목 출력을 위함.
+                var choice_title1 = data[count].fields.choice1_Title;
+                var choice_title2 = data[count].fields.choice2_Title;
+                var choice_title3 = data[count].fields.choice3_Title;
+                var choice_title4 = data[count].fields.choice4_Title;
+
+                var choice1 = choice_title1.substr(10);
+                var choice2 = choice_title2.substr(10);
+                var choice3 = choice_title3.substr(10);
+                var choice4 = choice_title4.substr(10);
+
+                // 투표수 카운팅
+                // 2가지 선택을 받았을때
+                if (data[count].fields.choice3 == null && data[count].fields.choice4 == null) {
+                    var countVote_Choice =
+                        data[count].fields.choice1 + data[count].fields.choice2;
                 }
-
-
-                // 투표테이블에 해당강의코드에 맞는 투표항목들을 반복생성
-                for (var count = 0; count < data.length; count++) {
-
-                    // 날짜 데이터
-                    var vote_date_start = data[count].fields.start;
-                    var vote_date_end = data[count].fields.end;
-
-                    // 날짜출력
-                    var startMonth = vote_date_start.substr(5, 2); //시작 월
-                    var startDay = vote_date_start.substr(8, 2); //시작 일
-                    var endMonth = vote_date_end.substr(5, 2); // 끝 월
-                    var endDay = vote_date_end.substr(8, 2); // 끝 일
-
-                    // 시간출력
-                    // 시작 출력
-                    var startHour = vote_date_start.substr(11, 2);
-                    var startMin = vote_date_start.substr(14, 2);
-                    // 끝 출력
-                    var endHour = vote_date_end.substr(11, 2);
-                    var endMin = vote_date_end.substr(14, 2);
-
-                    // 투표제목 출력을 위함.
-                    var choice_title1 = data[count].fields.choice1_Title;
-                    var choice_title2 = data[count].fields.choice2_Title;
-                    var choice_title3 = data[count].fields.choice3_Title;
-                    var choice_title4 = data[count].fields.choice4_Title;
-
-                    var choice1 = choice_title1.substr(10);
-                    var choice2 = choice_title2.substr(10);
-                    var choice3 = choice_title3.substr(10);
-                    var choice4 = choice_title4.substr(10);
-
-                    // 투표수 카운팅
-                    // 2가지 선택을 받았을때
-                    if (data[count].fields.choice3 == null && data[count].fields.choice4 == null) {
-                        var countVote_Choice =
-                            data[count].fields.choice1 + data[count].fields.choice2;
-                    }
-                    // 4가지를 모두 받을때
-                    else {
-                        var countVote_Choice =
-                            data[count].fields.choice1 + data[count].fields.choice2 + data[count].fields.choice3 + data[count].fields.choice4;
-                    }
-                    var vote_data =
-                        $('<div class = "vote_info_tab">' +
-                            '<div class = "vote_info_area">' +
-                            '<div class = "vote_infomation">' +
-                            '<div class = "class_name_title_data">' +
-                            '<span class = "class_name_title">' + '과목명 </span>' +
-                            '</div>' +
-                            '<div class = "class_name_data">' +
-                            '<span class = "class_name">' + data[count].fields.className + '</span>' +
-                            '</div>' +
-                            '<div class = "vote_date_title_data">' +
-                            '<span class = "vote_date_title">' + '투표기한' + '</span>' + '<br>' +
-                            '</div>' +
-                            '<div class = "vote_date_data">' +
-                            '<span class = "vote_date">' +
-                            startMonth + '월 ' + startDay + '일 ' + startHour + '시 ' + startMin + '분' + '<br>' +
-                            ' ~ ' + '<br>' +
-                            endMonth + '월 ' + endDay + '일 ' + endHour + '시 ' + endMin + '분' +
-                            '</span>' + '</div>' +
-                            '<div class = "vote_status_title_data">' +
-                            '<span class = "vote_status_title">' + '상태' + '</span>' +
-                            '</div>' +
-                            '<div class = "vote_status_data">' +
-                            '<span class = "vote_status">' + data[count].fields.voteStatus + '</span>' +
-                            '</div>' +
-                            '<div class = "vote_choice_title_data">' +
-                            '<span class = "vote_choice_title">' + '투표현황' + '</span>' +
-                            '</div>' +
-                            '<div class = "vote_choice_data">' +
-                            '<div id = "basic_vote_list">' +
-                            '<span class = "vote_choice">' + choice1 + ': </span>' +
-                            '<span class = "vote_choice_count">' + data[count].fields.choice1 + '표 / ' +
-                            '<span class = "vote_choice">' + choice2 + ': </span>' +
-                            '<span class = "vote_choice_count">' + data[count].fields.choice2 + '표 ' + '<br>' +
-                            '</div>' +
-                            '<span class = "total_count_vote">전체 ' + data[count].fields.totalCount + '명 중 ' +
-                            countVote_Choice + '명 투표</span>' + '<br>' +
-                            '</div>' +
-                            '<input type = "button" id = "portal_to_correct_vote" value = "투표관리하기">' +
-                            '<input type = "button" id = "delete_vote" value = "투표삭제하기">' +
-                            '</div>' +
-                            '</div>'
-                        );
-                    $('#pubcal_vote_info').append(vote_data);
-
-                    // 투표선택지가 다중일경우
-                    if (data[count].fields.choice4_Title === "False") {
-                        var choice3_info =
-                            $(
-                                '<span class = "vote_choice">' + choice3 + ': </span>' +
-                                '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  ' + '</span>'
-                            );
-                        $('#basic_vote_list').append(choice3_info);
-                    }
-                    if (data[count].fields.choice4_Title !== "False" && data[count].fields.choice3_Title !== "False") {
-                        var choice4_info =
-                            $('<span class = "vote_choice">' + choice3 + ': </span>' +
-                                '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  / ' + '</span>' +
-                                '<span class = "vote_choice">' + choice4 + ': </span>' +
-                                '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표  ' + '</span>'
-                            );
-                        $('#basic_vote_list').append(choice4_info);
-                    }
+                // 4가지를 모두 받을때
+                else {
+                    var countVote_Choice =
+                        data[count].fields.choice1 + data[count].fields.choice2 + data[count].fields.choice3 + data[count].fields.choice4;
                 }
-            })
-            .catch(function(err) {
-                console.log(err);
-            })
-    });
+                var vote_data =
+                    $('<div class = "vote_info_tab">' +
+                        '<div class = "vote_info_area">' +
+                        '<div class = "vote_infomation">' +
+                        '<div class = "class_name_title_data">' +
+                        '<span class = "class_name_title">' + '과목명 </span>' +
+                        '</div>' +
+                        '<div class = "class_name_data">' +
+                        '<span class = "class_name">' + data[count].fields.className + '</span>' +
+                        '</div>' +
+                        '<div class = "vote_date_title_data">' +
+                        '<span class = "vote_date_title">' + '투표기한' + '</span>' + '<br>' +
+                        '</div>' +
+                        '<div class = "vote_date_data">' +
+                        '<span class = "vote_date">' +
+                        startMonth + '월 ' + startDay + '일 ' + startHour + '시 ' + startMin + '분' + '<br>' +
+                        ' ~ ' + '<br>' +
+                        endMonth + '월 ' + endDay + '일 ' + endHour + '시 ' + endMin + '분' +
+                        '</span>' + '</div>' +
+                        '<div class = "vote_status_title_data">' +
+                        '<span class = "vote_status_title">' + '상태' + '</span>' +
+                        '</div>' +
+                        '<div class = "vote_status_data">' +
+                        '<span class = "vote_status">' + data[count].fields.voteStatus + '</span>' +
+                        '</div>' +
+                        '<div class = "vote_choice_title_data">' +
+                        '<span class = "vote_choice_title">' + '투표현황' + '</span>' +
+                        '</div>' +
+                        '<div class = "vote_choice_data">' +
+                        '<div id = "basic_vote_list">' +
+                        '<span class = "vote_choice">' + choice1 + ': </span>' +
+                        '<span class = "vote_choice_count">' + data[count].fields.choice1 + '표 / ' +
+                        '<span class = "vote_choice">' + choice2 + ': </span>' +
+                        '<span class = "vote_choice_count">' + data[count].fields.choice2 + '표 ' + '<br>' +
+                        '</div>' +
+                        '<span class = "total_count_vote">전체 ' + data[count].fields.totalCount + '명 중 ' +
+                        countVote_Choice + '명 투표</span>' + '<br>' +
+                        '</div>' +
+                        '<input type = "button" id = "portal_to_correct_vote" value = "투표관리하기">' +
+                        '<input type = "button" id = "delete_vote" value = "투표삭제하기">' +
+                        '</div>' +
+                        '</div>'
+                    );
+                $('#pubcal_vote_info').append(vote_data);
+
+                // 투표선택지가 다중일경우
+                if (data[count].fields.choice4_Title === "False") {
+                    var choice3_info =
+                        $(
+                            '<span class = "vote_choice">' + choice3 + ': </span>' +
+                            '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  ' + '</span>'
+                        );
+                    $('#basic_vote_list').append(choice3_info);
+                }
+                if (data[count].fields.choice4_Title !== "False" && data[count].fields.choice3_Title !== "False") {
+                    var choice4_info =
+                        $('<span class = "vote_choice">' + choice3 + ': </span>' +
+                            '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  / ' + '</span>' +
+                            '<span class = "vote_choice">' + choice4 + ': </span>' +
+                            '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표  ' + '</span>'
+                        );
+                    $('#basic_vote_list').append(choice4_info);
+                }
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
 });
-
-// 투표정보가 없을때 뜨는 투표개설버튼에 대한 이벤트리스너 생성
-// $(document).on("click", "#portal_to_making_vote", function() {
-//     changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
-//     changeContents('tab_box');
-//     changeContents('professor-vote-open', 'professor-vote-status', 'professor-vote-update');
-
-//     ajaxPost('/toast_cal/pro_vote_open_table/', 'json', 'POST', 1).then(function(data) {
-//             $('#vote-open-tbody').empty();
-
-//             for (var count = 0; count < data.length; count++) {
-//                 var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\', false)"><td>' + data[count].fields.code + '</td>' +
-//                     '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
-//                     '<td>' + data[count].fields.professor + '</td>' + '<td> 2020-test-1234 </td></tr>');
-//                 $('#vote-open-tbody').append(tr);
-//             }
-//         })
-//         .catch(function(err) {
-//             alert(err);
-//         });
-// });
 
 // 투표정보가 있을경우
 // 투표정보에 대한 투표수정으로 가는 링크 버튼
@@ -946,54 +878,6 @@ var voteStatusTabBtn = document.getElementById('vote-status-tab-btn');
 voteOpenTabBtn.addEventListener('click', function(event) {
     changeContents('professor-vote-open', 'professor-vote-status', 'professor-vote-update');
 
-    // var select_val = $("#class_select option:selected").val();
-
-    // var select_data = {
-    //     classCode: select_val,
-    // }
-
-    // var className = "";
-    // var lecType = "";
-
-    // ajaxPost('/toast_cal/subject_info/', 'json', 'POST', select_data)
-    //     .then(function(data) {
-    //         for (var count = 0; count < data.length; count++) {
-    //             className = data[count].fields.name;
-    //             lecType = data[count].fields.lecture_type;
-    //         }
-    //     })
-    //     .catch(function(err) {
-    //         console.log(err);
-    //     })
-
-    // ajaxPost('/toast_cal/pro_vote_open_table/', 'json', 'POST', select_data)
-    //     .then(function(data) {
-    //         //console.log(data)
-
-    //         $('#vote-open-tbody').empty();
-
-    //         for (var count = 0; count < data.length; count++) {
-    //             var status = data[count].fields.status;
-    //             var timeStatus = "";
-
-    //             if (status < 0.3) {
-    //                 timeStatus = "선택불가";
-    //             } else if (status < 0.5) {
-    //                 timeStatus = "혼잡";
-    //             } else {
-    //                 timeStatus = "원활";
-    //             }
-
-    //             var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\', false)"><td>' + lecType + '</td>' +
-    //                 '<td>' + className + '</td>' +
-    //                 '<td>' + timeStatus + '</td>' +
-    //                 '<td>' + data[count].fields.avaTime + '</td></tr>');
-    //             $('#vote-open-tbody').append(tr);
-    //         }
-    //     })
-    //     .catch(function(err) {
-    //         console.log(err);
-    //     });
 });
 
 // 투표 현황 탭 버튼
@@ -1320,87 +1204,35 @@ $(document).on('click', '.voteBtn', function() {
 
 
 // 공유캘린더 과목코드 변경시 즉시 실행되어 테이블에 수강학생 전체 목록 출력
-$(function() {
-    $('#pubcal_select').on('change', function() {
-        var select_val = $("#pubcal_select option:selected").val();
+// $(function() {
+$('#pubcal_select').on('change', function() {
+    var select_val = $("#pubcal_select option:selected").val();
 
-        var test_data = {
-            code: select_val,
-        }
+    var test_data = {
+        code: select_val,
+    }
 
-        ajaxPost('/toast_cal/getAllStudent/', 'json', 'POST', test_data).then(function(data) {
-                // console.log(data)
+    ajaxPost('/toast_cal/getAllStudent/', 'json', 'POST', test_data).then(function(data) {
+            // console.log(data)
 
-                $('#vote-pub-info').empty();
+            $('#vote-pub-info').empty();
 
-                for (var count = 0; count < data.length; count++) {
-                    var tr = $('<tr><td>' + data[count].fields.studentID + '</td>' +
-                        '<td>' + data[count].fields.username + '</td>' +
-                        '<td>' + data[count].fields.department + '</td>' +
-                        '</tr>'
-                    );
+            for (var count = 0; count < data.length; count++) {
+                var tr = $('<tr><td>' + data[count].fields.studentID + '</td>' +
+                    '<td>' + data[count].fields.username + '</td>' +
+                    '<td>' + data[count].fields.department + '</td>' +
+                    '</tr>'
+                );
 
-                    $('#vote-pub-info').append(tr);
-                }
-            })
-            .catch(function(err) {
-                console.log(err);
-            })
-    });
-    
-    // $('#class_select').on('change', function() {
-    //     var select_val = $("#class_select option:selected").val();
-
-    //     var select_data = {
-    //         classCode: select_val,
-    //     }
-
-    //     var className = "";
-    //     var lecType = "";
-
-    //     ajaxPost('/toast_cal/subject_info/', 'json', 'POST', select_data)
-    //         .then(function(data) {
-    //             for (var count = 0; count < data.length; count++) {
-    //                 className = data[count].fields.name;
-    //                 lecType = data[count].fields.lecture_type;
-    //             }
-    //         })
-    //         .catch(function(err) {
-    //             console.log(err);
-    //         })
-
-    //     ajaxPost('/toast_cal/pro_vote_open_table/', 'json', 'POST', select_data)
-    //         .then(function(data) {
-    //             //console.log(data)
-
-    //             $('#vote-open-tbody').empty();
-
-    //             for (var count = 0; count < data.length; count++) {
-    //                 var status = data[count].fields.status;
-    //                 var timeStatus = "";
-
-    //                 if (status < 0.3) {
-    //                     timeStatus = "선택불가";
-    //                 } else if (status < 0.5) {
-    //                     timeStatus = "혼잡";
-    //                 } else {
-    //                     timeStatus = "원활";
-    //                 }
-
-    //                 var tr = $('<tr scope="row" onclick="clickTrEvent(this,\'#vote-open-tbody\', false)"><td>' + lecType + '</td>' +
-    //                     '<td>' + className + '</td>' +
-    //                     '<td>' + timeStatus + '</td>' +
-    //                     '<td>' + data[count].fields.avaTime + '</td></tr>');
-
-    //                 $('#vote-open-tbody').append(tr);
-    //             }
-    //         })
-    //         .catch(function(err) {
-    //             console.log(err);
-    //         })
-    // });
-
+                $('#vote-pub-info').append(tr);
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
 });
+
+// });
 
 $(document).on('click', '.voteDelete', function() {
     var deleteBtn = $(this);
@@ -1634,4 +1466,9 @@ window.addEventListener('load', function() {
         .catch(function(err) {
             console.log(err);
         });
+});
+
+// 투표 관리의 과목을 변경했을 때 테이블데이터를 지워줌
+$('#class_select').on('change', function() {
+    $('#vote-open-tbody').empty();
 });

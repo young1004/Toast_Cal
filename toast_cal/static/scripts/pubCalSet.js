@@ -35,9 +35,16 @@ ajaxPost('/toast_cal/pubCalSetData/', 'json', 'POST', '1').then(function(data) {
         console.log(err);
     });
 
-var pubCalSaveBtn = document.getElementById('pubCalSaveBtn');
+var pubCalLoadBtn = document.getElementById('pubCalLoadBtn');
 
-pubCalSaveBtn.addEventListener('click', async function() {
+pubCalLoadBtn.addEventListener('click', async function() {
+
+    let btnLock = document.getElementById('shareProBtn');
+
+    btnLock.disabled  = true;
+    pubCalLoadBtn.disabled = true;
+
+
     var saveCode = document.getElementById('pubcal_select').value
     var saveStart = document.getElementById('pubStart').value
     var saveEnd = document.getElementById('pubEnd').value
@@ -47,19 +54,15 @@ pubCalSaveBtn.addEventListener('click', async function() {
         start: saveStart,
         end: saveEnd,
     }
-    // console.log(data)
+
     await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', codeData)
         .then(function(data) {
-            console.log(data);
+            // console.log(data);
         })
         .catch(function(err) {
             alert(err);
         });
-})
 
-var pubCalLoadBtn = document.getElementById('pubCalLoadBtn');
-
-pubCalLoadBtn.addEventListener('click', async function() {
     var loadCode = document.getElementById('pubcal_select').value
     var loadStart = document.getElementById('pubStart').value
     var loadEnd = document.getElementById('pubEnd').value
@@ -75,7 +78,7 @@ pubCalLoadBtn.addEventListener('click', async function() {
 
     let betweenDay = (dateObj.getTime() - thisWeekFirstObj.getTime()) / 1000 / 60 / 60 / 24;
 
-    console.log(betweenDay);
+    // console.log(betweenDay);
 
     if ((betweenDay / 7) < 1) {} else if ((betweenDay / 7) < 2) {
         pubCalendar.next();
@@ -107,6 +110,8 @@ pubCalLoadBtn.addEventListener('click', async function() {
     } else {
         alert('날짜를 선택하세오.')
     }
+    btnLock.disabled = false;
+    pubCalLoadBtn.disabled = false;
 });
 
 // 공용캘린더의 날짜 이동 버튼(이전, 오늘, 다음)
@@ -191,66 +196,3 @@ $(document).on('click', '#portal_to_making_vote', async function () {
         printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
     }
 });
-
-// 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
-// $(document).on('click', '#voteTimeLoad', async function() {
-//     var voteCode = document.getElementById('pubcal_select').value;
-//     var voteStart = document.getElementById('pubStart').value;
-//     var voteEnd = document.getElementById('pubEnd').value;
-
-//     let voteTimeLoad = {
-//         code: voteCode,
-//         start: voteStart,
-//         end: voteEnd,
-//     }
-
-//     let date_status_json = {
-//         code: "",
-//         date: "",
-//         status: "",
-//     }
-
-//     let flag = true;
-
-//     await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
-//         .then(function(data) {
-//             if (data !== "공용 일정이 없습니다") {
-//                 // console.log(data);
-//                 // console.log(data['date'].length)
-//                 // console.log(data['date'][0])
-
-//                 // let newDate = getVoteDate(data['date']);
-//                 let newDate = getVoteDate(data);
-
-//                 // console.log(newDate)
-
-//                 console.log('new date 객체', newDate);
-
-//                 date_status_json = {
-//                     newDate
-//                 }
-
-//                 voteProBtn.click(); // 투표 관리 버튼으로 넘어가기 위해서
-//             } else { // 공용캘린더 DB에 데이터가 없을 때
-//                 flag = false;
-//                 alert(data);
-//             }
-//         })
-//         .catch(function(err) {
-//             alert(err);
-//         });
-
-
-//     console.log('date 객체 구조', date_status_json);
-//     // console.log("종합 데이터", date_status_json);
-//     if (flag === true) {
-//         await ajaxPost('/toast_cal/voteTimeSave/', 'json', 'POST', date_status_json)
-//             .then(function(data) {
-//                 console.log(data);
-//             })
-//             .catch(function(err) {
-//                 alert(err);
-//             });
-//     }
-
-// });
