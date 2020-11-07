@@ -432,9 +432,11 @@ $(document).on('click', '#takeVote', function() {
     }
 });
 
+var chart = null;
+
 // 투표 상세보기 버튼
 $(document).on('click', '.voteDetail', function() {
-    var chart = null;
+    
 
     if (chart !== null)
         $('#chart-area-student').empty();

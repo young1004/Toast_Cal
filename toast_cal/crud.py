@@ -777,15 +777,6 @@ def getVoteInfo(request):
     )
 
 
-# 해당 과목코드에 맞는 투표정보 반환
-def getVoteInfo(request):
-    voteInfo = Vote.objects.filter(classCode=request.POST["code"])
-
-    return HttpResponse(
-        serializers.serialize("json", voteInfo), content_type="application/json"
-    )
-
-
 def create_Vote(request):
     if request.method == "POST":
         lecType = request.POST.get("select_Array[0][lecType]", False)
