@@ -38,6 +38,7 @@ ajaxPost('/toast_cal/pubCalSetData/', 'json', 'POST', '1').then(function(data) {
 var pubCalLoadBtn = document.getElementById('pubCalLoadBtn');
 
 pubCalLoadBtn.addEventListener('click', async function() {
+    pubCalendar.today();
 
     let btnLock = document.getElementById('shareProBtn');
 

@@ -99,13 +99,16 @@ voteProBtn.addEventListener('click', async function(event) {
                 $('#class_select').empty(); //기존 옵션 값 삭제
 
                 for (var count = 0; count < data.length; count++) {
-                    var option = $('<option>' + data[count].fields.code + '</option>');
+                    var option = $('<option>' + data[count].fields.name + " (" + data[count].fields.code + ")" + '</option>');
                     $('#class_select').append(option);
                 }
             })
             .catch(function(err) {
                 alert(err);
             });
+
+        $('#vote-open-tab-btn').trigger('click');
+
 
     } else {
         alert("교수님의 강의가 없습니다. 강의를 개설해주세요.")
@@ -116,9 +119,9 @@ voteProBtn.addEventListener('click', async function(event) {
 
 // 투표 개설 선택 버튼
 $(document).on("click", "#vote-ava-time", async function() {
-    var select_val = $("#class_select option:selected").val();
+    // var select_val = $("#class_select option:selected").val();
 
-    var voteCode = document.getElementById('class_select').value;
+    var voteCode = getSubCode(document.getElementById('class_select').value)
     var voteStart = document.getElementById('start').value;
     var voteEnd = document.getElementById('end').value;
 
@@ -897,6 +900,8 @@ voteOpenTabBtn.addEventListener('click', function(event) {
 
 // 투표 현황 탭 버튼
 voteStatusTabBtn.addEventListener('click', function(event) {
+    $('#voteTableBtn').trigger('click');
+
     changeContents('professor-vote-status', 'professor-vote-open', 'professor-vote-update');
 
     var voteData = {
@@ -923,7 +928,7 @@ voteStatusTabBtn.addEventListener('click', function(event) {
 $('#vote-open-btn').click(async function() {
     var tr = $('#vote-open-tbody').children();
 
-    var classCode = $("#class_select option:selected").val()
+    var classCode = getSubCode($("#class_select option:selected").val());
     var array = [];
     var husks = {};
     var check = 0;
@@ -957,7 +962,7 @@ $('#vote-open-btn').click(async function() {
 
                     husks = {
                         select_Array: array,
-                        classCode: $("#class_select option:selected").val(),
+                        classCode: classCode,
                         start: $('#voteStart').val(),
                         end: $('#voteEnd').val(),
                     }
@@ -987,22 +992,6 @@ var voteData = {
     lecture_type: '전공 필수',
     vote_status: '투표 중'
 }
-
-// 교수 투표 현황 테이블 생성 부분
-ajaxPost('/toast_cal/voteTable/', 'json', 'POST', voteData).then(function(data) {
-        $('#vote-info').empty();
-
-        for (var count = 0; count < data.length; count++) {
-            var tr = $('<tr><td>' + data[count].fields.classCode + '</td>' +
-                '<td>' + data[count].fields.lecType + '</td>' + '<td>' + data[count].fields.className + '</td>' +
-                '<td>' + data[count].fields.voteStatus + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn">상세</button> <button type="button" class="btn btn-outline-dark voteDelete">삭제</button></td>');
-            $('#vote-info').append(tr);
-        }
-
-    })
-    .catch(function(err) {
-        console.log(err);
-    });
 
 // 투표 현황 option 오른쪽의 선택버튼 
 voteTableBtn.addEventListener('click', function(event) {
@@ -1489,7 +1478,7 @@ $('#class_select').on('change', function() {
 });
 
 // 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
-$(document).on('click', '#portal_to_making_vote', async function () {
+$(document).on('click', '#portal_to_making_vote', async function() {
     changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
     changeContents('tab_box');
     changeContents('professor-vote-open', 'professor-vote-status');
@@ -1516,7 +1505,7 @@ $(document).on('click', '#portal_to_making_vote', async function () {
     let flag = true;
 
     await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
-        .then(function (data) {
+        .then(function(data) {
             if (data !== "공용 일정이 없습니다") {
                 let newDate = getVoteDate(data);
 
@@ -1529,12 +1518,12 @@ $(document).on('click', '#portal_to_making_vote', async function () {
                 alert(data);
             }
         })
-        .catch(function (err) {
+        .catch(function(err) {
             alert(err);
         });
 
     await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
-        .then(function (data) {
+        .then(function(data) {
             $('#class_select').empty(); //기존 옵션 값 삭제
 
             for (var count = 0; count < data.length; count++) {
@@ -1543,7 +1532,7 @@ $(document).on('click', '#portal_to_making_vote', async function () {
             }
             $("#class_select").val(voteCodeData);
         })
-        .catch(function (err) {
+        .catch(function(err) {
             alert(err);
         });
 
