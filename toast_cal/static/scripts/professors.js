@@ -717,34 +717,22 @@ $(document).on("click", "#delete_vote", function() {
         }
 
         // vote테이블에서 삭제후 vote테이블 검색
-        ajaxPost('/toast_cal/delete_vote_from_info/', 'json', 'POST', val_data).then(function(data) {
+        ajaxPost('/toast_cal/delete_Vote/', 'json', 'POST', val_data).then(function(data) {
             $('#pubcal_vote_info').empty();
 
-            // 개설된 강의가 존재하면 투표정보에 대한 타이틀을 띄워줌
-            var pubcal_vote_info_title =
-                $('<ul class = "vote_info_title_area">' +
-                    '<li class = "vote_info_title">' +
-                    '<span>' +
-                    subData + '에 대한 투표정보' +
-                    '</span>' +
-                    '</li>' +
-                    '</ul>');
-            $('#pubcal_vote_info').append(pubcal_vote_info_title);
-
-            // 투표 테이블에 강의코드와 맞는 투표항목이 없을경우 투표개설하도록 띄워줌
-            if (data.length == 0) {
-                var vote_data_null =
-                    $('<div class = "vote_info_tab_null">' +
-                        '<div class = "vote_info_area">' +
-                        '<span class = "vote_infomation">' +
-                        '해당 과목에 대한 투표내역이 없습니다.' +
-                        '</span>' + '</br>' +
-                        '<input type = "button" id = "portal_to_making_vote" value = "투표개설하기">' +
-                        '</div>' +
-                        '</div>'
-                    );
-                $('#pubcal_vote_info').append(vote_data_null);
-            }
+            var vote_data_null =
+                $('<div class = "vote_info_tab_null">' +
+                    '<div class = "vote_info_area">' +
+                    '<span class = "vote_infomation">' +
+                    '해당 과목에 대한 투표내역이 없습니다.' +
+                    '</span>' + '</br>' +
+                    '<input type = "button" id = "portal_to_making_vote" value = "투표개설하기">' +
+                    '</div>' +
+                    '</div>'
+                );
+            $('#pubcal_vote_info').append(vote_data_null);
+        }).catch(function(err) {
+            alert(err);
         })
         alert("해당 투표가 삭제되었습니다.");
     } else {
@@ -1257,7 +1245,7 @@ $(document).on('click', '.voteDelete', function() {
     var delete_Data = {
         code: td.eq(0).text()
     }
-
+    // 표시!
     ajaxPost('/toast_cal/delete_Vote/', 'json', 'POST', delete_Data)
         .then(function(data) {
             // console.log(data)

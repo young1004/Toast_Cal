@@ -849,6 +849,13 @@ def delete_Vote(request):
         classCode = request.POST["code"]
 
         delete_vote = Vote.objects.get(classCode=classCode)
+
+        if delete_vote:
+            infoKey = delete_vote.id
+            print(infoKey)
+            deleteVoteInfo = VoteInfo.objects.filter(voteId=infoKey)
+            deleteVoteInfo.delete()
+
         delete_vote.delete()
 
         test = Vote.objects.all()
@@ -856,6 +863,20 @@ def delete_Vote(request):
     return HttpResponse(
         serializers.serialize("json", test), content_type="application/json"
     )
+
+
+# def delete_vote_from_info(request):
+#     if request.method == "POST":
+#         classCode = request.POST["code"]
+
+#         delete_vote = Vote.objects.get(classCode=classCode)
+#         delete_vote.delete()
+
+#         voteInfo = Vote.objects.filter(classCode=request.POST["code"])
+
+#     return HttpResponse(
+#         serializers.serialize("json", voteInfo), content_type="application/json"
+#     )
 
 
 def check_Vote(request):
