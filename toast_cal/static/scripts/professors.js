@@ -165,6 +165,7 @@ $(document).on("click", "#vote-ava-time", async function() {
 
 // 공용 캘린더 버튼 리스너
 shareProBtn.addEventListener('click', async function(event) {
+    pubCalendar.clear();
 
     var check_subject;
     await ajaxPost('/toast_cal/check_user_subject/', 'json', 'POST', 1)
@@ -176,7 +177,6 @@ shareProBtn.addEventListener('click', async function(event) {
         });
 
     if (check_subject === "강의 있음") {
-        $('#pubCalLoad').trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
         changeContents('professor3', 'professor2', 'calendar-common', 'sidebar', 'professor1', 'tab_box');
         changeContents('pubcal_vote_info');
 
@@ -193,6 +193,8 @@ shareProBtn.addEventListener('click', async function(event) {
             .catch(function(err) {
                 alert(err);
             });
+
+        $('#pub_today').trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
 
         // 공유 캘린더 날짜 셋팅
         var dateValue = getThisWeek();
@@ -368,7 +370,6 @@ shareProBtn.addEventListener('click', async function(event) {
                 }
             }
         })
-
 
     } else {
         alert("교수님의 강의가 없습니다. 강의를 개설해주세요.")
