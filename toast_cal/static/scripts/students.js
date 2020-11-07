@@ -358,7 +358,7 @@ $(document).on('click', '.voteBtn', function() {
             for (let i = 0; i < time.length; i++) {
                 if (time[i] === 'False')
                     continue;
-                var timeTr = $('<tr scope="row" onclick="clickTrEvent(this, \'#select_head\', false)" class="select_line"><td class="select_area">' +
+                var timeTr = $('<tr scope="row" onclick="clickTrEvent(this, \'#select_info\', true)" class="select_line"><td class="select_area">' +
                     time[i] + '</td></tr>');
 
                 $('#select_info').append(timeTr);
@@ -419,7 +419,7 @@ $(document).on('click', '#takeVote', function() {
         // console.log(obj);
 
         obj.array = array;
-        // console.log(obj);
+        console.log(obj);
         ajaxPost('/toast_cal/takeVoteSave/', 'json', 'POST', obj)
             .then(function(data) {
                 alert(data);

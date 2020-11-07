@@ -899,6 +899,7 @@ def pro_vote_info(request):
     )
 
 
+# 투표 수정
 def update_Vote(request):
     if request.method == "POST":
         lecType = request.POST["lecType"]
@@ -906,6 +907,7 @@ def update_Vote(request):
         today_data_vote = request.POST["today"]
         start = request.POST["start"]
         end = request.POST["end"]
+        status = ""
 
         convert_date_data = datetime.datetime.strptime(
             today_data_vote, "%Y-%m-%d %H:%M:%S.%f"
@@ -918,8 +920,8 @@ def update_Vote(request):
         if convert_date_data < convert_date_start:
             status = "투표 전"
         elif (
-            convert_date_data > convert_date_start
-            and convert_date_data < convert_date_end
+            convert_date_data >= convert_date_start
+            and convert_date_data <= convert_date_end
         ):
             status = "투표 중"
         elif convert_date_data > convert_date_end:
@@ -933,6 +935,13 @@ def update_Vote(request):
         deleteVote = Vote.objects.filter(
             proName=request.session["userName"], className=request.POST["className"]
         )
+
+        if deleteVote:
+            infoKey = deleteVote[0].id
+            print(infoKey)
+            deleteVoteInfo = VoteInfo.objects.filter(voteId=infoKey)
+            deleteVoteInfo.delete()
+
         deleteVote.delete()
 
         subject = Subject.objects.get(
@@ -960,9 +969,8 @@ def update_Vote(request):
         serializers.serialize("json", test), content_type="application/json"
     )
 
-    # 오른쪽 투표정보탭에 있는 투표 삭제버튼 기능
 
-
+# 오른쪽 투표정보탭에 있는 투표 삭제버튼 기능
 def delete_vote_from_info(request):
     if request.method == "POST":
         classCode = request.POST["code"]
