@@ -49,6 +49,8 @@ pubCalLoadBtn.addEventListener('click', async function() {
     var saveStart = document.getElementById('pubStart').value
     var saveEnd = document.getElementById('pubEnd').value
 
+    saveCode = getSubCode(saveCode);
+
     let codeData = {
         code: saveCode,
         start: saveStart,
@@ -66,6 +68,8 @@ pubCalLoadBtn.addEventListener('click', async function() {
     var loadCode = document.getElementById('pubcal_select').value
     var loadStart = document.getElementById('pubStart').value
     var loadEnd = document.getElementById('pubEnd').value
+    
+    loadCode = getSubCode(loadCode);
 
     let dateString = loadStart;
     let thisWeekFirst = getThisWeek()[0]
@@ -133,66 +137,4 @@ pub_nextBtn.addEventListener('click', function(event) {
 pub_todayBtn.addEventListener('click', function(event) {
     pubCalendar.today();
     getYearMonth(pub_year, pub_month, pubCalendar);
-});
-
-// 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
-$(document).on('click', '#portal_to_making_vote', async function () {
-    changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
-    changeContents('tab_box');
-    changeContents('professor-vote-open', 'professor-vote-status');
-
-    var voteCode = document.getElementById('pubcal_select').value;
-    var voteStart = document.getElementById('pubStart').value;
-    var voteEnd = document.getElementById('pubEnd').value;
-
-    let voteTimeLoad = {
-        code: voteCode,
-        start: voteStart,
-        end: voteEnd,
-    }
-
-    let date_status_json = {
-        code: "",
-        date: "",
-        status: "",
-    }
-
-    let flag = true;
-
-    await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
-        .then(function (data) {
-            if (data !== "공용 일정이 없습니다") {
-                let newDate = getVoteDate(data);
-
-                date_status_json = {
-                    newDate
-                }
-
-            } else { // 공용캘린더 DB에 데이터가 없을 때
-                flag = false;
-                alert(data);
-            }
-        })
-        .catch(function (err) {
-            alert(err);
-        });
-
-    await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
-        .then(function (data) {
-            $('#class_select').empty(); //기존 옵션 값 삭제
-
-            for (var count = 0; count < data.length; count++) {
-                var option = $('<option>' + data[count].fields.code + '</option>');
-                $('#class_select').append(option);
-            }
-            $("#class_select").val(voteCode);
-        })
-        .catch(function (err) {
-            alert(err);
-        });
-
-    // console.log("종합 데이터", date_status_json);
-    if (flag === true) {
-        printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
-    }
 });

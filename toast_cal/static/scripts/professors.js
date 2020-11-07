@@ -186,7 +186,7 @@ shareProBtn.addEventListener('click', async function(event) {
                 $('#pubcal_select').empty(); //기존 옵션 값 삭제
 
                 for (var count = 0; count < data.length; count++) {
-                    var option = $('<option>' + data[count].fields.code + '</option>');
+                    var option = $('<option>' + data[count].fields.name + ' (' + data[count].fields.code + ')</option>');
                     $('#pubcal_select').append(option);
                 }
             })
@@ -204,7 +204,11 @@ shareProBtn.addEventListener('click', async function(event) {
 
 
         // 공유 캘린더 하단 학생 정보 표시
-        var select_val = $("#pubcal_select option:selected").val();
+        var select_val = $('#pubcal_select option:selected').val();
+        let subData = $('#pubcal_select option:selected').val();
+
+        select_val = getSubCode(select_val);
+        // console.log(select_val);
 
         var test_data = {
             code: select_val,
@@ -242,7 +246,7 @@ shareProBtn.addEventListener('click', async function(event) {
                 $('<ul class = "vote_info_title_area">' +
                     '<li class = "vote_info_title">' +
                     '<span>' +
-                    select_val + '에 대한 투표정보' +
+                    subData + '에 대한 투표정보' +
                     '</span>' +
                     '</li>' +
                     '</ul>');
@@ -383,6 +387,9 @@ $('#pubcal_select').on('change', function() {
     pubCalendar.clear();
 
     var select_val = $("#pubcal_select option:selected").val();
+    let subData = $("#pubcal_select option:selected").val();
+
+    select_val = getSubCode(select_val);
 
     var test_data = {
         code: select_val,
@@ -398,7 +405,7 @@ $('#pubcal_select').on('change', function() {
                 $('<ul class = "vote_info_title_area">' +
                     '<li class = "vote_info_title">' +
                     '<span>' +
-                    select_val + '에 대한 투표정보' +
+                    subData + '에 대한 투표정보' +
                     '</span>' +
                     '</li>' +
                     '</ul>');
@@ -542,6 +549,10 @@ $(document).on("click", "#portal_to_correct_vote", function() {
 
     var option_select = $("#pubcal_select option:selected").val();
 
+    // let optionData = $("#pubcal_select option:selected").val();
+    option_select = getSubCode(option_select);
+
+
     var option_select_value = {
         code: option_select,
     }
@@ -676,6 +687,9 @@ $(document).on("click", "#delete_vote", function() {
         // 강의코드 받아오기.
         var select_val = $("#pubcal_select option:selected").val();
 
+        let subData = $("#pubcal_select option:selected").val();
+        select_val = getSubCode(select_val);
+
         var val_data = {
             code: select_val,
         }
@@ -689,7 +703,7 @@ $(document).on("click", "#delete_vote", function() {
                 $('<ul class = "vote_info_title_area">' +
                     '<li class = "vote_info_title">' +
                     '<span>' +
-                    select_val + '에 대한 투표정보' +
+                    subData + '에 대한 투표정보' +
                     '</span>' +
                     '</li>' +
                     '</ul>');
@@ -1472,4 +1486,69 @@ window.addEventListener('load', function() {
 // 투표 관리의 과목을 변경했을 때 테이블데이터를 지워줌
 $('#class_select').on('change', function() {
     $('#vote-open-tbody').empty();
+});
+
+// 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
+$(document).on('click', '#portal_to_making_vote', async function () {
+    changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
+    changeContents('tab_box');
+    changeContents('professor-vote-open', 'professor-vote-status');
+
+    var voteCode = document.getElementById('pubcal_select').value;
+    var voteStart = document.getElementById('pubStart').value;
+    var voteEnd = document.getElementById('pubEnd').value;
+
+    let voteCodeData = document.getElementById('pubcal_select').value;
+    voteCode = getSubCode(voteCode);
+
+    let voteTimeLoad = {
+        code: voteCode,
+        start: voteStart,
+        end: voteEnd,
+    }
+
+    let date_status_json = {
+        code: "",
+        date: "",
+        status: "",
+    }
+
+    let flag = true;
+
+    await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
+        .then(function (data) {
+            if (data !== "공용 일정이 없습니다") {
+                let newDate = getVoteDate(data);
+
+                date_status_json = {
+                    newDate
+                }
+
+            } else { // 공용캘린더 DB에 데이터가 없을 때
+                flag = false;
+                alert(data);
+            }
+        })
+        .catch(function (err) {
+            alert(err);
+        });
+
+    await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
+        .then(function (data) {
+            $('#class_select').empty(); //기존 옵션 값 삭제
+
+            for (var count = 0; count < data.length; count++) {
+                var option = $('<option>' + data[count].fields.name + ' (' + data[count].fields.code + ')</option>');
+                $('#class_select').append(option);
+            }
+            $("#class_select").val(voteCodeData);
+        })
+        .catch(function (err) {
+            alert(err);
+        });
+
+    // console.log("종합 데이터", date_status_json);
+    if (flag === true) {
+        printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
+    }
 });

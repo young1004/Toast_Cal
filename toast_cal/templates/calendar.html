@@ -245,7 +245,7 @@
                     <span>투표 상태:</span>
                     <select id="vote-status-student" name="voteStatus">
                         <option value="전체">전체</option>
-                        <option value="투표중">투표중</option> <!-- 문제시 볼곳-->
+                        <option value="투표 중">투표 중</option>
                         <option value="투표 완료">투표 완료</option>
                     </select>
                     <button type="button" class="btn btn-outline-dark" id="voteTableBtn-student">선택</button>
@@ -520,15 +520,15 @@
                 <button type="button" id="pub_prevBtn">
                     &lt;&lt; </button>
                 <button type="button" id="pub_today">오늘</button>
-                <span>과목: </span>
+                <span>과목 (학수번호) : </span>
                 <select name="" id="pubcal_select"></select>
                 <span>시작: </span>
                 <input type="date" id="pubStart" value="2020-09-14">
                 <span>끝: </span>
                 <input type="date" id="pubEnd" value="2020-09-18">
                 <!-- <button id="pubCalSaveBtn" class="btn btn-outline-dark">일정 새로고침</button> -->
-                <button id="pubCalLoadBtn" class="btn btn-outline-dark">불러오기</button>
                 <button type="button" id="pub_nextBtn"> &gt;&gt;</button>
+                <button id="pubCalLoadBtn" class="btn btn-outline-dark">불러오기</button>
                 <!-- <button id="voteTimeLoad" class="btn btn-outline-dark">투표가능날짜확인</button> -->
             </div>
             <div id="pubCalendar">
@@ -631,8 +631,8 @@
     <script src="{% static 'scripts/students.js' %}"></script>
     {% elif request.session.userType == "professor" %}
     <script src="{% static 'scripts/pubCalFunc.js' %}"></script>
-    <script src="{% static 'scripts/pubCalSet.js' %}"></script>
     <script src="{% static 'scripts/proFunc.js' %}"></script>
+    <script src="{% static 'scripts/pubCalSet.js' %}"></script>
     <script src="{% static 'scripts/professors.js' %}"></script>
     {% endif %}
 

@@ -63,3 +63,17 @@ async function printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json
             alert(err);
         });
 }
+
+/**
+ * select 태그 옵션이 '과목명 (학수번호)'인 경우 '학수번호'를 반환하는 함수
+ * @param {String} str 학수번호를 반환받고 싶은 문자열
+ * @returns {String} 입력한 데이터에 해당하는 학수번호
+ */
+function getSubCode(str){
+    let code;
+
+    code = str.split(' ')[1];
+    code = code.substring(1, code.length - 1);
+
+    return code;
+}
