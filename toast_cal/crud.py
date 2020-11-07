@@ -793,6 +793,7 @@ def create_Vote(request):
         today_data_vote = request.POST["today"]
         start = request.POST["start"]
         end = request.POST["end"]
+        status = ""
 
         convert_date_data = datetime.datetime.strptime(
             today_data_vote, "%Y-%m-%d %H:%M:%S.%f"
@@ -805,8 +806,8 @@ def create_Vote(request):
         if convert_date_data < convert_date_start:
             status = "투표 전"
         elif (
-            convert_date_data > convert_date_start
-            and convert_date_data < convert_date_end
+            convert_date_data >= convert_date_start
+            and convert_date_data <= convert_date_end
         ):
             status = "투표 중"
         elif convert_date_data > convert_date_end:
@@ -995,8 +996,8 @@ def renewal_vote_status(request):
                 )
 
             elif (
-                convert_date_data > vote_all_info[i].start
-                and convert_date_data < vote_all_info[i].end
+                convert_date_data >= vote_all_info[i].start
+                and convert_date_data <= vote_all_info[i].end
             ):
                 Vote.objects.filter(classCode=vote_all_info[i].classCode).update(
                     voteStatus="투표 중",
