@@ -811,7 +811,7 @@ def create_Vote(request):
         ):
             status = "투표 중"
         elif convert_date_data > convert_date_end:
-            status = "투표 완료"
+            status = "투표 마감"
 
         ava_Time1 = request.POST.get("select_Array[0][ava_Time]", False)
         ava_Time2 = request.POST.get("select_Array[1][ava_Time]", False)
@@ -932,7 +932,7 @@ def update_Vote(request):
         ):
             status = "투표 중"
         elif convert_date_data > convert_date_end:
-            status = "투표 완료"
+            status = "투표 마감"
 
         ava_Time1 = request.POST.get("select_Array[0][ava_Time]", False)
         ava_Time2 = request.POST.get("select_Array[1][ava_Time]", False)
@@ -1005,7 +1005,7 @@ def renewal_vote_status(request):
 
             elif convert_date_data > vote_all_info[i].end:
                 Vote.objects.filter(classCode=vote_all_info[i].classCode).update(
-                    voteStatus="투표 완료",
+                    voteStatus="투표 마감",
                 )
 
     return HttpResponse(
