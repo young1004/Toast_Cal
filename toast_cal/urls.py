@@ -77,6 +77,7 @@ urlpatterns = [
     path("voteConfirm/", crud.voteConfirm, name="voteConfirm"),
     path("createExamData/", crud.createExamData, name="createExamData"),
     path("bring_Comment/", crud.bring_Comment, name="bring_Comment"),  # 코멘트 가져오기
+    path("bring_StdName/", crud.bring_StdName, name="bring_StdName"),
     # 공통 기능들
     path("deleteCalendars/", crud.deleteCalendars, name="deleteCalendars"),
     path("makeCalendars/", crud.makeCalendars, name="makeCalendars"),

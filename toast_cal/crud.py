@@ -548,7 +548,7 @@ def makeCalendars(request):
 # 공통 부분 : 강의 일정 삭제
 def deleteCalendars(request):
     if request.method == "POST":
-        print(request.POST)
+        # print(request.POST)
         if request.session["userType"] == "student":
             for i in range(int(len(request.POST) / 7)):
                 title = request.POST["array[" + str(i) + "][name]"]
@@ -810,7 +810,7 @@ def voteTimeLoad(request):
 
 # ava_Time 테이블에 저장하고, 저장한 값을 보내줌
 def voteTimeSave(request):
-    print(request.POST)
+    # print(request.POST)
     ava_time = Ava_Time.objects.filter(classCode=request.POST["newDate[0][code]"])
 
     if request.method == "POST":
@@ -920,7 +920,7 @@ def delete_Vote(request):
 
         if delete_vote:
             infoKey = delete_vote.id
-            print(infoKey)
+            # print(infoKey)
             deleteVoteInfo = VoteInfo.objects.filter(voteId=infoKey)
             deleteVoteInfo.delete()
 
@@ -1013,7 +1013,7 @@ def update_Vote(request):
 
         if deleteVote:
             infoKey = deleteVote[0].id
-            print(infoKey)
+            # print(infoKey)
             deleteVoteInfo = VoteInfo.objects.filter(voteId=infoKey)
             deleteVoteInfo.delete()
 
@@ -1048,13 +1048,13 @@ def update_Vote(request):
 # 투표 확정2 (캘린더에 일정 생성 및 확정 관련 처리)
 def createExamData(request):
 
-    print(request.POST["title"])
+    # print(request.POST["title"])
 
     startIdx = request.POST["title"].find("(")
     endIdx = request.POST["title"].find(")")
 
     subCode = (request.POST["title"])[startIdx + 1 : endIdx]
-    print(subCode)
+    # print(subCode)
 
     stdList = Student_lecture.objects.filter(code=subCode)
 
@@ -1173,7 +1173,7 @@ def student_voteTable(request):
     )
 
 
-# 코멘트가져오기
+# 코멘트 가져오기
 def bring_Comment(request):
     if request.method == "POST":
         # 과목코드를 받아옴
@@ -1181,21 +1181,37 @@ def bring_Comment(request):
         # print(classcode)
 
         # vote테이블내의 과목코드를 비교하여 해당되는 쿼리셋을 불러옴.
-        filt_vote_classcode = Vote.objects.get(classCode = classcode)
+        filt_vote_classcode = Vote.objects.get(classCode=classcode)
         # print(filt_vote_classcode)
         # ex) nn번 vote쿼리셋
 
-        # vote테이블의 id로 필터링하여 votrinfo테이블에서 가져오기 
-        filt_voteid = VoteInfo.objects.filter(
-            voteId = filt_vote_classcode.id,
-            )
-        
+        # vote테이블의 id로 필터링하여 votrinfo테이블에서 가져오기
+        filt_voteid = VoteInfo.objects.filter(voteId=filt_vote_classcode.id,)
+
         # print(filt_voteid)
 
         for i in range(filt_voteid.count()):
-            if(filt_voteid[i].comment ==""):
+            if filt_voteid[i].comment == "":
                 filt_voteid[i].delete()
 
         return HttpResponse(
             serializers.serialize("json", filt_voteid), content_type="application/json"
-            )
+        )
+
+
+# 코멘트에 대한 학생 이름 가져오기
+def bring_StdName(request):
+    print(request.POST)
+
+    finalData = Student.objects.filter(userID="Null")  # 초기화
+
+    for i in range(int(len(request.POST))):
+        print()
+        finalData = finalData | Student.objects.filter(
+            userID=request.POST["array[" + str(i) + "][studentID]"]
+        )
+
+    return HttpResponse(
+        serializers.serialize("json", finalData), content_type="application/json"
+    )
+

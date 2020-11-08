@@ -1033,7 +1033,7 @@ var chart = null;
 let confirmCode; // 투표 확정을 위한 데이터 
 
 // 투표 상세보기 버튼
-$(document).on('click', '.voteBtn', function() {
+$(document).on('click', '.voteBtn', async function() {
 
     if (chart !== null)
         $('#chart-area').empty();
@@ -1190,31 +1190,74 @@ $(document).on('click', '.voteBtn', function() {
     let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
     $('#professor-vote-status').append(comment);
 
-    // for (var count = 0; count < 10; count++) {
-    //     var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:void(0);" onclick="show_comment(\'투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.\')">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
-    //     $('#comment_tbody').append(comment_tr);
-    // }
+    let stdId = {};
+    // let comments = [];
+    let commentData = {};
+    let comDatas = [];
+    let comStdId = [];
 
-    // 댓글 데이터 가져와서 댓글 보여주는 부분
-    ajaxPost('/toast_cal/bring_Comment/', 'json', 'POST', chartData).then(function(data) {
+    // 댓글 데이터 저장 및 userID 저장
+    await ajaxPost('/toast_cal/bring_Comment/', 'json', 'POST', chartData)
+        .then(function(data) {
+            
+            for (var count = 0; count < data.length; count++) {
+                let tmp = {
+                    studentID: data[count].fields.studentID
+                };
+                
+                commentData = {
+                    id: data[count].fields.studentID,
+                    comment: data[count].fields.comment
+                }
+                comDatas.push(commentData);
+
+                comStdId.push(tmp);
+            }
+
+        }).catch(function(err){
+            alert(err);
+        });
+
+    stdId.array = comStdId;
+
+    await ajaxPost('/toast_cal/bring_StdName/', 'json', 'POST', stdId)
+    .then(function(data){
+        console.log("서버 데이터 :", data);
+        console.log("댓글 데이터 :", comDatas);
         if (data.length == 0) {
             var comment_tr = $(
                 '<span class = "nothing-comment">-등록된 의견이 없습니다.-</span>'
             );
             $('#comment_tbody').append(comment_tr);
         }
+        else{
+            for (var count = 0; count < comDatas.length; count++) {
+                
+                for(let cnt = 0; cnt < data.length; cnt++){
+                    if(comDatas[count].id == data[cnt].pk){
+                        if (data[count].fields.comment != "") {
+                            var comment_tr = $(
+                                '<tr><td>' + data[cnt].pk + '</td><td class="comment_td">' +
+                                '<a href="javascript:void(0);" onclick="show_comment(\'' + comDatas[count].comment + '\')">' +
+                                comDatas[count].comment + '</a></td></tr>');
+                                $('#comment_tbody').append(comment_tr);
+                        }
+                    }
+                    
+                    
+                }
 
-        for (var count = 0; count < data.length; count++) {
-            if (data[count].fields.comment != "") {
-                var comment_tr = $(
-                    '<tr><td>' + data[count].fields.studentID + '</td><td class="comment_td">' +
-                    '<a href="javascript:void(0);" onclick="show_comment(\'' + data[count].fields.comment + '\')">' +
-                    data[count].fields.comment + '</a></td></tr>');
+                
             }
-            $('#comment_tbody').append(comment_tr);
         }
+        // 뎃글을 저장하는 배열 하나랑 코멘트를 저장하는 배열 하나
 
-    });
+
+    }).catch(function(err){
+        alert(err);
+    })
+
+
 
     var voteConfirmBtn = $('<button type="button" class="btn btn-outline-dark voteConfirmBtn" id="voteConfirmBtn">투표 확정</button>');
     var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correctBtn">투표 수정</button>');
@@ -1259,14 +1302,14 @@ $(document).on('click', '#voteConfirmBtn', async function() {
         let startTime;
         let endTime;
         let splitData = scheduleData.split(','); // 강의코드, 강의 제목, 시간 데이터
-        
+
 
         subTitle = splitData[1] + '(' + splitData[0] + ')' + ' 시험'; // 제목 문자열 포맷팅
         let timeData = splitData[2]; // 시간 데이터 저장
         let yymmdd = timeData.split(' ')[0]; // 년월일 데이터
-        
+
         if (scheduleData.indexOf('~') === -1) { // 정규 시간 데이터일 시 (정규 데이터는 ~가 없음)
-            
+
 
             let periodData = periodSplit(timeData.split(' ')[1])[1]; // 시간 데이터에서 교시 데이터만 빼냄 (월78 등등)
             periodData = timeConvert(periodData);
@@ -1279,7 +1322,7 @@ $(document).on('click', '#voteConfirmBtn', async function() {
         } else { // 오후 7시 이후 데이터일 시
 
             startTime = yymmdd + ' 19:00'
-            endTime = yymmdd  + ' 20:15'
+            endTime = yymmdd + ' 20:15'
 
         }
 
