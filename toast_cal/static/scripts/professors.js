@@ -987,9 +987,10 @@ voteTableBtn.addEventListener('click', function(event) {
 
 // chart 표시하기 위한 데이터
 var chart = null;
-// var comment_div = null;
 
-// 투표 상세보기 버튼 11111
+let confirmCode; // 투표 확정을 위한 데이터 
+
+// 투표 상세보기 버튼
 $(document).on('click', '.voteBtn', function() {
 
     if (chart !== null)
@@ -1003,8 +1004,10 @@ $(document).on('click', '.voteBtn', function() {
     var chartData = {
         code: td.eq(0).text()
     }
+    confirmCode = td.eq(0).text();
 
     let voteStat = td.eq(3).text();
+    
 
     ajaxPost('/toast_cal/voteChart/', 'json', 'POST', chartData).then(function(data) {
             // console.log(data.length);
@@ -1165,8 +1168,50 @@ $(document).on('click', '.voteBtn', function() {
 
 });
 
-$(document).on('click', '#voteConfirmBtn', function () {
-    console.log('voteConfirmBtn 눌림');
+// 투표 확정 버튼
+$(document).on('click', '#voteConfirmBtn', async function () {
+
+    var confirmData = {
+        code: confirmCode
+    }
+
+    let scheduleData;
+
+    // 가장 많이 선택된 시간대를 받아옴
+    await ajaxPost('/toast_cal/voteConfirm/', 'json', 'POST', confirmData)
+    .then(function(data) {
+        scheduleData = data;
+
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+    let splitData = scheduleData.split(',');
+
+    let subTitle = splitData[1] + '(' + splitData[0] + ')' + ' 시험';
+    let timeData = splitData[2];
+
+    let yymmdd = timeData.split(' ')[0];
+    let periodData = periodSplit(timeData.split(' ')[1])[1];
+    periodData = timeConvert(periodData);
+    
+    let startTime = yymmdd + ' ' + periodData[0];
+    let endTime = yymmdd  + ' ' + periodData[1];
+
+    examData = newCalObj(1, '시험 일정', subTitle, 'milestone', '', startTime, endTime, 'False', 'busy', 'public')
+    console.log(examData);
+
+    // 함수 테스트
+    ajaxPost('/toast_cal/createExamData/', 'int', 'POST', examData)
+        .then(function(data) {
+            alert(data);
+            window.location.reload();
+        })
+        .catch(function(err) {
+            alert(err);
+        });
+
 })
 
 $(document).on('click', '.voteDelete', function() {

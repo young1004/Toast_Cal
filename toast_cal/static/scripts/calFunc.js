@@ -217,7 +217,7 @@ function getTimeData(convertedData, monthday, day) {
 
 /**
  * 서버에서 주고받는 데이터를 통일해서 생성하기 위한 함수(총 10개의 파라미터)
- * @param {String|Number} id 캘린더의 scheduleID(database 키 값)
+ * @param {String|Number} id 캘린더의 scheduleID(database 키 값) ※ 1로 줄것!
  * @param {String} calendarId 캘린더의 setCalendars로 지정된 값(ex. 'Major Subject')
  * @param {String} title 제목
  * @param {String} category 일정의 종류 ('milestone', 'task', 'allday', 'time' 4가지 속성)

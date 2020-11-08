@@ -359,6 +359,42 @@ def voteChart(request):
     )
 
 
+# 투표 확정
+def voteConfirm(request):
+
+    voteData = Vote.objects.get(classCode=request.POST["code"])
+
+    voteTimeData = ""
+    finalData = ""
+
+    finalData += voteData.classCode + ","
+    # finalData.append(voteData.classCode)
+    finalData += voteData.className + ","
+    # finalData.append(voteData.className)
+
+    # list는 투표수가 가장 많은 선택지의 값을 뽑기 위해 만듬
+    # dict는 투표수가 가장 많은 시간 데이터를 뽑기 위해 만듬
+    voteList = [voteData.choice1, voteData.choice2, voteData.choice3, voteData.choice4]
+    voteDict = {
+        "choice1": voteData.choice1_Title,
+        "choice2": voteData.choice2_Title,
+        "choice3": voteData.choice3_Title,
+        "choice4": voteData.choice4_Title,
+    }
+
+    maxValue = max(voteList)  # 투표를 가장 많이 한 선택지
+
+    for i, vdata in zip(range(0, 4), voteList):
+        if vdata == maxValue:
+            voteTimeData = voteDict["choice" + str(i + 1)]
+            break
+
+    finalData += voteTimeData
+    # print(finalData)
+
+    return HttpResponse(finalData)
+
+
 # ajax로 들어온 데이터로 강의 개설
 def makeSubject(request):
     if request.method == "POST":
@@ -789,6 +825,7 @@ def getVoteInfo(request):
     )
 
 
+# 투표 개설
 def create_Vote(request):
     if request.method == "POST":
         lecType = request.POST.get("select_Array[0][lecType]", False)
@@ -847,6 +884,7 @@ def create_Vote(request):
     )
 
 
+# 투표 삭제
 def delete_Vote(request):
     if request.method == "POST":
         classCode = request.POST["code"]
@@ -978,6 +1016,52 @@ def update_Vote(request):
     return HttpResponse(
         serializers.serialize("json", test), content_type="application/json"
     )
+
+
+# 투표 확정 (캘린더에 일정 생성 및 확정 관련 처리)
+def createExamData(request):
+
+    print(request.POST["title"])
+
+    startIdx = request.POST["title"].find("(")
+    endIdx = request.POST["title"].find(")")
+
+    subCode = (request.POST["title"])[startIdx + 1 : endIdx]
+    print(subCode)
+
+    stdList = Student_lecture.objects.filter(code=subCode)
+
+    new_instance = Calendar.objects.create(
+        userID=request.session["userID"],
+        calendarId=request.POST["calendarId"],
+        title=request.POST["title"],
+        category=request.POST["category"],
+        location=request.POST["location"],
+        start=request.POST["start"],
+        end=request.POST["end"],
+        isAllDay=request.POST["isAllDay"],
+        state=request.POST["state"],
+        calendarClass=request.POST["class"],
+    )
+    new_instance.save()
+
+    # if stdList
+    for std in stdList:
+        new_instance = Calendar.objects.create(
+            userID=std.student_id,
+            calendarId=request.POST["calendarId"],
+            title=request.POST["title"],
+            category=request.POST["category"],
+            location=request.POST["location"],
+            start=request.POST["start"],
+            end=request.POST["end"],
+            isAllDay=request.POST["isAllDay"],
+            state=request.POST["state"],
+            calendarClass=request.POST["class"],
+        )
+        new_instance.save()
+
+    return HttpResponse("저장 성공")
 
 
 # 투표정보를 모두 불러 와서 시간비교하여 투표상태 바꾸기 위함.

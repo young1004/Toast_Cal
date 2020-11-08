@@ -27,3 +27,7 @@ VALUES("전공 선택", "전공 선택", "#ffffff", "#ffbb3b", "#ffbb3b", "#ffbb
 
 INSERT INTO calid
 VALUES("일반 교양", "일반 교양", "#ffffff", "#03bd9e", "#03bd9e", "#03bd9e");
+
+INSERT INTO calid
+VALUES("시험 일정", "시험 일정", "#ffffff", "#ff0000", "#ff0000", "#ff0000");
+

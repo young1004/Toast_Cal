@@ -72,6 +72,8 @@ urlpatterns = [
     path("loginInfo/", views.loginInfo, name="loginInfo"),
     path("modifyInfo/", views.modifyInfo, name="modifyInfo"),
     path("getVoteInfo/", crud.getVoteInfo, name="getVoteInfo"),
+    path("voteConfirm/", crud.voteConfirm, name="voteConfirm"),
+    path("createExamData/", crud.createExamData, name="createExamData"),
     # 공통 기능들
     path("deleteCalendars/", crud.deleteCalendars, name="deleteCalendars"),
     path("makeCalendars/", crud.makeCalendars, name="makeCalendars"),
