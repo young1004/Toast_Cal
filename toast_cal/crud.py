@@ -368,9 +368,7 @@ def voteConfirm(request):
     finalData = ""
 
     finalData += voteData.classCode + ","
-    # finalData.append(voteData.classCode)
     finalData += voteData.className + ","
-    # finalData.append(voteData.className)
 
     # list는 투표수가 가장 많은 선택지의 값을 뽑기 위해 만듬
     # dict는 투표수가 가장 많은 시간 데이터를 뽑기 위해 만듬
@@ -390,7 +388,6 @@ def voteConfirm(request):
             break
 
     finalData += voteTimeData
-    # print(finalData)
 
     return HttpResponse(finalData)
 
@@ -1043,9 +1040,7 @@ def createExamData(request):
         state=request.POST["state"],
         calendarClass=request.POST["class"],
     )
-    new_instance.save()
 
-    # if stdList
     for std in stdList:
         new_instance = Calendar.objects.create(
             userID=std.student_id,
@@ -1059,7 +1054,6 @@ def createExamData(request):
             state=request.POST["state"],
             calendarClass=request.POST["class"],
         )
-        new_instance.save()
 
     return HttpResponse("저장 성공")
 
