@@ -124,6 +124,8 @@ $(document).on("click", "#vote-ava-time", async function() {
     var voteCode = getSubCode(document.getElementById('class_select').value)
     var voteStart = document.getElementById('start').value;
     var voteEnd = document.getElementById('end').value;
+    var voteOpen = document.getElementById('vote-open-btn');
+    var lec_check = 0;
 
     let voteTimeLoad = {
         code: voteCode,
@@ -150,42 +152,65 @@ $(document).on("click", "#vote-ava-time", async function() {
     let betweenStartEnd = (objEnd.getTime() - objStart.getTime()) / 1000 / 60 / 60 / 24; // 시작 날짜와 끝 날짜와의 차이
     let betweenTodayStart = (objStart.getTime() - objToday.getTime()) / 1000 / 60 / 60 / 24; // 시작 날짜와 오늘 날짜의 차이
 
-    console.log(betweenStartEnd);
-    console.log(betweenTodayStart);
-
-    if (betweenTodayStart < -1) { // 시작날짜가 오늘 이전의 날짜가 입력됬을때
-        $('#vote-open-tbody').empty();
-        alert("시작 날짜를 오늘 이후의 날짜로 입력해주세요.")
-    } else if (betweenStartEnd < 0) { // 끝 날짜가 시작 날짜보다 크게 입력됬을때
-        $('#vote-open-tbody').empty();
-        alert("마지막 날짜의 입력이 잘못 되었습니다.")
-    } else {
-        await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', voteTimeLoad)
-            .then(function(data) {
-                // console.log(data);
-            })
-            .catch(function(err) {
-                alert(err);
-            });
-
-        await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
-            .then(function(data) {
-                if (data !== "공용 일정이 없습니다") {
-                    let newDate = getVoteDate(data);
-
-                    date_status_json = {
-                        newDate
+    // console.log(betweenStartEnd);
+    // console.log(betweenTodayStart);
+    
+    if (voteOpen.disabled == true ) {
+        voteOpen.disabled = false;
+    }
+    
+    await ajaxPost('/toast_cal/lec_Check/', 'json', 'POST', voteTimeLoad)
+        .then(function (data) {
+            for (var count = 0; count < data.length; count++) {
+                lec_check += 1;
+            }
+        })
+        .catch(function (err) {
+            alert(err);
+        });
+    
+    console.log("lec_check : " + lec_check);
+    
+    if(lec_check > 0) {
+        if (betweenTodayStart < -1) { // 시작날짜가 오늘 이전의 날짜가 입력됬을때
+            $('#vote-open-tbody').empty();
+            alert("시작 날짜를 오늘 이후의 날짜로 입력해주세요.")
+        } else if (betweenStartEnd < 0) { // 끝 날짜가 시작 날짜보다 크게 입력됬을때
+            $('#vote-open-tbody').empty();
+            alert("마지막 날짜의 입력이 잘못 되었습니다.")
+        } else {
+            await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', voteTimeLoad)
+                .then(function (data) {
+                    // console.log(data);
+                })
+                .catch(function (err) {
+                    alert(err);
+                });
+    
+            await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
+                .then(function (data) {
+                    if (data !== "공용 일정이 없습니다") {
+                        let newDate = getVoteDate(data);
+    
+                        date_status_json = {
+                            newDate
+                        }
+    
+                    } else { // 공용캘린더 DB에 데이터가 없을 때
+                        alert(data);
                     }
-
-                } else { // 공용캘린더 DB에 데이터가 없을 때
-                    alert(data);
-                }
-            })
-            .catch(function(err) {
-                alert(err);
-            });
-
-        printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
+                })
+                .catch(function (err) {
+                    alert(err);
+                });
+    
+            printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
+        }
+    }
+    else {
+        alert("강의를 수강중인 학생이 없습니다.");
+        lec_check = 0;
+        voteOpen.disabled = true;
     }
 
 });
