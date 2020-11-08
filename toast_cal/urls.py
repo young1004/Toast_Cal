@@ -33,6 +33,7 @@ urlpatterns = [
     path(
         "stdVoteJoinTable/", crud.stdVoteJoinTable, name="stdVoteJoinTable"
     ),  # 학생 투표 참여 데이터 불러오기
+    path("joinCheck/", crud.joinCheck, name="joinCheck"),
     path(
         "stdVoteSelectData/", crud.stdVoteSelectData, name="stdVoteSelectData"
     ),  # 학생 투표 참여 페이지 상세내용 불러오기
@@ -61,6 +62,7 @@ urlpatterns = [
         crud.pro_vote_update_table,
         name="pro_vote_update_table",
     ),
+    path("lec_Check/", crud.lec_Check, name="lec_Check"),
     path("pro_vote_info/", crud.pro_vote_info, name="pro_vote_info"),
     # 교수 투표 관련
     path("subject_info/", crud.subject_info, name="subject_info"),

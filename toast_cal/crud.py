@@ -261,6 +261,25 @@ def stdVoteJoinTable(request):
     )
 
 
+def joinCheck(request):
+    if request.method == "POST":
+        checkVote = Vote.objects.filter(classCode="Null")
+        stdJoin = VoteInfo.objects.filter(voteId="0")
+
+        for i in range(int(len(request.POST) / 4)):
+            classCode = request.POST["array[" + str(i) + "][classCode]"]
+            checkVote = checkVote | Vote.objects.filter(classCode=classCode)
+
+        for i in range(checkVote.count()):
+            stdJoin = stdJoin | VoteInfo.objects.filter(
+                voteId=checkVote[i].id, studentID=request.session["userID"]
+            )
+
+    return HttpResponse(
+        serializers.serialize("json", stdJoin), content_type="application/json"
+    )
+
+
 # 투표 하위 테이블에 투표정보 저장 (+ 투표 테이블 업데이트)
 def takeVoteSave(request):
     # request.POST
@@ -447,12 +466,12 @@ def professor_lecture_delete(request):
         if lec_del:
             lec_del.delete()
 
-        vote_del = Vote.objects.get(classCode=code)
+        vote_del = Vote.objects.filter(classCode=code)
         ava_del = Ava_Time.objects.filter(classCode=code)
         pubcal_del = PubCalendar.objects.filter(code=code)
 
         if vote_del:
-            info_del = VoteInfo.objects.filter(voteId=vote_del.id)
+            info_del = VoteInfo.objects.filter(voteId=vote_del[0].id)
 
             vote_del.delete()
             ava_del.delete()
@@ -819,6 +838,17 @@ def getVoteInfo(request):
 
     return HttpResponse(
         serializers.serialize("json", voteInfo), content_type="application/json"
+    )
+
+
+def lec_Check(request):
+    if request.method == "POST":
+        test = Student_lecture.objects.filter(
+            code=request.POST["code"], professor=request.session["userName"]
+        )
+
+    return HttpResponse(
+        serializers.serialize("json", test), content_type="application/json"
     )
 
 

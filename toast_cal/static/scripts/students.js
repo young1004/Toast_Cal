@@ -262,6 +262,9 @@ var voteTableBtn = document.getElementById('voteTableBtn');
 
 //투표 참여 선택 버튼
 voteTableBtn.addEventListener('click', async function(event) {
+    var joinData = {};
+    var voteJoinData = [];
+    var joinCheckData = [];
 
     // 서버에서 filter를 적용할 투표 페이지 관련 데이터 object
     let voteData = {
@@ -273,26 +276,75 @@ voteTableBtn.addEventListener('click', async function(event) {
 
     await ajaxPost('/toast_cal/stdVoteJoinTable/', 'json', 'POST', voteData)
         .then(function(data) {
-            $('#vote-info').empty();
-
-            for (let cnt = 0; cnt < data.length; cnt++) {
-                let tr = $('<tr><td>' + data[cnt].fields.lecType + '</td>' +
-                    '<td>' + data[cnt].fields.classCode + '</td>' +
-                    '<td>' + data[cnt].fields.className + '</td>' +
-                    '<td>' + data[cnt].fields.voteStatus + '</td>' +
-                    '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn">투표하기</button></td></tr>');
-                // var tr = $('<tr><td>' + data[count].fields.code + '</td>' +
-                //     '<td>' + data[count].fields.lecture_type + '</td>' + '<td>' + data[count].fields.name + '</td>' +
-                //     '<td>' + data[count].fields.vote_status + '</td>' + '<td><button type="button" class="btn btn-outline-dark voteBtn_student">상세</button></td>');
-                $('#vote-info').append(tr);
-            }
             // console.log(data);
 
+            // $('#vote-info').empty();
+
+            for (let cnt = 0; cnt < data.length; cnt++) {
+
+                var voteClassData = {};
+                voteClassData.id = data[cnt].pk;
+                voteClassData.lecType = data[cnt].fields.lecType;
+                voteClassData.classCode = data[cnt].fields.classCode;
+                voteClassData.className = data[cnt].fields.className;
+                voteClassData.voteStatus = data[cnt].fields.voteStatus;
+
+                voteJoinData.push(voteClassData);
+            }
         })
         .catch(function(err) {
             console.log(err);
         })
+
+    joinData.array = voteJoinData;
+
+    await ajaxPost('/toast_cal/joinCheck/', 'json', 'POST', joinData)
+        .then(function(data) {
+            console.log(data)
+            for (let cnt = 0; cnt < data.length; cnt++) {
+                var join = {};
+                join.id = data[cnt].fields.voteId;
+
+                joinCheckData.push(join);
+            }
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
+
+    $('#vote-info').empty();
+
+    for(var i = 0; i < voteJoinData.length; i++) {
+        console.log("voteJoinData" + i + " : 투표ID =" + voteJoinData[i].id + 
+            ", 강의코드=" + voteJoinData[i].classCode + 
+            ", 이수구분=" + voteJoinData[i].lecType + 
+            ", 강의명=" + voteJoinData[i].className + 
+            ", 상태=" + voteJoinData[i].voteStatus);
+        let tr_Join = '<button type="button" class="btn btn-outline-dark voteBtn">투표하기</button>';
+
+        for(var j = 0; j < joinCheckData.length; j++) {
+            if (voteJoinData[i].id == joinCheckData[j].id) {
+                tr_Join = '<button type="button" class="btn btn-outline-dark voteBtn" disabled>투표참여</button>';
+            }
+            // else {
+            //     tr_Join = '<button type="button" class="btn btn-outline-dark voteBtn">투표하기</button>';
+            // }
+        }
+
+        let tr = $('<tr><td>' + voteJoinData[i].lecType + '</td>' +
+                '<td>' + voteJoinData[i].classCode + '</td>' +
+                '<td>' + voteJoinData[i].className + '</td>' +
+                '<td>' + voteJoinData[i].voteStatus + '</td>' +
+                '<td>' + tr_Join + '</td></tr>'
+            );
+
+        $('#vote-info').append(tr);
+    }
+
+
 });
+
+
 
 //학생 투표 현황 관련 변수 및 함수들
 var voteTableBtnStu = document.getElementById('voteTableBtn-student');
