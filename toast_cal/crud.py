@@ -378,7 +378,7 @@ def voteChart(request):
     )
 
 
-# 투표 확정
+# 투표 확정1 (투표를 확정할 데이터를 보내주는 부분)
 def voteConfirm(request):
 
     voteData = Vote.objects.get(classCode=request.POST["code"])
@@ -1045,7 +1045,7 @@ def update_Vote(request):
     )
 
 
-# 투표 확정 (캘린더에 일정 생성 및 확정 관련 처리)
+# 투표 확정2 (캘린더에 일정 생성 및 확정 관련 처리)
 def createExamData(request):
 
     print(request.POST["title"])
@@ -1084,6 +1084,13 @@ def createExamData(request):
             state=request.POST["state"],
             calendarClass=request.POST["class"],
         )
+
+    deleteVote = Vote.objects.get(classCode=subCode)
+    deleteVoteInfo = VoteInfo.objects.filter(voteId=deleteVote.id)
+    deleteVote.delete()
+
+    if deleteVoteInfo:
+        deleteVoteInfo.delete()
 
     return HttpResponse("저장 성공")
 
