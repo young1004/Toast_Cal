@@ -60,7 +60,7 @@ voteMenuBtn.addEventListener('click', async function(event) {
     await ajaxPost('/toast_cal/check_user_subject/', 'json', 'POST', 1)
         .then(function(data) {
             check_subject = data;
-            console.log(data)
+            // console.log(data)
         })
         .catch(function(err) {
             alert(err);
@@ -195,7 +195,7 @@ $('#lecture_delete_btn').click(async function() {
 
         var json = {};
         json.array = array;
-        console.log(json);
+        // console.log(json);
         await ajaxPost('/toast_cal/deleteCalendars/', 'json', 'POST', json)
             .then(function(data) {
                 alert(data);
@@ -300,7 +300,7 @@ voteTableBtn.addEventListener('click', async function(event) {
 
     await ajaxPost('/toast_cal/joinCheck/', 'json', 'POST', joinData)
         .then(function(data) {
-            console.log(data)
+            // console.log(data)
             for (let cnt = 0; cnt < data.length; cnt++) {
                 var join = {};
                 join.id = data[cnt].fields.voteId;
@@ -315,11 +315,11 @@ voteTableBtn.addEventListener('click', async function(event) {
     $('#vote-info').empty();
 
     for(var i = 0; i < voteJoinData.length; i++) {
-        console.log("voteJoinData" + i + " : 투표ID =" + voteJoinData[i].id + 
-            ", 강의코드=" + voteJoinData[i].classCode + 
-            ", 이수구분=" + voteJoinData[i].lecType + 
-            ", 강의명=" + voteJoinData[i].className + 
-            ", 상태=" + voteJoinData[i].voteStatus);
+        // console.log("voteJoinData" + i + " : 투표ID =" + voteJoinData[i].id + 
+        //     ", 강의코드=" + voteJoinData[i].classCode + 
+        //     ", 이수구분=" + voteJoinData[i].lecType + 
+        //     ", 강의명=" + voteJoinData[i].className + 
+        //     ", 상태=" + voteJoinData[i].voteStatus);
         let tr_Join = '<button type="button" class="btn btn-outline-dark voteBtn">투표하기</button>';
 
         for(var j = 0; j < joinCheckData.length; j++) {
@@ -471,7 +471,7 @@ $(document).on('click', '#takeVote', function() {
         // console.log(obj);
 
         obj.array = array;
-        console.log(obj);
+        // console.log(obj);
         ajaxPost('/toast_cal/takeVoteSave/', 'json', 'POST', obj)
             .then(function(data) {
                 alert(data);
@@ -502,7 +502,7 @@ $(document).on('click', '.voteDetail', function() {
         code: td.eq(0).text()
     }
 
-    console.log("classCode : " + chartData.code)
+    // console.log("classCode : " + chartData.code)
 
     ajaxPost('/toast_cal/voteChart/', 'json', 'POST', chartData).then(function(data) {
             // console.log(data.length);
