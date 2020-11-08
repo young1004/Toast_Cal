@@ -154,7 +154,7 @@ $(document).on("click", "#vote-ava-time", async function() {
 
     // console.log(betweenStartEnd);
     // console.log(betweenTodayStart);
-    
+
     if (voteOpen.disabled == true ) {
         voteOpen.disabled = false;
     }

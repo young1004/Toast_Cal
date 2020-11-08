@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core import serializers
-from .models import Calendar, Student, Professor, Subject, Student_lecture
+from .models import *  # Ava_Time, Calendar, PubCalendar, Student, Professor, Subject, Student_lecture
 
 from django.contrib.auth.hashers import make_password, check_password
 
@@ -428,6 +428,24 @@ def signout(request):
                 cal_del.delete()
                 lec_del = Student_lecture.objects.filter(student_id=userID)
 
+                sjDataSet = Student_lecture.objects.filter(student_id=userID)
+
+                if sjDataSet:
+                    for sdata in sjDataSet:
+                        pubCalDelete = PubCalendar.objects.filter(code=sdata.code)
+                        avaTimeDelete = Ava_Time.objects.filter(classCode=sdata.code)
+                        pubCalDelete.delete()
+                        avaTimeDelete.delete()
+
+                voteDataSet = Vote.objects.filter(proName=userName)
+
+                if voteDataSet:
+                    for vdata in voteDataSet:
+                        voteInfoData = VoteInfo.objects.filter(voteId=vdata.id)
+                        voteInfoData.delete()
+
+                voteDataSet.delete()
+
                 for i in range(lec_del.count()):
                     code = lec_del[i].code
                     codeClass = lec_del[i].codeClass
@@ -449,6 +467,24 @@ def signout(request):
             elif userType == "professor":
                 cal_Pdel = Calendar.objects.filter(userID=userID)
                 lec_del = Student_lecture.objects.filter(professor=userName)
+
+                sjDataSet = Subject.objects.filter(professor=userName)
+
+                if sjDataSet:
+                    for sdata in sjDataSet:
+                        pubCalDelete = PubCalendar.objects.filter(code=sdata.code)
+                        avaTimeDelete = Ava_Time.objects.filter(classCode=sdata.code)
+                        pubCalDelete.delete()
+                        avaTimeDelete.delete()
+
+                voteDataSet = Vote.objects.filter(proName=userName)
+
+                if voteDataSet:
+                    for vdata in voteDataSet:
+                        voteInfoData = VoteInfo.objects.filter(voteId=vdata.id)
+                        voteInfoData.delete()
+
+                voteDataSet.delete()
 
                 for i in range(lec_del.count()):
                     for j in range(cal_Pdel.count()):
