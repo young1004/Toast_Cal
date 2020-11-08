@@ -641,8 +641,8 @@ svg {
     float: right;
 }
 
-/* 투표 재개설, 수정 버튼 */
-.revoteBtn, .correctBtn {
+/* 투표 확정, 수정 버튼  revoteBtn 제거*/
+.voteConfirmBtn, .correctBtn {
     margin: 10px;
 }
 

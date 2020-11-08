@@ -833,7 +833,7 @@ voteStatusTabBtn.addEventListener('click', function(event) {
             $('#chart-area').empty();
             // comment_div = null;
             $('#comment').remove();
-            $('#revoteBtn').remove();
+            $('#voteConfirmBtn').remove();
             $('#correctBtn').remove();
             $('.classCode').remove();
         }
@@ -1004,6 +1004,8 @@ $(document).on('click', '.voteBtn', function() {
         code: td.eq(0).text()
     }
 
+    let voteStat = td.eq(3).text();
+
     ajaxPost('/toast_cal/voteChart/', 'json', 'POST', chartData).then(function(data) {
             // console.log(data.length);
             // console.log(data);
@@ -1135,14 +1137,11 @@ $(document).on('click', '.voteBtn', function() {
             console.log(err);
         });
 
-    // if (comment_div !== null) {
-    //     comment_div = null;
     $('#comment').remove();
-    $('#revoteBtn').remove();
+    $('#voteConfirmBtn').remove();
     $('#correctBtn').remove();
     $('.classCode').remove();
 
-    // comment_div = 1;
     let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
     $('#professor-vote-status').append(comment);
 
@@ -1150,31 +1149,25 @@ $(document).on('click', '.voteBtn', function() {
         var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:void(0);" onclick="show_comment(\'투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.\')">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
         $('#comment_tbody').append(comment_tr);
     }
-
-    var revote_btn = $('<button type="button" class="btn btn-outline-dark revoteBtn" id="revoteBtn">투표 재개설</button>');
+    var voteConfirmBtn = $('<button type="button" class="btn btn-outline-dark voteConfirmBtn" id="voteConfirmBtn">투표 확정</button>');
     var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correctBtn">투표 수정</button>');
     var code = $('<a class="classCode" style="display: none;">' + td.eq(0).text() + '<a>');
-    $('#professor-vote-status').append(revote_btn);
+    $('#professor-vote-status').append(voteConfirmBtn);
     $('#professor-vote-status').append(correct_btn);
     $('#professor-vote-status').append(code);
-    // } else {
-    //     comment_div = 1;
-    //     let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
-    //     $('#professor-vote-status').append(comment);
 
-    //     for (var count = 0; count < 10; count++) {
-    //         var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:void(0);" onclick="show_comment(\'투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.\')">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
-    //         $('#comment_tbody').append(comment_tr);
-    //     }
+    if(voteStat !== '투표 마감')
+        document.getElementById('voteConfirmBtn').disabled = true;
+    
+    if(voteStat === '투표 마감')
+        document.getElementById('voteConfirmBtn').disabled = false;
 
-    //     var revote_btn = $('<button type="button" class="btn btn-outline-dark revoteBtn" id="revoteBtn">투표 재개설</button>');
-    //     var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correctBtn">투표 수정</button>');
-    //     var code = $('<a class="classCode" style="display: none;">' + td.eq(0).text() + '<a>');
-    //     $('#professor-vote-status').append(revote_btn);
-    //     $('#professor-vote-status').append(correct_btn);
-    //     $('#professor-vote-status').append(code);
-    // }
+
 });
+
+$(document).on('click', '#voteConfirmBtn', function () {
+    console.log('voteConfirmBtn 눌림');
+})
 
 $(document).on('click', '.voteDelete', function() {
     var deleteBtn = $(this);
@@ -1197,7 +1190,7 @@ $(document).on('click', '.voteDelete', function() {
 
             // if (comment_div !== null) {
                 $('#comment').remove();
-                $('#revoteBtn').remove();
+                $('#voteConfirmBtn').remove();
                 $('#correctBtn').remove();
                 $('.classCode').remove();
             // }
@@ -1239,7 +1232,7 @@ $(document).on('click', '.correctBtn', async function() {
 
     // if (comment_div !== null) {
         $('#comment').remove();
-        $('#revoteBtn').remove();
+        $('#voteConfirmBtn').remove();
         $('#correctBtn').remove();
         $('.classCode').remove();
     // }
