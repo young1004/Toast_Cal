@@ -1254,20 +1254,36 @@ $(document).on('click', '#voteConfirmBtn', async function() {
                 console.log(err);
             });
 
-        let splitData = scheduleData.split(',');
+        // ajax로 보낼 일정 데이터에 필요한 변수 선언
+        let subTitle;
+        let startTime;
+        let endTime;
+        let splitData = scheduleData.split(','); // 강의코드, 강의 제목, 시간 데이터
+        
 
-        let subTitle = splitData[1] + '(' + splitData[0] + ')' + ' 시험';
-        let timeData = splitData[2];
+        subTitle = splitData[1] + '(' + splitData[0] + ')' + ' 시험'; // 제목 문자열 포맷팅
+        let timeData = splitData[2]; // 시간 데이터 저장
+        let yymmdd = timeData.split(' ')[0]; // 년월일 데이터
+        
+        if (scheduleData.indexOf('~') === -1) { // 정규 시간 데이터일 시 (정규 데이터는 ~가 없음)
+            
 
-        let yymmdd = timeData.split(' ')[0];
-        let periodData = periodSplit(timeData.split(' ')[1])[1];
-        periodData = timeConvert(periodData);
+            let periodData = periodSplit(timeData.split(' ')[1])[1]; // 시간 데이터에서 교시 데이터만 빼냄 (월78 등등)
+            periodData = timeConvert(periodData);
 
-        let startTime = yymmdd + ' ' + periodData[0];
-        let endTime = yymmdd + ' ' + periodData[1];
+            startTime = yymmdd + ' ' + periodData[0];
+            endTime = yymmdd + ' ' + periodData[1];
+
+
+            console.log(examData);
+        } else { // 오후 7시 이후 데이터일 시
+
+            startTime = yymmdd + ' 19:00'
+            endTime = yymmdd  + ' 20:15'
+
+        }
 
         examData = newCalObj(1, '시험 일정', subTitle, 'milestone', '', startTime, endTime, 'False', 'busy', 'public')
-        console.log(examData);
 
         // 함수 테스트
         ajaxPost('/toast_cal/createExamData/', 'int', 'POST', examData)
