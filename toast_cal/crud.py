@@ -408,11 +408,23 @@ def pro_lecture_table(request):
 # 교수 강의 삭제
 def professor_lecture_delete(request):
     if request.method == "POST":
-        try:
-            lec_del = Student_lecture.objects.filter(code=request.POST["code"])
+        code = request.POST["code"]
+
+        lec_del = Student_lecture.objects.filter(code=request.POST["code"])
+        if lec_del:
             lec_del.delete()
-        except lec_del.DoesNotExist:
-            a = "aa"
+
+        vote_del = Vote.objects.get(classCode=code)
+        ava_del = Ava_Time.objects.filter(classCode=code)
+        pubcal_del = PubCalendar.objects.filter(code=code)
+
+        if vote_del:
+            info_del = VoteInfo.objects.filter(voteId=vote_del.id)
+
+            vote_del.delete()
+            ava_del.delete()
+            info_del.delete()
+            pubcal_del.delete()
 
         sub_del = Subject.objects.get(
             code=request.POST["code"], codeClass=request.POST["codeClass"]

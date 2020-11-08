@@ -137,32 +137,56 @@ $(document).on("click", "#vote-ava-time", async function() {
         status: "",
     }
 
-    await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', voteTimeLoad)
-        .then(function(data) {
-            // console.log(data);
-        })
-        .catch(function(err) {
-            alert(err);
-        });
+    let startString = voteStart;
+    let endString = voteEnd;
 
-    await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
-        .then(function(data) {
-            if (data !== "공용 일정이 없습니다") {
-                let newDate = getVoteDate(data);
+    let arrayStart = startString.split("-");
+    let arrayEnd = endString.split("-");
 
-                date_status_json = {
-                    newDate
+    let objStart = new Date(arrayStart[0], Number(arrayStart[1]) - 1, arrayStart[2]);
+    let objEnd = new Date(arrayEnd[0], Number(arrayEnd[1]) - 1, arrayEnd[2]);
+    let objToday = new Date();
+
+    let betweenStartEnd = (objEnd.getTime() - objStart.getTime()) / 1000 / 60 / 60 / 24; // 시작 날짜와 끝 날짜와의 차이
+    let betweenTodayStart = (objStart.getTime() - objToday.getTime()) / 1000 / 60 / 60 / 24; // 시작 날짜와 오늘 날짜의 차이
+
+    console.log(betweenStartEnd);
+    console.log(betweenTodayStart);
+
+    if (betweenTodayStart < -1) { // 시작날짜가 오늘 이전의 날짜가 입력됬을때
+        $('#vote-open-tbody').empty();
+        alert("시작 날짜를 오늘 이후의 날짜로 입력해주세요.")
+    } else if (betweenStartEnd < 0) { // 끝 날짜가 시작 날짜보다 크게 입력됬을때
+        $('#vote-open-tbody').empty();
+        alert("마지막 날짜의 입력이 잘못 되었습니다.")
+    } else {
+        await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', voteTimeLoad)
+            .then(function (data) {
+                // console.log(data);
+            })
+            .catch(function (err) {
+                alert(err);
+            });
+
+        await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
+            .then(function (data) {
+                if (data !== "공용 일정이 없습니다") {
+                    let newDate = getVoteDate(data);
+
+                    date_status_json = {
+                        newDate
+                    }
+
+                } else { // 공용캘린더 DB에 데이터가 없을 때
+                    alert(data);
                 }
+            })
+            .catch(function (err) {
+                alert(err);
+            });
 
-            } else { // 공용캘린더 DB에 데이터가 없을 때
-                alert(data);
-            }
-        })
-        .catch(function(err) {
-            alert(err);
-        });
-
-    printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
+        printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
+    }
 
 });
 
@@ -805,9 +829,9 @@ voteStatusTabBtn.addEventListener('click', function(event) {
     if (exist_code === "false") {
         $('#voteTableBtn').trigger('click');
 
-        if (chart !== null && comment_div !== null) {
+        if (chart !== null/* && comment_div !== null*/) {
             $('#chart-area').empty();
-            comment_div = null;
+            // comment_div = null;
             $('#comment').remove();
             $('#revoteBtn').remove();
             $('#correctBtn').remove();
@@ -820,12 +844,30 @@ voteStatusTabBtn.addEventListener('click', function(event) {
 
 // 투표 개설 버튼 ajax 부분 미완
 $('#vote-open-btn').click(async function() {
+    var voteStart = document.getElementById('voteStart').value;
+    var voteEnd = document.getElementById('voteEnd').value;
+
+    let startString = voteStart;
+    let endString = voteEnd;
+
+    let arrayStart = startString.split("-");
+    let arrayEnd = endString.split("-");
+
+    let objStart = new Date(arrayStart[0], Number(arrayStart[1]) - 1, arrayStart[2]);
+    let objEnd = new Date(arrayEnd[0], Number(arrayEnd[1]) - 1, arrayEnd[2]);
+    let objToday = new Date();
+
+    let betweenStartEnd = (objEnd.getTime() - objStart.getTime()) / 1000 / 60 / 60 / 24; // 시작 날짜와 끝 날짜와의 차이
+    let betweenTodayStart = (objStart.getTime() - objToday.getTime()) / 1000 / 60 / 60 / 24; // 시작 날짜와 오늘 날짜의 차이
+
+
     var tr = $('#vote-open-tbody').children();
 
     var classCode = getSubCode($("#class_select option:selected").val());
     var array = [];
     var husks = {};
     var check = 0;
+
 
     for (var i = 0; i < tr.length; i++) {
         if (tr[i].style.backgroundColor === 'rgb(177, 179, 182)') { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
@@ -839,7 +881,15 @@ $('#vote-open-btn').click(async function() {
         }
     }
 
-    ajaxPost('/toast_cal/check_Vote/', 'json', 'POST', husks)
+
+    if (betweenTodayStart < -1) { // 시작날짜가 오늘 이전의 날짜가 입력됬을때
+        alert("시작 날짜를 오늘 이후의 날짜로 입력해주세요.")
+    } else if (betweenStartEnd < 0) { // 끝 날짜가 시작 날짜보다 크게 입력됬을때
+        alert("마지막 날짜의 입력이 잘못 되었습니다.")
+    } else if (array.length==0){
+        alert("투표 목록을 선택해주세요.")
+    } else {
+        ajaxPost('/toast_cal/check_Vote/', 'json', 'POST', husks)
         .then(function(data) {
             for (var count = 0; count < data.length; count++) {
                 if (classCode == data[count].fields.classCode) {
@@ -871,10 +921,12 @@ $('#vote-open-btn').click(async function() {
                         get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
 
                     let start_data_vote_status = $('#voteStart').val() + ' ' +
-                        get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+                        // get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+                        '00:00:00.000000'
 
                     let end_data_vote_status = $('#voteEnd').val() + ' ' +
-                        get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+                        // get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+                        '00:00:00.000000'
 
                     husks = {
                         select_Array: array,
@@ -902,6 +954,7 @@ $('#vote-open-btn').click(async function() {
         .catch(function(err) {
             alert(err);
         });
+    }
 });
 
 // 서버에서 filter를 적용할 투표 페이지 관련 데이터 object
@@ -1142,12 +1195,12 @@ $(document).on('click', '.voteDelete', function() {
                 $('#chart-area').empty();
             // chart.destroy();
 
-            if (comment_div !== null) {
+            // if (comment_div !== null) {
                 $('#comment').remove();
                 $('#revoteBtn').remove();
                 $('#correctBtn').remove();
                 $('.classCode').remove();
-            }
+            // }
 
             voteData.lecture_type = voteClass.value;
             voteData.vote_status = voteStatus.value;
@@ -1184,12 +1237,12 @@ $(document).on('click', '.correctBtn', async function() {
     if (chart !== null)
         $('#chart-area').empty();
 
-    if (comment_div !== null) {
+    // if (comment_div !== null) {
         $('#comment').remove();
         $('#revoteBtn').remove();
         $('#correctBtn').remove();
         $('.classCode').remove();
-    }
+    // }
 
 
     await ajaxPost('/toast_cal/pro_vote_info/', 'json', 'POST', class_data)
@@ -1304,10 +1357,12 @@ $('#vote-update-btn').click(function() {
                 get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
 
             let start_data_vote_status = $('#vote-update-Start').val() + ' ' +
-                get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+                // get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+                '00:00:00.000000'
 
             let end_data_vote_status = $('#vote-update-End').val() + ' ' +
-                get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+                // get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+                '00:00:00.000000'
 
             class_data = {
                 select_Array: array,
