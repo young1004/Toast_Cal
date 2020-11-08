@@ -155,23 +155,23 @@ $(document).on("click", "#vote-ava-time", async function() {
     // console.log(betweenStartEnd);
     // console.log(betweenTodayStart);
 
-    if (voteOpen.disabled == true ) {
+    if (voteOpen.disabled == true) {
         voteOpen.disabled = false;
     }
-    
+
     await ajaxPost('/toast_cal/lec_Check/', 'json', 'POST', voteTimeLoad)
-        .then(function (data) {
+        .then(function(data) {
             for (var count = 0; count < data.length; count++) {
                 lec_check += 1;
             }
         })
-        .catch(function (err) {
+        .catch(function(err) {
             alert(err);
         });
-    
+
     console.log("lec_check : " + lec_check);
-    
-    if(lec_check > 0) {
+
+    if (lec_check > 0) {
         if (betweenTodayStart < -1) { // 시작날짜가 오늘 이전의 날짜가 입력됬을때
             $('#vote-open-tbody').empty();
             alert("시작 날짜를 오늘 이후의 날짜로 입력해주세요.")
@@ -180,34 +180,33 @@ $(document).on("click", "#vote-ava-time", async function() {
             alert("마지막 날짜의 입력이 잘못 되었습니다.")
         } else {
             await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', voteTimeLoad)
-                .then(function (data) {
+                .then(function(data) {
                     // console.log(data);
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     alert(err);
                 });
-    
+
             await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
-                .then(function (data) {
+                .then(function(data) {
                     if (data !== "공용 일정이 없습니다") {
                         let newDate = getVoteDate(data);
-    
+
                         date_status_json = {
                             newDate
                         }
-    
+
                     } else { // 공용캘린더 DB에 데이터가 없을 때
                         alert(data);
                     }
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     alert(err);
                 });
-    
+
             printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
         }
-    }
-    else {
+    } else {
         alert("강의를 수강중인 학생이 없습니다.");
         lec_check = 0;
         voteOpen.disabled = true;
@@ -406,8 +405,8 @@ shareProBtn.addEventListener('click', async function(event) {
                     );
                 $('#pubcal_vote_info').append(vote_data);
 
-                // 투표선택지가 다중일경우
-                if (data[count].fields.choice4_Title === "False") {
+                // 투표선택지가 다중일경우 + 수정
+                if (data[count].fields.choice4_Title === "False" && data[count].fields.choice3_Title !== "False") {
                     var choice3_info =
                         $(
                             '<span class = "vote_choice">' + choice3 + ': </span>' +
@@ -415,14 +414,23 @@ shareProBtn.addEventListener('click', async function(event) {
                         );
                     $('#basic_vote_list').append(choice3_info);
                 }
-                if (data[count].fields.choice4_Title !== "False" && data[count].fields.choice3_Title !== "False") {
+                if (data[count].fields.choice3_Title === "False" && data[count].fields.choice4_Title !== "False") {
                     var choice4_info =
-                        $('<span class = "vote_choice">' + choice3 + ': </span>' +
-                            '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  / ' + '</span>' +
+                        $(
                             '<span class = "vote_choice">' + choice4 + ': </span>' +
                             '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표  ' + '</span>'
                         );
                     $('#basic_vote_list').append(choice4_info);
+                }
+                if (data[count].fields.choice3_Title !== "False" && data[count].fields.choice4_Title !== "False") {
+                    var choice3_and4_info =
+                        $(
+                            '<span class = "vote_choice">' + choice3 + ': </span>' +
+                            '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  ' + '</span>' +
+                            '<span class = "vote_choice">' + choice4 + ': </span>' +
+                            '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표  ' + '</span>'
+                        );
+                    $('#basic_vote_list').append(choice3_and4_info);
                 }
             }
         })
@@ -566,8 +574,8 @@ $('#pubcal_select').on('change', function() {
                     );
                 $('#pubcal_vote_info').append(vote_data);
 
-                // 투표선택지가 다중일경우
-                if (data[count].fields.choice4_Title === "False") {
+                // 투표선택지가 다중일경우 + 수정
+                if (data[count].fields.choice4_Title === "False" && data[count].fields.choice3_Title !== "False") {
                     var choice3_info =
                         $(
                             '<span class = "vote_choice">' + choice3 + ': </span>' +
@@ -575,14 +583,23 @@ $('#pubcal_select').on('change', function() {
                         );
                     $('#basic_vote_list').append(choice3_info);
                 }
-                if (data[count].fields.choice4_Title !== "False" && data[count].fields.choice3_Title !== "False") {
+                if (data[count].fields.choice3_Title === "False" && data[count].fields.choice4_Title !== "False") {
                     var choice4_info =
-                        $('<span class = "vote_choice">' + choice3 + ': </span>' +
-                            '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  / ' + '</span>' +
+                        $(
                             '<span class = "vote_choice">' + choice4 + ': </span>' +
                             '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표  ' + '</span>'
                         );
                     $('#basic_vote_list').append(choice4_info);
+                }
+                if (data[count].fields.choice3_Title !== "False" && data[count].fields.choice4_Title !== "False") {
+                    var choice3_and4_info =
+                        $(
+                            '<span class = "vote_choice">' + choice3 + ': </span>' +
+                            '<span class = "vote_choice_count">' + data[count].fields.choice3 + '표  ' + '</span>' +
+                            '<span class = "vote_choice">' + choice4 + ': </span>' +
+                            '<span class = "vote_choice_count">' + data[count].fields.choice4 + '표  ' + '</span>'
+                        );
+                    $('#basic_vote_list').append(choice3_and4_info);
                 }
             }
         })
@@ -1029,9 +1046,9 @@ $(document).on('click', '.voteBtn', function() {
     var chartData = {
         code: td.eq(0).text()
     }
-    confirmCode = td.eq(0).text();
+    confirmCode = td.eq(0).text(); // 투표 확정 버튼에서 사용할 code값
 
-    let voteStat = td.eq(3).text();
+    let voteStat = td.eq(3).text(); // 투표 상태를 통한 버튼 disabled용 변수
 
 
     ajaxPost('/toast_cal/voteChart/', 'json', 'POST', chartData).then(function(data) {
@@ -1173,10 +1190,32 @@ $(document).on('click', '.voteBtn', function() {
     let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
     $('#professor-vote-status').append(comment);
 
-    for (var count = 0; count < 10; count++) {
-        var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:void(0);" onclick="show_comment(\'투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.\')">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
-        $('#comment_tbody').append(comment_tr);
-    }
+    // for (var count = 0; count < 10; count++) {
+    //     var comment_tr = $('<tr><td>이종욱</td><td class="comment_td"><a href="javascript:void(0);" onclick="show_comment(\'투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.\')">투표 방식에 이의가 있어 글을 남깁니다. 다시 재투표 해주세요. 빠른 시일 내에 수정해주시길 바랍니다.</a></td></tr>');
+    //     $('#comment_tbody').append(comment_tr);
+    // }
+
+    // 댓글 데이터 가져와서 댓글 보여주는 부분
+    ajaxPost('/toast_cal/bring_Comment/', 'json', 'POST', chartData).then(function(data) {
+        if (data.length == 0) {
+            var comment_tr = $(
+                '<span class = "nothing-comment">-등록된 의견이 없습니다.-</span>'
+            );
+            $('#comment_tbody').append(comment_tr);
+        }
+
+        for (var count = 0; count < data.length; count++) {
+            if (data[count].fields.comment != "") {
+                var comment_tr = $(
+                    '<tr><td>' + data[count].fields.studentID + '</td><td class="comment_td">' +
+                    '<a href="javascript:void(0);" onclick="show_comment(\'' + data[count].fields.comment + '\')">' +
+                    data[count].fields.comment + '</a></td></tr>');
+            }
+            $('#comment_tbody').append(comment_tr);
+        }
+
+    });
+
     var voteConfirmBtn = $('<button type="button" class="btn btn-outline-dark voteConfirmBtn" id="voteConfirmBtn">투표 확정</button>');
     var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correctBtn">투표 수정</button>');
     var code = $('<a class="classCode" style="display: none;">' + td.eq(0).text() + '<a>');
@@ -1184,6 +1223,8 @@ $(document).on('click', '.voteBtn', function() {
     $('#professor-vote-status').append(correct_btn);
     $('#professor-vote-status').append(code);
 
+
+    // 투표 상태에 따라, 투표 마감인 경우만 투표 확정 버튼 누를 수 있도록 처리
     if (voteStat !== '투표 마감')
         document.getElementById('voteConfirmBtn').disabled = true;
 

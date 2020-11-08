@@ -1171,3 +1171,31 @@ def student_voteTable(request):
     return HttpResponse(
         serializers.serialize("json", result), content_type="application/json"
     )
+
+
+# 코멘트가져오기
+def bring_Comment(request):
+    if request.method == "POST":
+        # 과목코드를 받아옴
+        classcode = request.POST["code"]
+        # print(classcode)
+
+        # vote테이블내의 과목코드를 비교하여 해당되는 쿼리셋을 불러옴.
+        filt_vote_classcode = Vote.objects.get(classCode = classcode)
+        # print(filt_vote_classcode)
+        # ex) nn번 vote쿼리셋
+
+        # vote테이블의 id로 필터링하여 votrinfo테이블에서 가져오기 
+        filt_voteid = VoteInfo.objects.filter(
+            voteId = filt_vote_classcode.id,
+            )
+        
+        # print(filt_voteid)
+
+        for i in range(filt_voteid.count()):
+            if(filt_voteid[i].comment ==""):
+                filt_voteid[i].delete()
+
+        return HttpResponse(
+            serializers.serialize("json", filt_voteid), content_type="application/json"
+            )
