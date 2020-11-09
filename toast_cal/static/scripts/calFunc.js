@@ -373,3 +373,31 @@ function clickTrEvent(tr, id, option) { //tr tag
         tdArr.push(td.eq(i).text());
     });
 }
+
+/**
+ * 한개 이상의 id 값을 입력하면 입력한 id값에 해당하는 인터페이스들을 비활성화하는 함수
+ * @param  {...String} ids 비활성화 할 버튼의 id값 문자열들
+ */
+function uiLock(...ids) {
+
+    for (let i = 0; i < ids.length; i++) {
+        id = ids[i].trim();
+        $(id).attr('disabled', true);
+        // let setLock = document.getElementById(id);
+        // setLock.disabled = true;
+    }
+}
+
+/**
+ * 한개 이상의 id 값을 입력하면 id값에 해당하는 인터페이스들을 활성화하는 함수
+ * @param  {...String} ids 활성화 할 버튼의 id값 문자열들
+ */
+function uiUnLock(...ids) {
+
+    for (let i = 0; i < ids.length; i++) {
+        id = ids[i].trim();
+        $(id).attr('disabled', false);
+        // let setLock = document.getElementById(id);
+        // setLock.disabled = false;
+    }
+}
