@@ -70,42 +70,7 @@ voteProBtn.addEventListener('click', async function(event) {
         changeContents('professor2', 'calendar-common', 'professor1', 'sidebar', 'professor3', 'pubcal_vote_info');
         changeContents('tab_box');
 
-        // 공유 캘린더 날짜 셋팅
-        var dateValue = getThisWeek();
-        var todayValue = new Date()
-
-        ty = todayValue.getFullYear();
-        tm = todayValue.getMonth() + 1;
-        td = todayValue.getDate();
-
-        td_end = td + 14;
-
-        if (td < 10) {
-            td = "0" + td;
-        }
-
-        tv_start = ty + "-" + tm + "-" + td;
-        tv_end = ty + "-" + tm + "-" + td_end;
-
-        document.getElementById('start').value = dateValue[0];
-        document.getElementById('end').value = dateValue[6];
-
-        document.getElementById('voteStart').value = tv_start;
-        document.getElementById('voteEnd').value = tv_end;
-
-        // select options 셋팅
-        await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
-            .then(function(data) {
-                $('#class_select').empty(); //기존 옵션 값 삭제
-
-                for (var count = 0; count < data.length; count++) {
-                    var option = $('<option>' + data[count].fields.name + " (" + data[count].fields.code + ")" + '</option>');
-                    $('#class_select').append(option);
-                }
-            })
-            .catch(function(err) {
-                alert(err);
-            });
+        
 
         $('#vote-open-tab-btn').trigger('click');
 
@@ -138,6 +103,8 @@ $(document).on("click", "#vote-ava-time", async function() {
         date: "",
         status: "",
     }
+    
+
 
     let startString = voteStart;
     let endString = voteEnd;
@@ -248,9 +215,21 @@ shareProBtn.addEventListener('click', async function(event) {
         $('#pub_today').trigger('click'); // 캘린더 크기 잡아주기 위한 트리거
 
         // 공유 캘린더 날짜 셋팅
+        var todayValue = new Date()
+
+        ty = todayValue.getFullYear();
+        tm = todayValue.getMonth() + 1;
+        td = todayValue.getDate();
+
+        if (td < 10) {
+            td = "0" + td;
+        }
+
+        tv_start = ty + "-" + tm + "-" + td;
+
         var dateValue = getThisWeek();
 
-        document.getElementById('pubStart').value = dateValue[0];
+        document.getElementById('pubStart').value = tv_start;
         document.getElementById('pubEnd').value = dateValue[6];
 
 
@@ -857,8 +836,51 @@ var voteOpenTabBtn = document.getElementById('vote-open-tab-btn');
 var voteStatusTabBtn = document.getElementById('vote-status-tab-btn');
 
 // 투표 개설 탭 버튼
-voteOpenTabBtn.addEventListener('click', function(event) {
+voteOpenTabBtn.addEventListener('click', async function(event) {
     changeContents('professor-vote-open', 'professor-vote-status', 'professor-vote-update');
+
+    // 공유 캘린더 날짜 셋팅
+    var dateValue = getThisWeek();
+    var todayValue = new Date()
+
+    ty = todayValue.getFullYear();
+    tm = todayValue.getMonth() + 1;
+    td = todayValue.getDate();
+
+    todayValue.setDate(todayValue.getDate() + 14);
+
+    if (td < 10) {
+        td = "0" + td;
+    }
+
+    tv_start = ty + "-" + tm + "-" + td;
+    tv_end_date = todayValue.getDate()
+
+    if(tv_end_date < 10){
+        tv_end_date = "0" + tv_end_date;
+    }
+    
+    tv_end = todayValue.getFullYear() + '-' + (todayValue.getMonth() + 1) + '-' + tv_end_date;
+
+    document.getElementById('start').value = tv_start;
+    document.getElementById('end').value = dateValue[6];
+
+    document.getElementById('voteStart').value = tv_start;
+    document.getElementById('voteEnd').value = tv_end;
+
+    // select options 셋팅
+    await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
+    .then(function(data) {
+        $('#class_select').empty(); //기존 옵션 값 삭제
+
+        for (var count = 0; count < data.length; count++) {
+            var option = $('<option>' + data[count].fields.name + " (" + data[count].fields.code + ")" + '</option>');
+            $('#class_select').append(option);
+        }
+    })
+    .catch(function(err) {
+        alert(err);
+    });
 
 });
 
@@ -1222,8 +1244,8 @@ $(document).on('click', '.voteBtn', async function() {
 
     await ajaxPost('/toast_cal/bring_StdName/', 'json', 'POST', stdId)
     .then(function(data){
-        console.log("서버 데이터 :", data);
-        console.log("댓글 데이터 :", comDatas);
+        // console.log("서버 데이터 :", data);
+        // console.log("댓글 데이터 :", comDatas);
         if (data.length == 0) {
             var comment_tr = $(
                 '<span class = "nothing-comment">-등록된 의견이 없습니다.-</span>'
@@ -1634,7 +1656,9 @@ $(document).on('click', '#portal_to_making_vote', async function() {
 
             } else { // 공용캘린더 DB에 데이터가 없을 때
                 flag = false;
+                $('#vote-open-tbody').empty();
 
+                // 공유 캘린더 날짜 셋팅
                 var dateValue = getThisWeek();
                 var todayValue = new Date()
 
@@ -1642,16 +1666,24 @@ $(document).on('click', '#portal_to_making_vote', async function() {
                 tm = todayValue.getMonth() + 1;
                 td = todayValue.getDate();
 
-                td_end = td + 14;
+                todayValue.setDate(todayValue.getDate() + 14);
+                // console.log(todayValue)
 
                 if (td < 10) {
                     td = "0" + td;
                 }
 
                 tv_start = ty + "-" + tm + "-" + td;
-                tv_end = ty + "-" + tm + "-" + td_end;
+                tv_end_date = todayValue.getDate()
 
-                document.getElementById('start').value = dateValue[0];
+                if(tv_end_date < 10){
+                    tv_end_date = "0" + tv_end_date;
+                }
+                
+                tv_end = todayValue.getFullYear() + '-' + (todayValue.getMonth() + 1) + '-' + tv_end_date;
+                // console.log(tv_end)
+
+                document.getElementById('start').value = tv_start;
                 document.getElementById('end').value = dateValue[6];
 
                 document.getElementById('voteStart').value = tv_start;
