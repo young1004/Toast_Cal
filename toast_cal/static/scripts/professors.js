@@ -15,6 +15,7 @@ var pubCalLoadBtn = document.getElementById('pubCalLoadBtn');
 // 각종 처리에 필요한 변수들 모음
 var chart = null; // chart 표시를 위한 변수
 let confirmCode; // 투표 확정 시 필요한 강의 코드를 위한 변수
+let voteUpdateCode; // 투표 수정 시 필요한 강의 코드를 위한 변수
 let exist_code = "false" // 로직 분리를 위한 상태 변수
 
 // 서버에서 filter를 적용할 투표 페이지 관련 데이터 object
@@ -334,17 +335,39 @@ voteOpenTabBtn.addEventListener('click', async function(event) {
         .catch(function(err) {
             alert(err);
         });
+    
+    $('#vote-ava-time').trigger('click');
 
 });
 
-// 투표 개설 탭의 과목명 option 태그 변경 시 테이블 데이터를 지워줄 eventListener
+// 투표 개설 탭의 과목명 option 태그 
 $('#class_select').on('change', function() {
-    $('#vote-open-tbody').empty();
+    // $('#vote-open-tbody').empty();
+    $('#vote-ava-time').trigger('click');
+    
+});
+
+// 투표 개설 탭 하단 시작 날짜 date 필드 eventListener
+$('#start').on('change', function() {
+    // $('#vote-open-tbody').empty();
+    $('#vote-ava-time').trigger('click');
+    
+});
+
+// 투표 개설 탭 하단 끝 날짜 date 필드 eventListener
+$('#end').on('change', function() {
+    // $('#vote-open-tbody').empty();
+    $('#vote-ava-time').trigger('click');
+    
 });
 
 // 투표 개설 탭의 date 필드 오른쪽 선택 버튼
 $(document).on("click", "#vote-ava-time", async function() {
+    $('#vote-open-tbody').empty();
     // var select_val = $("#class_select option:selected").val();
+
+    // 정보 불러오는 동안 동작 불가
+    uiLock('calProBtn', 'subProBtn', 'voteProBtn', 'shareProBtn', 'vote-open-tab-btn', 'vote-status-tab-btn', 'class_select', 'start', 'end', 'voteStart', 'voteEnd', 'vote-open-btn');
 
     var voteCode = getSubCode(document.getElementById('class_select').value)
     var voteStart = document.getElementById('start').value;
@@ -400,10 +423,10 @@ $(document).on("click", "#vote-ava-time", async function() {
 
     if (lec_check > 0) {
         if (betweenTodayStart < -1) { // 시작날짜가 오늘 이전의 날짜가 입력됬을때
-            $('#vote-open-tbody').empty();
+            // $('#vote-open-tbody').empty();
             alert("시작 날짜를 오늘 이후의 날짜로 입력해주세요.")
         } else if (betweenStartEnd < 0) { // 끝 날짜가 시작 날짜보다 크게 입력됬을때
-            $('#vote-open-tbody').empty();
+            // $('#vote-open-tbody').empty();
             alert("마지막 날짜의 입력이 잘못 되었습니다.")
         } else {
             await ajaxPost('/toast_cal/pubCalSave/', 'json', 'POST', voteTimeLoad)
@@ -441,7 +464,11 @@ $(document).on("click", "#vote-ava-time", async function() {
         voteOpen.disabled = true;
     }
 
+    // disabled 해제
+    uiUnLock('calProBtn', 'subProBtn', 'voteProBtn', 'shareProBtn', 'vote-open-tab-btn', 'vote-status-tab-btn', 'class_select', 'start', 'end', 'voteStart', 'voteEnd', 'vote-open-btn');
+
 });
+
 
 // 투표 개설 탭의 하단 끝 날짜 date 필드 이벤트리스너
 $(document).on('change', '#voteEnd', function() {
@@ -638,6 +665,8 @@ $(document).on('click', '.voteBtn', async function() {
     var chartData = {
         code: td.eq(0).text()
     }
+
+    voteUpdateCode = td.eq(0).text(); // 투표 수정시 필요한 강의 코드 데이터를 저장
     confirmCode = td.eq(0).text(); // 투표 확정 버튼에서 사용할 code값
 
     let voteStat = td.eq(3).text(); // 투표 상태를 통한 버튼 disabled용 변수
@@ -834,11 +863,7 @@ $(document).on('click', '.voteBtn', async function() {
                                 $('#comment_tbody').append(comment_tr);
                             }
                         }
-
-
                     }
-
-
                 }
             }
             // 댓글을 저장하는 배열 하나랑 코멘트를 저장하는 배열 하나
@@ -850,10 +875,10 @@ $(document).on('click', '.voteBtn', async function() {
 
     var voteConfirmBtn = $('<button type="button" class="btn btn-outline-dark voteConfirmBtn" id="voteConfirmBtn">투표 확정</button>');
     var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correctBtn">투표 수정</button>');
-    var code = $('<a class="classCode" style="display: none;">' + td.eq(0).text() + '<a>');
+    // var code = $('<a class="classCode" style="display: none;">' + td.eq(0).text() + '<a>'); 11111
     $('#professor-vote-status').append(voteConfirmBtn);
     $('#professor-vote-status').append(correct_btn);
-    $('#professor-vote-status').append(code);
+    // $('#professor-vote-status').append(code);
 
 
     // 투표 상태에 따라, 투표 마감인 경우만 투표 확정 버튼 누를 수 있도록 처리
@@ -989,7 +1014,7 @@ $(document).on('click', '.correctBtn', async function() {
     var title1, title2, title3, title4 = "";
 
     class_data = {
-        classCode: $('.classCode').text(),
+        classCode: voteUpdateCode,
     }
 
     if (chart !== null)
@@ -999,7 +1024,7 @@ $(document).on('click', '.correctBtn', async function() {
     $('#comment').remove();
     $('#voteConfirmBtn').remove();
     $('#correctBtn').remove();
-    $('.classCode').remove();
+    // $('.classCode').remove();
     // }
 
 
@@ -1032,9 +1057,10 @@ $(document).on('click', '.correctBtn', async function() {
             $('#vote-update-period').empty();
 
             var vote_period = $('<span>투표 기간 : </span>' +
-                '<input type="date" id="vote-update-Start" value="' + update_start + '">' +
+                '<input type="date" id="vote-update-Start" value="' + update_start + '" readonly>' +
                 '<span> ~ </span>' +
-                '<input type="date" id="vote-update-End" value="' + update_end + '">');
+                '<input type="date" id="vote-update-End" value="' + update_end + '">' +
+                '<span id="update_period_comment"></span>');
 
             $('#vote-update-period').append(vote_period);
 
@@ -1811,7 +1837,7 @@ $(document).on("click", "#delete_vote", function() {
 // 공유캘린더 투표개설하기 버튼(pubCalendar에서 생성된 투표가능 시간대를 Ava_Time으로 불러오는 기능)
 $(document).on('click', '#portal_to_making_vote', async function() {
     changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
-    changeContents('tab_box');
+    changeContents('tab_box', 'professor-vote-update');
     changeContents('professor-vote-open', 'professor-vote-status');
 
     var voteCode = document.getElementById('pubcal_select').value;

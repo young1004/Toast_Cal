@@ -405,7 +405,8 @@
                     <input type="date" id="start">
                     <span>끝: </span>
                     <input type="date" id="end">
-                    <button type="button" class="btn btn-outline-dark" id="vote-ava-time">선택</button>
+                    <button type="button" class="btn btn-outline-dark" id="vote-ava-time"
+                        style="display: none;">선택</button>
                 </div>
                 <div class="vote-open-table-wrap">
                     <table class="table table-hover" id="vote-open-table">
@@ -425,9 +426,9 @@
                 <div id="vote-open-tab-input">
                     <div>
                         <span>투표 기간 : </span>
-                        <input type="date" id="voteStart">
+                        <input type="date" id="voteStart" readonly>
                         <span> ~ </span>
-                        <input type="date" id="voteEnd">
+                        <input type="date" id="voteEnd" readonly>
                         <span id="vote_period_comment"></span>
                     </div>
                 </div>

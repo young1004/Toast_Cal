@@ -374,6 +374,7 @@ function clickTrEvent(tr, id, option) { //tr tag
     });
 }
 
+
 /**
  * 한개 이상의 id 값을 입력하면 입력한 id값에 해당하는 인터페이스들을 비활성화하는 함수
  * @param  {...String} ids 비활성화 할 버튼의 id값 문자열들
