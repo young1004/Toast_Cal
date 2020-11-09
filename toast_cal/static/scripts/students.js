@@ -511,6 +511,9 @@ $(document).on('click', '.voteDetail', function() {
     var tr = voteBtn.parent().parent();
     var td = tr.children();
 
+    let voteStart = "";
+    let voteEnd = "";
+
     var chartData = {
         code: td.eq(0).text()
     }
@@ -520,6 +523,8 @@ $(document).on('click', '.voteDetail', function() {
     ajaxPost('/toast_cal/voteChart/', 'json', 'POST', chartData).then(function(data) {
             // console.log(data.length);
             // console.log(data);
+            voteStart = data[0].fields.start;
+            voteEnd = data[0].fields.end;
             if (data.length > 0) {
                 //toast UI Chart 세팅
                 var doughnut = document.getElementById('chart-area-student');
@@ -654,35 +659,42 @@ $(document).on('click', '.voteDetail', function() {
     ajaxPost('/toast_cal/getLectureInfo/', 'json', 'POST', chartData)
         .then(function(data) {
             // console.log(data);
+            let start = voteStart.substring(0, 10);
+            let end = voteEnd.substring(0, 10);
+
             for (i = 0; i < data.length; i++) {
                 var testText = $(
-                    '<div id = "lec-info-wrap">' +
-                    '<div class = "lec-info-area">' +
-                    '<table>' +
-                    '<thead>' +
-                    '<tr>' +
-                    '<th>' + '강의정보' + '</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody class = sub_info >' +
-                    '<tr>' +
-                    '<th>' + '강의명' + '</th>' +
-                    '<td>' + data[i].fields.name + '</td>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<th>' + '강의코드' + '</th>' +
-                    '<td>' + data[i].fields.code + '</td>' +
-                    '</tr>' +
-                    '<tr>' +
-                    '<th>' + '강의분류' + '</th>' +
-                    '<td>' + data[i].fields.lecture_type + '</td>' +
-                    '</tr>' +
-                    '</tbody>' +
-                    '</table>' +
-                    '</div>' +
-                    '</div>'
-                )
-                $('#lec-info-student').append(testText)
+                '<div id = "lec-info-wrap">' +
+                '<div class = "lec-info-area">' +
+                '<table>' +
+                '<thead>' +
+                '<tr>' +
+                '<th>' + '강의정보' + '</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody class = sub_info >' +
+                '<tr>' +
+                '<th>' + '강의명' + '</th>' +
+                '<td>' + data[i].fields.name + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<th>' + '강의코드' + '</th>' +
+                '<td>' + data[i].fields.code + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<th>' + '강의분류' + '</th>' +
+                '<td>' + data[i].fields.lecture_type + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<th>' + '투표기간' + '</th>' +
+                '<td>' + start + " ~ " + end + '</td>' +
+                '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '</div>' +
+                '</div>'
+            );
+                $('#lec-info-student').append(testText);
             }
         })
 });

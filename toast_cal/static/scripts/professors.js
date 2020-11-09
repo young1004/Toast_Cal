@@ -1151,7 +1151,7 @@ $('#vote-update-btn').click(function() {
     var array = [];
 
     for (var i = 0; i < tr.length; i++) {
-        if (tr[i].style.backgroundColor === 'rgb(177, 179, 182)') { // #b1b3b6 선택된 tr 색 값이 안먹히는 것 같음...
+        if (tr[i].style.backgroundColor === 'rgb(177, 179, 182)') {
             var obj = {};
             var td = tr[i].children;
             obj.lecType = td[0].innerText;

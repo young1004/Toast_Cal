@@ -293,7 +293,7 @@ svg {
 }
 
 #lec-info-student {
-    padding-left: 2em;
+    /* padding-left: 2em; */
     height: 250px;
     width: 400px;
     margin: 0;
@@ -303,9 +303,10 @@ svg {
 }
 
 #lec-info-wrap {
-    border-style: solid;
+    /* border-style: solid;
     border-width: 0.5px;
-    background-color: white;
+    background-color: white; */
+    border-bottom: solid 0.5px #cdcdcd;
 }
 
 #lec-info-area {
@@ -314,28 +315,32 @@ svg {
 }
 
 .lec-info-area table {
-    margin-left: 10px;
-    height: 140px;
+    /* margin-left: 10px; */
+    /* height: 140px; */
+    height: 230px;
+    width: 400px;
 }
 
 .lec-info-area table thead {
     padding-top: 10px;
     padding-bottom: 10px;
+    font-size: 20px;
+    border-bottom: solid 0.5px #cdcdcd;
 }
 
 .sub_info {
     height: auto;
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; */
 }
 
 .sub_info tr th {
     font-size: 17px;
 }
 
-.sub_info tr {
+/* .sub_info tr {
     padding-top: 10px;
     padding-bottom: 10px;
-}
+} */
 
 
 
