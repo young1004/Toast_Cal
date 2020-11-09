@@ -13,20 +13,36 @@ $(document).on('click', '#close_comment', function() {
 
 /**
  * HTML 표 tr요소의 값과 날짜를 비교하여 date 필드를 변경해주는 함수
- * @param {String} tr 날짜 데이터를 비교할 tr 요소 id (#id)
+ * @param {String} tbody 날짜 데이터를 비교할 tbody 요소 id (#id)
  * @param {String} id 날짜 데이터를 비교하여 바꿀 date 객체의 id
  */
-function getClickTrData(tr, id) {
-    let trdata = $(tr);
-    
-    if (tr.style.backgroundColor === 'rgb(177, 179, 182)') {
-        td = trdata.children();
+function getClickTrData(tbody, id) {
+    let tr = $(tbody).children();
+    var td = tr.children();
 
-        let checkTime = (td.eq(3).text()).split(" ")[0]; // 새롭게 선택된 데이터
-        let beforeTime = document.getElementById(id).value
-        if (checkTime < beforeTime)
-            document.getElementById(id).value = checkTime;
+    let timeInit = document.getElementById('end').value; // 상단 날짜를 초기값으로 잡음
+    
+    let minTime = "9999-10-01"; // 9999년을 최소값으로 초기화
+    let checkTime;
+
+    let flag = false;
+    for(var i = 0; i < tr.length; i++){
+        if (tr[i].style.backgroundColor === 'rgb(177, 179, 182)') {
+            flag = true;
+            let td = tr[i].children;
+
+            checkTime = (td[3].innerText).split(' ')[0]; // 새롭게 선택된 데이터
+            if(checkTime < minTime)
+                minTime = checkTime;
+        }
     }
+    if(flag === true)
+        document.getElementById(id).value = minTime;
+
+    if(flag === false){//아무런 데이터 설정 x시 오늘부터 2주로 바꿔줌
+        document.getElementById(id).value = timeInit;
+    }
+    $('#voteEnd').trigger('change');
 
 }
 
@@ -72,8 +88,8 @@ async function printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json
                 } else {
                     timeStatus = "원활";
                 }
-                // 11111
-                var tr = $('<tr scope="row" onclick="javascript:clickTrEvent(this,\'#vote-open-tbody\', false); getClickTrData(this, \'voteEnd\');"><td>' + lecType + '</td>' +
+
+                var tr = $('<tr scope="row" onclick="javascript:clickTrEvent(this,\'#vote-open-tbody\', false); getClickTrData(\'#vote-open-tbody\', \'voteEnd\');"><td>' + lecType + '</td>' +
                     '<td>' + className + '</td>' +
                     '<td>' + timeStatus + '</td>' +
                     '<td>' + data[count].fields.avaTime + '</td></tr>');
