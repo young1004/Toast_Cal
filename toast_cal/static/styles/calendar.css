@@ -937,3 +937,7 @@ svg {
 .nav-tabs a:hover {
     color: black;
 }
+
+#vote_period_comment, #update_period_comment {
+    margin-left: 20px;
+}

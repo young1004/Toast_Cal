@@ -298,6 +298,10 @@ voteOpenTabBtn.addEventListener('click', async function(event) {
 
     todayValue.setDate(todayValue.getDate() + 14);
 
+    if (tm < 10) {
+        tm = "0" + tm;
+    }
+
     if (td < 10) {
         td = "0" + td;
     }
@@ -437,6 +441,30 @@ $(document).on("click", "#vote-ava-time", async function() {
 
 });
 
+// 투표 개설 탭의 하단 끝 날짜 date 필드 이벤트리스너
+$(document).on('change', '#voteEnd', function() {
+    voteStart = document.getElementById('voteStart').value
+    voteEnd = document.getElementById('voteEnd').value
+    vote_period_comment = document.getElementById('vote_period_comment')
+
+    var vote_start = new Date(voteStart);
+    var vote_end = new Date(voteEnd);
+
+    // console.log("start : " + vote_start + ", end : " + vote_end);
+    var votePeriod = Math.abs(vote_end.getTime() - vote_start.getTime());
+    votePeriod = Math.ceil(votePeriod / (1000 * 3600 * 24) + 1);
+
+    // console.log("투표기간 : " + votePeriod + "일");
+    vote_period_comment.innerText = "  * 투표기간 : " + votePeriod + "일";
+
+    if (votePeriod <= 3) {
+        vote_period_comment.style.color = '#FF0000'; // 진한 빨강 '#FF0000', 연한 빨강 '#F15F5F'
+    }
+    else {
+        vote_period_comment.style.color = '#212529';
+    }
+});
+
 // 투표 개설 탭의 투표 개설 버튼
 $('#vote-open-btn').click(async function() {
     var voteStart = document.getElementById('voteStart').value;
@@ -521,7 +549,7 @@ $('#vote-open-btn').click(async function() {
 
                         let end_data_vote_status = $('#voteEnd').val() + ' ' +
                             // get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
-                            '00:00:00.000000'
+                            '23:59:59.000000'
 
                         husks = {
                             select_Array: array,
@@ -796,7 +824,7 @@ $(document).on('click', '.voteBtn', async function() {
 
                     for (let cnt = 0; cnt < data.length; cnt++) {
                         if (comDatas[count].id == data[cnt].pk) {
-                            if (data[count].fields.comment != "") {
+                            if (comDatas[count].comment !== "") {
                                 var comment_tr = $(
                                     '<tr><td>' + data[cnt].fields.username + '</td><td class="comment_td">' +
                                     '<a href="javascript:void(0);" onclick="show_comment(\'' + comDatas[count].comment + '\')">' +
@@ -811,14 +839,12 @@ $(document).on('click', '.voteBtn', async function() {
 
                 }
             }
-            // 뎃글을 저장하는 배열 하나랑 코멘트를 저장하는 배열 하나
+            // 댓글을 저장하는 배열 하나랑 코멘트를 저장하는 배열 하나
 
 
         }).catch(function(err) {
             alert(err);
-        })
-
-
+        });
 
     var voteConfirmBtn = $('<button type="button" class="btn btn-outline-dark voteConfirmBtn" id="voteConfirmBtn">투표 확정</button>');
     var correct_btn = $('<button type="button" class="btn btn-outline-dark correctBtn" id="correctBtn">투표 수정</button>');
@@ -977,11 +1003,26 @@ $(document).on('click', '.correctBtn', async function() {
 
     await ajaxPost('/toast_cal/pro_vote_info/', 'json', 'POST', class_data)
         .then(function(data) {
-            var vote_update_start = data[0].fields.start;
+            var todayValue = new Date();
+            // var vote_update_start = data[0].fields.start;
             var vote_update_end = data[0].fields.end;
 
+            ty = todayValue.getFullYear();
+            tm = todayValue.getMonth() + 1;
+            td = todayValue.getDate();
+
+            if(tm < 10) {
+                tm = "0" + tm;
+            }
+
+            if (td < 10) {
+                td = "0" + td;
+            }
+
+            tv_start = ty + "-" + tm + "-" + td;
+
             // 날짜출력
-            var update_start = vote_update_start.substr(0, 10);
+            var update_start = tv_start;
             var update_end = vote_update_end.substr(0, 10);
 
             //console.log(update_start + " ~ " +update_end)
@@ -1049,6 +1090,30 @@ $(document).on('click', '.correctBtn', async function() {
         });
 });
 
+// 투표 현황 탭 투표 수정의 투표 수정 UI 내부 끝 날짜 date 필드 eventListener
+$(document).on('change', '#vote-update-End', function() {
+    voteStart = document.getElementById('vote-update-Start').value
+    voteEnd = document.getElementById('vote-update-End').value
+    vote_period_comment = document.getElementById('update_period_comment')
+
+    var vote_start = new Date(voteStart);
+    var vote_end = new Date(voteEnd);
+
+    // console.log("start : " + vote_start + ", end : " + vote_end);
+    var votePeriod = Math.abs(vote_end.getTime() - vote_start.getTime());
+    votePeriod = Math.ceil(votePeriod / (1000 * 3600 * 24) + 1);
+
+    // console.log("투표기간 : " + votePeriod + "일");
+    vote_period_comment.innerText = "  * 투표기간 : " + votePeriod + "일";
+
+    if (votePeriod <= 3) {
+        vote_period_comment.style.color = '#FF0000'; // 진한 빨강 '#FF0000', 연한 빨강 '#F15F5F'
+    }
+    else {
+        vote_period_comment.style.color = '#212529';
+    }
+});
+
 // 투표 현황 탭 투표 수정의 투표 수정 UI 내부 투표 수정 버튼
 $('#vote-update-btn').click(function() {
     var tr = $('#vote-update-tbody').children();
@@ -1093,7 +1158,7 @@ $('#vote-update-btn').click(function() {
 
             let end_data_vote_status = $('#vote-update-End').val() + ' ' +
                 // get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
-                '00:00:00.000000'
+                '23:59:59.000000'
 
             class_data = {
                 select_Array: array,
@@ -1163,6 +1228,10 @@ shareProBtn.addEventListener('click', async function(event) {
         td = todayValue.getDate();
 
         todayValue.setDate(todayValue.getDate() + 14);
+
+        if (tm < 10) {
+            tm = "0" + tm;
+        }
 
         if (td < 10) {
             td = "0" + td;
@@ -1774,6 +1843,10 @@ $(document).on('click', '#portal_to_making_vote', async function() {
 
             todayValue.setDate(todayValue.getDate() + 14);
             // console.log(todayValue)
+
+            if (tm < 10) {
+                tm = "0" + tm;
+            }
 
             if (td < 10) {
                 td = "0" + td;

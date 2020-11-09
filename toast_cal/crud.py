@@ -1190,10 +1190,6 @@ def bring_Comment(request):
 
         # print(filt_voteid)
 
-        for i in range(filt_voteid.count()):
-            if filt_voteid[i].comment == "":
-                filt_voteid[i].delete()
-
         return HttpResponse(
             serializers.serialize("json", filt_voteid), content_type="application/json"
         )
