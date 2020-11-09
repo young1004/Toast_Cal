@@ -309,6 +309,17 @@ def takeVoteSave(request):
         comment=request.POST["array[4][comment]"],
     )
 
+    voteStatusData = Vote.objects.filter(id=request.POST["array[0][id]"])
+
+    checkEnd = (
+        voteStatusData[0].choice1
+        + voteStatusData[0].choice2
+        + voteStatusData[0].choice3
+        + voteStatusData[0].choice4
+    )
+    if checkEnd == voteStatusData[0].totalCount:
+        voteStatusData.update(voteStatus="투표 마감")
+
     return HttpResponse("투표 완료!")
 
 
