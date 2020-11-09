@@ -36,6 +36,9 @@ async function printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json
         .then(function (data) {
             document.getElementById('start').value = voteStart;
             document.getElementById('end').value = voteEnd;
+            document.getElementById('voteStart').value = voteStart;
+            document.getElementById('voteEnd').value = voteEnd;
+        
 
             $('#vote-open-tbody').empty();
 

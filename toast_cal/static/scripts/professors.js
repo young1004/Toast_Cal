@@ -1373,6 +1373,7 @@ $(document).on('click', '#voteConfirmBtn', async function() {
 
 })
 
+// 투표 삭제 버튼
 $(document).on('click', '.voteDelete', function() {
     var deleteBtn = $(this);
 
@@ -1422,6 +1423,7 @@ $(document).on('click', '.voteDelete', function() {
         })
 });
 
+// 투표 수정 버튼
 $(document).on('click', '.correctBtn', async function() {
     changeContents('professor-vote-update', 'professor-vote-open', 'professor-vote-status');
 
@@ -1516,6 +1518,7 @@ $(document).on('click', '.correctBtn', async function() {
         });
 });
 
+// 투표 수정 UI 들어갔을 때의 투표 수정 버튼
 $('#vote-update-btn').click(function() {
     var tr = $('#vote-update-tbody').children();
     var td = tr.children();
@@ -1626,7 +1629,7 @@ $('#class_select').on('change', function() {
     $('#vote-open-tbody').empty();
 });
 
-// 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
+// 공유캘린더 투표가능날짜확인 버튼(pubCalendar에 있는 일정들 활용하여 투표가능 시간대를 Ava_Time으로 불러오는 기능)
 $(document).on('click', '#portal_to_making_vote', async function() {
     changeContents('professor2', 'professor3', 'calendar-common', 'sidebar', 'professor1', 'pubcal_vote_info');
     changeContents('tab_box');
@@ -1655,6 +1658,37 @@ $(document).on('click', '#portal_to_making_vote', async function() {
 
     await ajaxPost('/toast_cal/voteTimeLoad/', 'json', 'POST', voteTimeLoad)
         .then(function(data) {
+            // 공유 캘린더 날짜 셋팅
+            // var dateValue = getThisWeek();
+            var todayValue = new Date()
+
+            ty = todayValue.getFullYear();
+            tm = todayValue.getMonth() + 1;
+            td = todayValue.getDate();
+
+            todayValue.setDate(todayValue.getDate() + 14);
+            // console.log(todayValue)
+
+            if (td < 10) {
+                td = "0" + td;
+            }
+
+            tv_start = ty + "-" + tm + "-" + td;
+            tv_end_date = todayValue.getDate()
+
+            if (tv_end_date < 10) {
+                tv_end_date = "0" + tv_end_date;
+            }
+
+            tv_end = todayValue.getFullYear() + '-' + (todayValue.getMonth() + 1) + '-' + tv_end_date;
+            // console.log(tv_end)
+
+            document.getElementById('start').value = tv_start;
+            document.getElementById('end').value = tv_end;
+
+            document.getElementById('voteStart').value = tv_start;
+            document.getElementById('voteEnd').value = tv_end;
+
             if (data !== "공용 일정이 없습니다") {
                 let newDate = getVoteDate(data);
 
@@ -1665,38 +1699,6 @@ $(document).on('click', '#portal_to_making_vote', async function() {
             } else { // 공용캘린더 DB에 데이터가 없을 때
                 flag = false;
                 $('#vote-open-tbody').empty();
-
-                // 공유 캘린더 날짜 셋팅
-                // var dateValue = getThisWeek();
-                var todayValue = new Date()
-
-                ty = todayValue.getFullYear();
-                tm = todayValue.getMonth() + 1;
-                td = todayValue.getDate();
-
-                todayValue.setDate(todayValue.getDate() + 14);
-                // console.log(todayValue)
-
-                if (td < 10) {
-                    td = "0" + td;
-                }
-
-                tv_start = ty + "-" + tm + "-" + td;
-                tv_end_date = todayValue.getDate()
-
-                if (tv_end_date < 10) {
-                    tv_end_date = "0" + tv_end_date;
-                }
-
-                tv_end = todayValue.getFullYear() + '-' + (todayValue.getMonth() + 1) + '-' + tv_end_date;
-                // console.log(tv_end)
-
-                document.getElementById('start').value = tv_start;
-                document.getElementById('end').value = tv_end;
-
-                document.getElementById('voteStart').value = tv_start;
-                document.getElementById('voteEnd').value = tv_end;
-
                 alert(data);
             }
         })
@@ -1721,5 +1723,12 @@ $(document).on('click', '#portal_to_making_vote', async function() {
     // console.log("종합 데이터", date_status_json);
     if (flag === true) {
         printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
+    }
+    else{
+        document.getElementById('start').value = voteStart;
+        document.getElementById('end').value = voteEnd;
+        document.getElementById('voteStart').value = voteStart;
+        document.getElementById('voteEnd').value = voteEnd;
+        
     }
 });
