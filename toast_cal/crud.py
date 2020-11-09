@@ -1201,12 +1201,12 @@ def bring_Comment(request):
 
 # 코멘트에 대한 학생 이름 가져오기
 def bring_StdName(request):
-    print(request.POST)
+    # print(request.POST)
 
     finalData = Student.objects.filter(userID="Null")  # 초기화
 
     for i in range(int(len(request.POST))):
-        print()
+        # print()
         finalData = finalData | Student.objects.filter(
             userID=request.POST["array[" + str(i) + "][studentID]"]
         )

@@ -1209,7 +1209,7 @@ $(document).on('click', '.voteBtn', async function() {
     $('#correctBtn').remove();
     $('.classCode').remove();
 
-    let comment = $('<div id="comment"><table id="comment_table"><thead><tr><th>댓글</th></tr></thead><tbody id="comment_tbody"></tbody></table></div>');
+    let comment = $('<div id="comment"><table id="comment_table"><tbody id="comment_tbody"><div class= "title_opinion">댓글</div></tbody></table></div>');
     $('#professor-vote-status').append(comment);
 
     let stdId = {};
@@ -1340,7 +1340,7 @@ $(document).on('click', '#voteConfirmBtn', async function() {
             endTime = yymmdd + ' ' + periodData[1];
 
 
-            console.log(examData);
+            // console.log(examData);
         } else { // 오후 7시 이후 데이터일 시
 
             startTime = yymmdd + ' 19:00'
