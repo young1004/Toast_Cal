@@ -262,6 +262,16 @@ var voteTableBtn = document.getElementById('voteTableBtn');
 
 //투표 참여 선택 버튼
 voteTableBtn.addEventListener('click', async function(event) {
+
+    $('#select_head').empty();
+    $('#select_info').empty();
+    $('#stdVoteComment').empty();
+
+    
+    document.getElementById('select_head').innerHTML = '투표하기';
+    document.getElementById('select_info').innerHTML = ('<tr><td class="default_area">투표영역</td></tr>');
+
+
     var joinData = {};
     var voteJoinData = [];
     var joinCheckData = [];
@@ -422,7 +432,7 @@ $(document).on('click', '.voteBtn', function() {
 
 });
 
-$(document).on('click', '#takeVote', function() {
+$(document).on('click', '#takeVote', async function() {
     // console.log('동작 확인');
 
     let tr = $('#select_info').children();
@@ -472,13 +482,16 @@ $(document).on('click', '#takeVote', function() {
 
         obj.array = array;
         // console.log(obj);
-        ajaxPost('/toast_cal/takeVoteSave/', 'json', 'POST', obj)
+        await ajaxPost('/toast_cal/takeVoteSave/', 'json', 'POST', obj)
             .then(function(data) {
                 alert(data);
             })
             .catch(function(err) {
                 alert(err);
             });
+
+        $("#vote-status-student-btn").trigger('click');
+        
         // $('#select_head').empty();
         // $('#select_info').empty();
     }
