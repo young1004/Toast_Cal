@@ -129,7 +129,7 @@ $(document).ready(function() {
             ajaxPost('/toast_cal/checked/', 'json', 'POST', checked)
                 .then(function(data) {
 
-                    console.log(data)
+                    // console.log(data)
 
                     var i;
 

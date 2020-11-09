@@ -251,8 +251,8 @@ lastWeek.addEventListener('click', function(event) {
 
             }
 
-            console.log('StartDate: ' + getDate(0, -7));
-            console.log('EndDate: ' + getDate(1, -7));
+            // console.log('StartDate: ' + getDate(0, -7));
+            // console.log('EndDate: ' + getDate(1, -7));
         })
         .catch(function(err) {
             alert(err);

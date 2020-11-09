@@ -814,8 +814,8 @@ $(document).on('click', '.voteBtn', async function() {
 
     await ajaxPost('/toast_cal/bring_StdName/', 'json', 'POST', stdId)
         .then(function(data) {
-            console.log("서버 데이터 :", data);
-            console.log("댓글 데이터 :", comDatas);
+            // console.log("서버 데이터 :", data);
+            // console.log("댓글 데이터 :", comDatas);
             if (data.length == 0) {
                 var comment_tr = $(
                     '<span class = "nothing-comment">-등록된 의견이 없습니다.-</span>'
@@ -1446,7 +1446,7 @@ shareProBtn.addEventListener('click', async function(event) {
 
 // 공유 캘린더 내부의 숨겨진 불러오기 버튼
 pubCalLoadBtn.addEventListener('click', async function() {
-    console.log('pubCalLoad버튼 실행');
+    // console.log('pubCalLoad버튼 실행');
     pubCalendar.today();
 
     // 입력 혹은 클릭을 막아야할 부분들을 막아주는 함수 실행
@@ -1488,9 +1488,9 @@ pubCalLoadBtn.addEventListener('click', async function() {
     let betweenStartEnd = (objEnd.getTime() - objStart.getTime()) / 1000 / 60 / 60 / 24; // 시작 날짜와 끝 날짜와의 차이
     let betweenTodayStart = (objStart.getTime() - objToday.getTime()) / 1000 / 60 / 60 / 24; // 시작 날짜와 오늘 날짜의 차이
 
-    console.log(betweenStartWeek);
-    console.log(betweenStartEnd);
-    console.log(betweenTodayStart);
+    // console.log(betweenStartWeek);
+    // console.log(betweenStartEnd);
+    // console.log(betweenTodayStart);
 
     if (betweenTodayStart < -1) { // 시작날짜가 오늘 이전의 날짜가 입력됬을때
         pubCalendar.clear();
@@ -1554,7 +1554,7 @@ $('#pubcal_select').on('change', function() {
     }
 
     ajaxPost('/toast_cal/getVoteInfo/', 'json', 'POST', test_data).then(function(data) {
-            console.log(data)
+            // console.log(data)
 
             $('#pubcal_vote_info').empty();
 
