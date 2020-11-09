@@ -3,6 +3,39 @@ var subjectBtn = document.getElementById('subjectBtn');
 var subjectLoad = document.getElementById('subjectLoad');
 var voteMenuBtn = document.getElementById('voteMenuBtn');
 
+// 실시간으로 투표 상태를 갱신하기 위한 window 이벤트리스너
+window.addEventListener('load', function() {
+    let today_data_vote = new Date();
+
+    let get_year_vote = today_data_vote.getFullYear();
+    let get_month_vote = today_data_vote.getMonth() + 1;
+    let get_day_vote = today_data_vote.getDate();
+    let get_hour_vote = today_data_vote.getHours();
+    let get_min_vote = today_data_vote.getMinutes();
+    let get_sec_vote = today_data_vote.getSeconds();
+    let get_mil_vote = today_data_vote.getMilliseconds();
+
+    if (get_month_vote < 10) get_month_vote = '0' + get_month_vote;
+    if (get_day_vote < 10) get_day_vote = '0' + get_day_vote;
+
+    let today_data_vote_status =
+        get_year_vote + '-' + get_month_vote + '-' + get_day_vote + ' ' +
+        get_hour_vote + ':' + get_min_vote + ':' + get_sec_vote + '.' + get_mil_vote;
+
+    test_data = {
+        today: today_data_vote_status,
+    }
+
+    // 투표테이블 정보를 가져옴
+    ajaxPost('/toast_cal/renewal_vote_status/', 'json', 'POST', test_data)
+        .then(function(data) {
+            // console.log(data);
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+});
+
 
 calStdBtn.addEventListener('click', function(event) {
     changeContents('calendar-common', 'lecture', 'studentLectureLoad', 'votemenu');

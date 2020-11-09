@@ -1117,25 +1117,10 @@ def renewal_vote_status(request):
             today_data_vote, "%Y-%m-%d %H:%M:%S.%f"
         )
 
-        # 날짜비교를 하여서 투표상태를 갱신
-        for i in range(vote_all_info.count()):
-            if convert_date_data < vote_all_info[i].start:
-                Vote.objects.filter(classCode=vote_all_info[i].classCode).update(
-                    voteStatus="투표 전",
-                )
-
-            elif (
-                convert_date_data >= vote_all_info[i].start
-                and convert_date_data <= vote_all_info[i].end
-            ):
-                Vote.objects.filter(classCode=vote_all_info[i].classCode).update(
-                    voteStatus="투표 중",
-                )
-
-            elif convert_date_data > vote_all_info[i].end:
-                Vote.objects.filter(classCode=vote_all_info[i].classCode).update(
-                    voteStatus="투표 마감",
-                )
+        if convert_date_data > vote_all_info[i].end:
+            Vote.objects.filter(classCode=vote_all_info[i].classCode).update(
+                voteStatus="투표 마감",
+            )
 
     return HttpResponse(
         serializers.serialize("json", vote_all_info), content_type="application/json"
