@@ -1116,11 +1116,11 @@ def renewal_vote_status(request):
         convert_date_data = datetime.datetime.strptime(
             today_data_vote, "%Y-%m-%d %H:%M:%S.%f"
         )
-
-        if convert_date_data > vote_all_info[i].end:
-            Vote.objects.filter(classCode=vote_all_info[i].classCode).update(
-                voteStatus="투표 마감",
-            )
+        for i in range(vote_all_info.count()):
+            if convert_date_data > vote_all_info[i].end:
+                Vote.objects.filter(classCode=vote_all_info[i].classCode).update(
+                    voteStatus="투표 마감",
+                )
 
     return HttpResponse(
         serializers.serialize("json", vote_all_info), content_type="application/json"
