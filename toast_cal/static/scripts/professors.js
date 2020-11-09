@@ -396,7 +396,7 @@ $(document).on("click", "#vote-ava-time", async function() {
             alert(err);
         });
 
-    console.log("lec_check : " + lec_check);
+    // console.log("lec_check : " + lec_check);
 
     if (lec_check > 0) {
         if (betweenTodayStart < -1) { // 시작날짜가 오늘 이전의 날짜가 입력됬을때
@@ -431,7 +431,9 @@ $(document).on("click", "#vote-ava-time", async function() {
                     alert(err);
                 });
 
-            printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json)
+            printVoteOpenTbody(voteCode, voteStart, voteEnd, date_status_json);
+
+            $('#voteEnd').trigger('change');
         }
     } else {
         alert("강의를 수강중인 학생이 없습니다.");
@@ -1034,7 +1036,9 @@ $(document).on('click', '.correctBtn', async function() {
                 '<span> ~ </span>' +
                 '<input type="date" id="vote-update-End" value="' + update_end + '">');
 
-            $('#vote-update-period').append(vote_period)
+            $('#vote-update-period').append(vote_period);
+
+            $('#vote-update-End').trigger('change');
 
             title1 = data[0].fields.choice1_Title;
             title2 = data[0].fields.choice2_Title;
