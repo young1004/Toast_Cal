@@ -70,7 +70,7 @@ voteProBtn.addEventListener('click', async function(event) {
         changeContents('professor2', 'calendar-common', 'professor1', 'sidebar', 'professor3', 'pubcal_vote_info');
         changeContents('tab_box');
 
-        
+
 
         $('#vote-open-tab-btn').trigger('click');
 
@@ -103,7 +103,7 @@ $(document).on("click", "#vote-ava-time", async function() {
         date: "",
         status: "",
     }
-    
+
 
 
     let startString = voteStart;
@@ -221,16 +221,25 @@ shareProBtn.addEventListener('click', async function(event) {
         tm = todayValue.getMonth() + 1;
         td = todayValue.getDate();
 
+        todayValue.setDate(todayValue.getDate() + 14);
+
         if (td < 10) {
             td = "0" + td;
         }
 
         tv_start = ty + "-" + tm + "-" + td;
+        tv_end_date = todayValue.getDate()
 
-        var dateValue = getThisWeek();
+        if (tv_end_date < 10) {
+            tv_end_date = "0" + tv_end_date;
+        }
+
+        tv_end = todayValue.getFullYear() + '-' + (todayValue.getMonth() + 1) + '-' + tv_end_date;
+
+        // var dateValue = getThisWeek();
 
         document.getElementById('pubStart').value = tv_start;
-        document.getElementById('pubEnd').value = dateValue[6];
+        document.getElementById('pubEnd').value = tv_end;
 
 
         // 공유 캘린더 하단 학생 정보 표시
@@ -840,7 +849,7 @@ voteOpenTabBtn.addEventListener('click', async function(event) {
     changeContents('professor-vote-open', 'professor-vote-status', 'professor-vote-update');
 
     // 공유 캘린더 날짜 셋팅
-    var dateValue = getThisWeek();
+    // var dateValue = getThisWeek();
     var todayValue = new Date()
 
     ty = todayValue.getFullYear();
@@ -856,31 +865,31 @@ voteOpenTabBtn.addEventListener('click', async function(event) {
     tv_start = ty + "-" + tm + "-" + td;
     tv_end_date = todayValue.getDate()
 
-    if(tv_end_date < 10){
+    if (tv_end_date < 10) {
         tv_end_date = "0" + tv_end_date;
     }
-    
+
     tv_end = todayValue.getFullYear() + '-' + (todayValue.getMonth() + 1) + '-' + tv_end_date;
 
     document.getElementById('start').value = tv_start;
-    document.getElementById('end').value = dateValue[6];
+    document.getElementById('end').value = tv_end;
 
     document.getElementById('voteStart').value = tv_start;
     document.getElementById('voteEnd').value = tv_end;
 
     // select options 셋팅
     await ajaxPost('/toast_cal/pro_lecture/', 'json', 'POST', 1)
-    .then(function(data) {
-        $('#class_select').empty(); //기존 옵션 값 삭제
+        .then(function(data) {
+            $('#class_select').empty(); //기존 옵션 값 삭제
 
-        for (var count = 0; count < data.length; count++) {
-            var option = $('<option>' + data[count].fields.name + " (" + data[count].fields.code + ")" + '</option>');
-            $('#class_select').append(option);
-        }
-    })
-    .catch(function(err) {
-        alert(err);
-    });
+            for (var count = 0; count < data.length; count++) {
+                var option = $('<option>' + data[count].fields.name + " (" + data[count].fields.code + ")" + '</option>');
+                $('#class_select').append(option);
+            }
+        })
+        .catch(function(err) {
+            alert(err);
+        });
 
 });
 
@@ -1221,12 +1230,12 @@ $(document).on('click', '.voteBtn', async function() {
     // 댓글 데이터 저장 및 userID 저장
     await ajaxPost('/toast_cal/bring_Comment/', 'json', 'POST', chartData)
         .then(function(data) {
-            
+
             for (var count = 0; count < data.length; count++) {
                 let tmp = {
                     studentID: data[count].fields.studentID
                 };
-                
+
                 commentData = {
                     id: data[count].fields.studentID,
                     comment: data[count].fields.comment
@@ -1236,48 +1245,47 @@ $(document).on('click', '.voteBtn', async function() {
                 comStdId.push(tmp);
             }
 
-        }).catch(function(err){
+        }).catch(function(err) {
             alert(err);
         });
 
     stdId.array = comStdId;
 
     await ajaxPost('/toast_cal/bring_StdName/', 'json', 'POST', stdId)
-    .then(function(data){
-        // console.log("서버 데이터 :", data);
-        // console.log("댓글 데이터 :", comDatas);
-        if (data.length == 0) {
-            var comment_tr = $(
-                '<span class = "nothing-comment">-등록된 의견이 없습니다.-</span>'
-            );
-            $('#comment_tbody').append(comment_tr);
-        }
-        else{
-            for (var count = 0; count < comDatas.length; count++) {
-                
-                for(let cnt = 0; cnt < data.length; cnt++){
-                    if(comDatas[count].id == data[cnt].pk){
-                        if (data[count].fields.comment != "") {
-                            var comment_tr = $(
-                                '<tr><td>' + data[cnt].pk + '</td><td class="comment_td">' +
-                                '<a href="javascript:void(0);" onclick="show_comment(\'' + comDatas[count].comment + '\')">' +
-                                comDatas[count].comment + '</a></td></tr>');
+        .then(function(data) {
+            console.log("서버 데이터 :", data);
+            console.log("댓글 데이터 :", comDatas);
+            if (data.length == 0) {
+                var comment_tr = $(
+                    '<span class = "nothing-comment">-등록된 의견이 없습니다.-</span>'
+                );
+                $('#comment_tbody').append(comment_tr);
+            } else {
+                for (var count = 0; count < comDatas.length; count++) {
+
+                    for (let cnt = 0; cnt < data.length; cnt++) {
+                        if (comDatas[count].id == data[cnt].pk) {
+                            if (data[count].fields.comment != "") {
+                                var comment_tr = $(
+                                    '<tr><td>' + data[cnt].fields.username + '</td><td class="comment_td">' +
+                                    '<a href="javascript:void(0);" onclick="show_comment(\'' + comDatas[count].comment + '\')">' +
+                                    comDatas[count].comment + '</a></td></tr>');
                                 $('#comment_tbody').append(comment_tr);
+                            }
                         }
+
+
                     }
-                    
-                    
+
+
                 }
-
-                
             }
-        }
-        // 뎃글을 저장하는 배열 하나랑 코멘트를 저장하는 배열 하나
+            // 뎃글을 저장하는 배열 하나랑 코멘트를 저장하는 배열 하나
 
 
-    }).catch(function(err){
-        alert(err);
-    })
+        }).catch(function(err) {
+            alert(err);
+        })
 
 
 
@@ -1659,7 +1667,7 @@ $(document).on('click', '#portal_to_making_vote', async function() {
                 $('#vote-open-tbody').empty();
 
                 // 공유 캘린더 날짜 셋팅
-                var dateValue = getThisWeek();
+                // var dateValue = getThisWeek();
                 var todayValue = new Date()
 
                 ty = todayValue.getFullYear();
@@ -1676,15 +1684,15 @@ $(document).on('click', '#portal_to_making_vote', async function() {
                 tv_start = ty + "-" + tm + "-" + td;
                 tv_end_date = todayValue.getDate()
 
-                if(tv_end_date < 10){
+                if (tv_end_date < 10) {
                     tv_end_date = "0" + tv_end_date;
                 }
-                
+
                 tv_end = todayValue.getFullYear() + '-' + (todayValue.getMonth() + 1) + '-' + tv_end_date;
                 // console.log(tv_end)
 
                 document.getElementById('start').value = tv_start;
-                document.getElementById('end').value = dateValue[6];
+                document.getElementById('end').value = tv_end;
 
                 document.getElementById('voteStart').value = tv_start;
                 document.getElementById('voteEnd').value = tv_end;
